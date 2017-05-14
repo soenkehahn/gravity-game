@@ -1,23 +1,22 @@
 // @flow
 
-type Pos = {|
-  x: number,
-  y: number,
-|}
+import type {Position, Circle} from './objects'
 
 type Direction
   = 'right'
 
 type Player  = {|
-  position: Pos,
+  position: Position,
 |}
 
 type Scene = {|
   player: Player,
   step: Direction => void,
+  toObjects: () => Array<Circle>,
 |}
 
 export function mkScene(): Scene {
+
   const scene = {
     player: {
       position: {
@@ -30,6 +29,12 @@ export function mkScene(): Scene {
         scene.player.position.x += 1
       }
     },
+    toObjects: () => {
+      return [
+        {type: 'circle', position: scene.player.position}
+      ]
+    }
   }
+
   return scene
 }

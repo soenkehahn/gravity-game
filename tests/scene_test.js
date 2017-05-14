@@ -20,4 +20,19 @@ describe('scene', () => {
     })
   })
 
+  describe('toObjects', () => {
+    it('allows to convert the scene into a set of abstract objects', () => {
+      const scene = mkScene()
+      const position = {x: 42, y: 23}
+      scene.player.position = position
+      const objects = scene.toObjects()
+      expect(objects).to.eql([
+        {
+          type: 'circle',
+          position: position
+        }
+      ])
+    })
+  })
+
 })
