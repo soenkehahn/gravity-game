@@ -28,7 +28,9 @@
     "flow-typed": "^2.1.2",
     "mocha": "^3.3.0",
     "physicsjs": "^0.7.0",
-    "react-addons-test-utils": "^15.5.1"
+    "react-addons-test-utils": "^15.5.1",
+    "webpack": "^2.5.1",
+    "webpack-dev-server": "^2.4.5"
   },
   "dependencies": {
     "react": "^15.5.4",

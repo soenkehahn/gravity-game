@@ -8,3 +8,6 @@ dist_tests/tests/%.js: tests/%.js
 
 dist_tests/src/%.js: src/%.js
 	babel $< --out-dir dist_tests
+
+dev:
+	webpack-dev-server --content-base dist
