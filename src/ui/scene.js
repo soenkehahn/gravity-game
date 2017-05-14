@@ -3,10 +3,33 @@
 const React = require('react')
 global.React = React
 
-import {mkScene} from '../scene'
+import {castToDirection, mkScene} from '../scene'
 import type {Scene} from '../scene'
 
-export class SceneComponent extends React.Component<void, {scene: Scene}, {}> {
+export class SceneComponent extends React.Component<void, {}, {| scene: Scene |}> {
+
+  state = {scene: mkScene()}
+
+  componentDidMount() {
+    const handler: KeyboardEventListener = event => {
+      const direction = castToDirection(event.key)
+      if (direction) {
+        const scene = this.state.scene
+        scene.step(direction)
+        this.setState({scene: scene})
+      }
+    }
+    document.addEventListener('keydown', handler)
+  }
+
+  render() {
+    return <div>
+      <Render scene={this.state.scene} />
+    </ div>
+  }
+}
+
+class Render extends React.Component<void, {scene: Scene}, {}> {
 
   state = {}
 

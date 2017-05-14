@@ -3,7 +3,15 @@
 import type {Position, Circle} from './objects'
 
 export type Direction
-  = 'right' | 'left' | 'up' | 'down'
+  = 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown'
+
+export function castToDirection(input: mixed): ?Direction {
+  if (['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(input)) {
+    return (input: any)
+  } else {
+    return null
+  }
+}
 
 type Player  = {|
   position: Position,
@@ -25,13 +33,13 @@ export function mkScene(): Scene {
       },
     },
     step: direction => {
-      if (direction === 'right') {
+      if (direction === 'ArrowRight') {
         scene.player.position.x += 1
-      } else if (direction === 'left') {
+      } else if (direction === 'ArrowLeft') {
         scene.player.position.x -= 1
-      } else if (direction === 'up') {
+      } else if (direction === 'ArrowUp') {
         scene.player.position.y -= 1
-      } else if (direction === 'down') {
+      } else if (direction === 'ArrowDown') {
         scene.player.position.y += 1
       }
     },

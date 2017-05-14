@@ -15,10 +15,10 @@ describe('scene', () => {
 
   describe('step', () => {
     const tests = [
-      {direction: 'right', expected: {x: 1, y: 0}},
-      {direction: 'left', expected: {x: -1, y: 0}},
-      {direction: 'up', expected: {x: 0, y: -1}},
-      {direction: 'down', expected: {x: 0, y: 1}},
+      {direction: 'ArrowRight', expected: {x: 1, y: 0}},
+      {direction: 'ArrowLeft', expected: {x: -1, y: 0}},
+      {direction: 'ArrowUp', expected: {x: 0, y: -1}},
+      {direction: 'ArrowDown', expected: {x: 0, y: 1}},
     ]
     for (const test of tests) {
       it(`allows to move the character ${test.direction}`, () => {
