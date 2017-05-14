@@ -1,6 +1,5 @@
 // @flow
 
-import {describe, it} from 'mocha'
 import {expect} from 'chai'
 
 import {mkScene} from '../src/scene'
