@@ -2,7 +2,9 @@
 
 import ReactDOM from 'react-dom'
 
-import {Scene} from './ui/scene'
+import {SceneComponent} from './ui/scene'
+import {mkScene} from './scene'
 
 const root = document.getElementById('root')
-ReactDOM.render(<Scene />, root)
+const scene = mkScene()
+ReactDOM.render(<SceneComponent scene={scene} />, root)

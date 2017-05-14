@@ -26,6 +26,8 @@
     "enzyme": "^2.8.2",
     "flow-bin": "^0.46.0",
     "flow-typed": "^2.1.2",
+    "jsdom": "^10.1.0",
+    "jsdom-global": "^3.0.2",
     "mocha": "^3.3.0",
     "physicsjs": "^0.7.0",
     "react-addons-test-utils": "^15.5.1",

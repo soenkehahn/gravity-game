@@ -2,14 +2,14 @@
 
 import type {Position, Circle} from './objects'
 
-type Direction
-  = 'right'
+export type Direction
+  = 'right' | 'left'
 
 type Player  = {|
   position: Position,
 |}
 
-type Scene = {|
+export type Scene = {|
   player: Player,
   step: Direction => void,
   toObjects: () => Array<Circle>,
@@ -27,6 +27,8 @@ export function mkScene(): Scene {
     step: direction => {
       if (direction === 'right') {
         scene.player.position.x += 1
+      } else if (direction === 'left') {
+        scene.player.position.x -= 1
       }
     },
     toObjects: () => {

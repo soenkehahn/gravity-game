@@ -3,6 +3,8 @@
 import {expect} from 'chai'
 
 import {mkScene} from '../src/scene'
+import type {Direction} from '../src/scene'
+import type {Position} from '../src/objects'
 
 describe('scene', () => {
 
@@ -12,11 +14,17 @@ describe('scene', () => {
   })
 
   describe('step', () => {
-    it('allows to move the character right', () => {
-      const scene = mkScene()
-      scene.step('right')
-      expect(scene.player.position).to.eql({x: 1, y: 0})
-    })
+    const tests = [
+      {direction: 'right', expected: {x: 1, y: 0}},
+      {direction: 'left', expected: {x: -1, y: 0}},
+    ]
+    for (const test of tests) {
+      it(`allows to move the character ${test.direction}`, () => {
+        const scene = mkScene()
+        scene.step(test.direction)
+        expect(scene.player.position).to.eql(test.expected)
+      })
+    }
   })
 
   describe('toObjects', () => {
