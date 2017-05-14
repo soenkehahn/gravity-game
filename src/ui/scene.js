@@ -62,7 +62,11 @@ export class SceneComponent extends React.Component<void, {}, State> {
 class Render extends React.Component<void, {scene: Scene}, void> {
   render() {
     const objects = this.props.scene.toObjects()
-    return <svg viewBox="-10 -10 20 20" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+    return <svg
+      viewBox="-10 -10 20 20"
+      width="400" height="400"
+      xmlns="http://www.w3.org/2000/svg">
+      <rect x={-10} y={-10} width={20} height={20} fill="gray" />
       {objects.map((object, i) => {
         const position = object.position
         return <circle key={i} r="1" cx={position.x} cy={position.y} fill="blue" />
