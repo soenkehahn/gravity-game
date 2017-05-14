@@ -1,6 +1,6 @@
 // @flow
 
-import type {Position, Circle} from './objects'
+import type {Vector, Circle} from './objects'
 
 export type Direction
   = 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown'
@@ -14,41 +14,50 @@ export function castToDirection(input: mixed): ?Direction {
 }
 
 type Player  = {|
-  position: Position,
+  position: Vector,
+  velocity: Vector,
 |}
 
-export type Scene = {|
-  player: Player,
-  step: Direction => void,
-  toObjects: () => Array<Circle>,
-|}
+export const force = 0.00001
 
-export function mkScene(): Scene {
+export class Scene {
 
-  const scene = {
-    player: {
-      position: {
-        x: 0,
-        y: 0,
-      },
-    },
-    step: direction => {
-      if (direction === 'ArrowRight') {
-        scene.player.position.x += 1
-      } else if (direction === 'ArrowLeft') {
-        scene.player.position.x -= 1
-      } else if (direction === 'ArrowUp') {
-        scene.player.position.y -= 1
-      } else if (direction === 'ArrowDown') {
-        scene.player.position.y += 1
-      }
-    },
-    toObjects: () => {
-      return [
-        {type: 'circle', position: scene.player.position}
-      ]
+  player: Player
+
+  constructor() {
+    this.player = {
+      position: {x: 0, y: 0},
+      velocity: {x: 0, y: 0},
     }
   }
 
-  return scene
+  step(directions: Array<Direction>, timeDelta: number): void {
+    this._stepVelocity(directions, timeDelta)
+    this._stepPosition(timeDelta)
+  }
+
+  _stepVelocity(directions: Array<Direction>, timeDelta: number) {
+    for (const direction of directions) {
+      if (direction === 'ArrowRight') {
+        this.player.velocity.x += force * timeDelta
+      } else if (direction === 'ArrowLeft') {
+        this.player.velocity.x -= force * timeDelta
+      } else if (direction === 'ArrowUp') {
+        this.player.velocity.y -= force * timeDelta
+      } else if (direction === 'ArrowDown') {
+        this.player.velocity.y += force * timeDelta
+      }
+    }
+  }
+
+  _stepPosition(timeDelta: number) {
+    this.player.position.x += this.player.velocity.x * timeDelta
+    this.player.position.y += this.player.velocity.y * timeDelta
+  }
+
+  toObjects(): Array<Circle> {
+    return [
+      {type: 'circle', position: this.player.position}
+    ]
+  }
 }

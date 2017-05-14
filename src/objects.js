@@ -1,11 +1,11 @@
 // @flow
 
-export type Position = {|
+export type Vector = {|
   x: number,
   y: number,
 |}
 
 export type Circle = {|
   type: 'circle',
-  position: Position,
+  position: Vector,
 |}

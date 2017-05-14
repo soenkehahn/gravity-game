@@ -2,36 +2,53 @@
 
 import {expect} from 'chai'
 
-import {mkScene} from '../src/scene'
+import {Scene, force} from '../src/scene'
 import type {Direction} from '../src/scene'
-import type {Position} from '../src/objects'
+import type {Vector} from '../src/objects'
 
 describe('scene', () => {
 
+  let scene
+
+  beforeEach(() => {
+    scene = new Scene()
+  })
+
   it('contains the player', () => {
-    const scene = mkScene()
     expect(scene.player.position).to.eql({x: 0, y: 0})
   })
 
   describe('step', () => {
+    const expected = 500 * force
     const tests = [
-      {direction: 'ArrowRight', expected: {x: 1, y: 0}},
-      {direction: 'ArrowLeft', expected: {x: -1, y: 0}},
-      {direction: 'ArrowUp', expected: {x: 0, y: -1}},
-      {direction: 'ArrowDown', expected: {x: 0, y: 1}},
+      {direction: 'ArrowRight', expected: {x: expected, y: 0}},
+      {direction: 'ArrowLeft', expected: {x: -expected, y: 0}},
+      {direction: 'ArrowUp', expected: {x: 0, y: -expected}},
+      {direction: 'ArrowDown', expected: {x: 0, y: expected}},
     ]
     for (const test of tests) {
-      it(`allows to move the character ${test.direction}`, () => {
-        const scene = mkScene()
-        scene.step(test.direction)
-        expect(scene.player.position).to.eql(test.expected)
+      it(`allows to change the characters velocity (${test.direction})`, () => {
+        scene.step([test.direction], 500)
+        expect(scene.player.velocity).to.eql(test.expected)
       })
     }
+
+    it('moves the player when no keys are pressed', () => {
+        scene.player.velocity.x = 3
+        scene.step([], 3)
+        expect(scene.player.position).to.eql({x: 9, y: 0})
+    })
+
+    it('works for two keys pressed at once', () => {
+        scene.step(['ArrowRight', 'ArrowUp'], 3000)
+        const expected = 3000 * force * 3000
+        expect(scene.player.position).to.eql({x: expected, y: -expected})
+    })
+
   })
 
   describe('toObjects', () => {
     it('allows to convert the scene into a set of abstract objects', () => {
-      const scene = mkScene()
       const position = {x: 42, y: 23}
       scene.player.position = position
       const objects = scene.toObjects()
