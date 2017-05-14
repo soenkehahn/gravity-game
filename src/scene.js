@@ -3,7 +3,7 @@
 import type {Position, Circle} from './objects'
 
 export type Direction
-  = 'right' | 'left'
+  = 'right' | 'left' | 'up' | 'down'
 
 type Player  = {|
   position: Position,
@@ -29,6 +29,10 @@ export function mkScene(): Scene {
         scene.player.position.x += 1
       } else if (direction === 'left') {
         scene.player.position.x -= 1
+      } else if (direction === 'up') {
+        scene.player.position.y -= 1
+      } else if (direction === 'down') {
+        scene.player.position.y += 1
       }
     },
     toObjects: () => {
