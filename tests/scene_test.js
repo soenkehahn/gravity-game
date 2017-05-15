@@ -58,9 +58,10 @@ describe('scene', () => {
         })
 
         it('works diagonally', () => {
-          scene.planets.push(new Planet(Math.sqrt(2), Math.sqrt(2), 1))
+          const c = Math.sqrt(2) / 2
+          scene.planets.push(new Planet(c, c, 1))
           scene.step([], 1)
-          expect(scene.player.velocity).to.eql({x: Math.sqrt(2), y: Math.sqrt(2)})
+          expect(scene.player.velocity).to.eql({x: c, y: c})
         })
 
         it('works for multiple planets', () => {
@@ -74,6 +75,12 @@ describe('scene', () => {
           scene.planets.push(new Planet(1, 0, 2))
           scene.step([], 1)
           expect(scene.player.velocity).to.eql({x: 2, y: 0})
+        })
+
+        it('decreases with the square of the distance', () => {
+          scene.planets.push(new Planet(2, 0, 1))
+          scene.step([], 1)
+          expect(scene.player.velocity).to.eql({x: 0.25, y: 0})
         })
 
         it('allows to tweak a gravity constant', () => {

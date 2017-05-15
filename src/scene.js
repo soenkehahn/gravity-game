@@ -1,6 +1,6 @@
 // @flow
 
-import {add, scale, difference} from './objects'
+import {add, scale, difference, normalize} from './objects'
 import type {Vector, UIObject} from './objects'
 
 export type Control
@@ -106,8 +106,10 @@ export class Scene {
 
   _addGravityForObject(timeDelta: number, object: {position: Vector, size: number}) {
     const diff = difference(object.position, this.player.position)
-    const velocityChange =
-      scale(diff, timeDelta * object.size * this.gravityConstant)
+    const {direction: gravityDirection, length: distance} = normalize(diff)
+    const scalar =
+      timeDelta * object.size * this.gravityConstant / Math.pow(distance, 2)
+    const velocityChange = scale(gravityDirection, scalar)
     this.player.velocity = add(this.player.velocity, velocityChange)
   }
 

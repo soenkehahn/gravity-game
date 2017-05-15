@@ -26,6 +26,14 @@ export function difference(a: Vector, b: Vector): Vector {
   }
 }
 
+export function normalize(vector: Vector): {direction: Vector, length: number} {
+  const length = Math.sqrt(Math.pow(vector.x, 2) + Math.pow(vector.y, 2))
+  return {
+    direction: scale(vector, 1 / length),
+    length: length,
+  }
+}
+
 export type UIObjectType = 'player' | 'planet' | 'attractor'
 
 export type UIObject = {|
