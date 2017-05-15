@@ -5,8 +5,8 @@ import {mount} from 'enzyme'
 require('jsdom-global')()
 
 import {SceneComponent} from '../../src/ui/scene'
-import type {Direction} from '../../src/scene'
-import {Planet} from '../../src/scene'
+import type {Control} from '../../src/scene'
+import {Planet, allControls} from '../../src/scene'
 
 describe('ui/scene', () => {
 
@@ -67,10 +67,12 @@ describe('ui/scene', () => {
   })
 
   describe('key presses', () => {
-    it('remembers pressed arrow keys', () => {
-      simulateKeyEvent('keydown', 'ArrowLeft')
-      expect(wrapper.state().pressed).to.eql(['ArrowLeft'])
-    })
+    for (const controlKey of allControls) {
+      it(`remembers pressed control keys (${controlKey})`, () => {
+        simulateKeyEvent('keydown', controlKey)
+        expect(wrapper.state().pressed).to.eql([controlKey])
+      })
+    }
 
     it('tracks released keys correctly', () => {
       simulateKeyEvent('keydown', 'ArrowLeft')
@@ -126,9 +128,9 @@ describe('ui/scene', () => {
 
 })
 
-function simulateKeyEvent(type: KeyboardEventTypes, key: Direction) {
+function simulateKeyEvent(type: KeyboardEventTypes, code: Control) {
   const event = new KeyboardEvent(type, {
-    key: key,
+    code: code,
   })
   document.dispatchEvent(event)
 }

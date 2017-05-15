@@ -3,9 +3,9 @@
 const React = require('react')
 global.React = React
 
-import type {ObjectType} from '../objects'
-import {Scene, castToDirection} from '../scene'
-import type {Direction, Level} from '../scene'
+import type {UIObjectType} from '../objects'
+import {Scene, castToControl} from '../scene'
+import type {Control, Level} from '../scene'
 
 type Props = {|
   level?: Level
@@ -13,7 +13,7 @@ type Props = {|
 
 type State = {|
   scene: Scene,
-  pressed: Array<Direction>,
+  pressed: Array<Control>,
   lastTime: ?number,
 |}
 
@@ -38,17 +38,17 @@ export class SceneComponent extends React.Component<void, Props, State> {
 
   componentDidMount() {
     this.addKeyboardEventListener('keydown', event => {
-      const direction = castToDirection(event.key)
-      if (direction) {
+      const control = castToControl(event.code)
+      if (control) {
         const state = this.state
-        state.pressed.push(direction)
+        state.pressed.push(control)
         this.setState(state)
       }
     })
 
     this.addKeyboardEventListener('keyup', event => {
       const state = this.state
-      state.pressed = state.pressed.filter((d) => d !== event.key)
+      state.pressed = state.pressed.filter((d) => d !== event.code)
       this.setState(state)
     })
 
@@ -77,7 +77,7 @@ export class SceneComponent extends React.Component<void, Props, State> {
 
 class Render extends React.Component<void, {scene: Scene}, void> {
 
-  typeColor(type: ObjectType): string {
+  typeColor(type: UIObjectType): string {
     if (type === 'player') {
       return 'blue'
     } else if (type === 'planet') {

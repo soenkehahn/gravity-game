@@ -1,13 +1,22 @@
 // @flow
 
-import type {Vector, Circle} from './objects'
+import type {Vector, UIObject} from './objects'
 
-export type Direction
-  = 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown'
+export type Control
+  = 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown' | 'Space'
 
-export function castToDirection(input: mixed): ?Direction {
-  if (['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(input)) {
-    return (input: any)
+export const allControls: Array<Control> = [
+  'ArrowRight',
+  'ArrowLeft',
+  'ArrowUp',
+  'ArrowDown',
+  'Space'
+]
+
+export function castToControl(input: mixed): ?Control {
+  const a: any = input
+  if (allControls.includes(a)) {
+    return a
   } else {
     return null
   }
@@ -18,8 +27,7 @@ type Player  = {|
   velocity: Vector,
 |}
 
-export class Planet {
-
+class SceneObject {
   position: Vector
   size: number
 
@@ -29,61 +37,79 @@ export class Planet {
   }
 }
 
+export class Planet extends SceneObject {
+}
+
+export class Attractor extends SceneObject {
+}
+
 export type Level = 'empty' | 'test' | 1
 
 export class Scene {
 
-  player: Player
-  planets: Array<Planet>
+  player: Player = {
+    position: {x: 0, y: 0},
+    velocity: {x: 0, y: 0},
+  }
+  planets: Array<Planet> = []
+  attractors: Array<Attractor> = []
+
   controlForce: number = 0.00001
   gravityConstant: number = 0.00001
 
   constructor(level: ?Level = 'empty') {
-    this.player = {
-      position: {x: 0, y: 0},
-      velocity: {x: 0, y: 0},
-    }
-    this.planets = []
     if (level === 'test') {
       this.planets.push(
         new Planet(3, 4, 2)
       )
     } else if (level === 1) {
       this.planets.push(
-        new Planet(3, -4, 2)
+        new Planet(3, -4, 0.4)
+      )
+      this.attractors.push(
+        new Attractor(-2, 5, 0.4)
       )
     }
   }
 
-  step(directions: Array<Direction>, timeDelta: number): void {
-    this._stepVelocity(directions, timeDelta)
-    this._stepGravity(timeDelta)
+  step(controls: Array<Control>, timeDelta: number): void {
+    this._stepVelocity(controls, timeDelta)
+    this._stepGravity(controls, timeDelta)
     this._stepPosition(timeDelta)
   }
 
-  _stepVelocity(directions: Array<Direction>, timeDelta: number) {
-    for (const direction of directions) {
-      if (direction === 'ArrowRight') {
+  _stepVelocity(controls: Array<Control>, timeDelta: number) {
+    for (const control of controls) {
+      if (control === 'ArrowRight') {
         this.player.velocity.x += this.controlForce * timeDelta
-      } else if (direction === 'ArrowLeft') {
+      } else if (control === 'ArrowLeft') {
         this.player.velocity.x -= this.controlForce * timeDelta
-      } else if (direction === 'ArrowUp') {
+      } else if (control === 'ArrowUp') {
         this.player.velocity.y -= this.controlForce * timeDelta
-      } else if (direction === 'ArrowDown') {
+      } else if (control === 'ArrowDown') {
         this.player.velocity.y += this.controlForce * timeDelta
       }
     }
   }
 
-  _stepGravity(timeDelta: number) {
+  _stepGravity(controls: Array<Control>, timeDelta: number) {
     for (const planet of this.planets) {
-      const gravityVector = {
-        x: planet.position.x - this.player.position.x,
-        y: planet.position.y - this.player.position.y,
-      }
-      this.player.velocity.x += gravityVector.x * timeDelta * planet.size * this.gravityConstant
-      this.player.velocity.y += gravityVector.y * timeDelta * planet.size * this.gravityConstant
+      this._addGravityForObject(timeDelta, planet)
     }
+    if (controls.includes('Space')) {
+      for (const attractor of this.attractors) {
+        this._addGravityForObject(timeDelta, attractor)
+      }
+    }
+  }
+
+  _addGravityForObject(timeDelta: number, object: {position: Vector, size: number}) {
+    const gravityVector = {
+      x: object.position.x - this.player.position.x,
+      y: object.position.y - this.player.position.y,
+    }
+    this.player.velocity.x += gravityVector.x * timeDelta * object.size * this.gravityConstant
+    this.player.velocity.y += gravityVector.y * timeDelta * object.size * this.gravityConstant
   }
 
   _stepPosition(timeDelta: number) {
@@ -91,10 +117,13 @@ export class Scene {
     this.player.position.y += this.player.velocity.y * timeDelta
   }
 
-  toObjects(): Array<Circle> {
+  toObjects(): Array<UIObject> {
     const result = []
     for (const planet of this.planets) {
       result.push({type: 'planet', position: planet.position, radius: planet.size})
+    }
+    for (const attractor of this.attractors) {
+      result.push({type: 'attractor', position: attractor.position, radius: attractor.size})
     }
     result.push({type: 'player', position: this.player.position, radius: 1})
     return result

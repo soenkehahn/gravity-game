@@ -2,8 +2,7 @@
 
 import {expect} from 'chai'
 
-import {Scene, Planet} from '../src/scene'
-import type {Direction} from '../src/scene'
+import {Scene, Planet, Attractor} from '../src/scene'
 import type {Vector} from '../src/objects'
 
 describe('scene', () => {
@@ -22,14 +21,14 @@ describe('scene', () => {
   describe('step', () => {
     const expected = 500
     const tests = [
-      {direction: 'ArrowRight', expected: {x: expected, y: 0}},
-      {direction: 'ArrowLeft', expected: {x: -expected, y: 0}},
-      {direction: 'ArrowUp', expected: {x: 0, y: -expected}},
-      {direction: 'ArrowDown', expected: {x: 0, y: expected}},
+      {control: 'ArrowRight', expected: {x: expected, y: 0}},
+      {control: 'ArrowLeft', expected: {x: -expected, y: 0}},
+      {control: 'ArrowUp', expected: {x: 0, y: -expected}},
+      {control: 'ArrowDown', expected: {x: 0, y: expected}},
     ]
     for (const test of tests) {
-      it(`allows to change the characters velocity (${test.direction})`, () => {
-        scene.step([test.direction], 500)
+      it(`allows to change the characters velocity (${test.control})`, () => {
+        scene.step([test.control], 500)
         expect(scene.player.velocity).to.eql(test.expected)
       })
     }
@@ -40,49 +39,67 @@ describe('scene', () => {
         expect(scene.player.position).to.eql({x: 9, y: 0})
     })
 
-    describe('planet gravity', () => {
+    describe('gravity', () => {
       beforeEach(() => {
         scene.gravityConstant = 1
       })
 
-      it('adds velocity according to planet gravity', () => {
-        scene.planets.push(new Planet(1, 0, 1))
-        scene.step([], 1)
-        expect(scene.player.velocity).to.eql({x: 1, y: 0})
+      describe('planet gravity', () => {
+        it('adds velocity according to planet gravity', () => {
+          scene.planets.push(new Planet(1, 0, 1))
+          scene.step([], 1)
+          expect(scene.player.velocity).to.eql({x: 1, y: 0})
+        })
+
+        it('simulates gravity correctly with regard to time delta', () => {
+          scene.planets.push(new Planet(1, 0, 1))
+          scene.step([], 2)
+          expect(scene.player.velocity).to.eql({x: 2, y: 0})
+        })
+
+        it('works diagonally', () => {
+          scene.planets.push(new Planet(Math.sqrt(2), Math.sqrt(2), 1))
+          scene.step([], 1)
+          expect(scene.player.velocity).to.eql({x: Math.sqrt(2), y: Math.sqrt(2)})
+        })
+
+        it('works for multiple planets', () => {
+          scene.planets.push(new Planet(1, 0, 1))
+          scene.planets.push(new Planet(0, 1, 1))
+          scene.step([], 1)
+          expect(scene.player.velocity).to.eql({x: 1, y: 1})
+        })
+
+        it('increases gravity with the planet size', () => {
+          scene.planets.push(new Planet(1, 0, 2))
+          scene.step([], 1)
+          expect(scene.player.velocity).to.eql({x: 2, y: 0})
+        })
+
+        it('allows to tweak a gravity constant', () => {
+          scene.planets.push(new Planet(1, 0, 1))
+          scene.gravityConstant = 0.3
+          scene.step([], 1)
+          expect(scene.player.velocity).to.eql({x: 0.3, y: 0})
+        })
+
       })
 
-      it('simulates gravity correctly with regard to time delta', () => {
-        scene.planets.push(new Planet(1, 0, 1))
-        scene.step([], 2)
-        expect(scene.player.velocity).to.eql({x: 2, y: 0})
-      })
+      describe('attractor gravity', () => {
 
-      it('works diagonally', () => {
-        scene.planets.push(new Planet(Math.sqrt(2), Math.sqrt(2), 1))
-        scene.step([], 1)
-        expect(scene.player.velocity).to.eql({x: Math.sqrt(2), y: Math.sqrt(2)})
-      })
+        it("doesn't attract when space is not pushed", () => {
+          scene.attractors.push(new Attractor(1, 0, 1))
+          scene.step([], 1)
+          expect(scene.player.velocity).to.eql({x: 0, y: 0})
+        })
 
-      it('works for multiple planets', () => {
-        scene.planets.push(new Planet(1, 0, 1))
-        scene.planets.push(new Planet(0, 1, 1))
-        scene.step([], 1)
-        expect(scene.player.velocity).to.eql({x: 1, y: 1})
-      })
+        it("does attract when space is pushed", () => {
+          scene.attractors.push(new Attractor(1, 0, 1))
+          scene.step(['Space'], 1)
+          expect(scene.player.velocity).to.eql({x: 1, y: 0})
+        })
 
-      it('increases gravity with the planet size', () => {
-        scene.planets.push(new Planet(1, 0, 2))
-        scene.step([], 1)
-        expect(scene.player.velocity).to.eql({x: 2, y: 0})
       })
-
-      it('allows to tweak a gravity constant', () => {
-        scene.planets.push(new Planet(1, 0, 1))
-        scene.gravityConstant = 0.3
-        scene.step([], 1)
-        expect(scene.player.velocity).to.eql({x: 0.3, y: 0})
-      })
-
     })
 
     it('works for two keys pressed at once', () => {
@@ -94,7 +111,8 @@ describe('scene', () => {
   })
 
   describe('toObjects', () => {
-    it('allows to convert the scene into a set of abstract objects', () => {
+
+    it('converts the player into an abstract object', () => {
       const position = {x: 42, y: 23}
       scene.player.position = position
       const objects = scene.toObjects()
@@ -106,6 +124,19 @@ describe('scene', () => {
         }
       ])
     })
+
+    it('converts the attractors into abstract objects', () => {
+      scene.attractors = [
+        new Attractor(2, 3, 4)
+      ]
+      const objects = scene.toObjects()
+      expect(objects[0]).to.eql({
+        type: 'attractor',
+        position: {x: 2, y: 3},
+        radius: 4,
+      })
+    })
+
   })
 
 })

@@ -5,10 +5,10 @@ export type Vector = {|
   y: number,
 |}
 
-export type ObjectType = 'player' | 'planet'
+export type UIObjectType = 'player' | 'planet' | 'attractor'
 
-export type Circle = {|
-  type: ObjectType,
+export type UIObject = {|
+  type: UIObjectType,
   position: Vector,
   radius: number,
 |}
