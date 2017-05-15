@@ -6,6 +6,6 @@ export type Vector = {|
 |}
 
 export type Circle = {|
-  type: 'circle',
   position: Vector,
+  radius: number,
 |}

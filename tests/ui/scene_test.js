@@ -6,7 +6,7 @@ require('jsdom-global')()
 
 import {SceneComponent} from '../../src/ui/scene'
 import type {Direction} from '../../src/scene'
-import {force} from '../../src/scene'
+import {force, Planet} from '../../src/scene'
 
 describe('ui/scene', () => {
 
@@ -25,6 +25,12 @@ describe('ui/scene', () => {
 
   let wrapper
 
+  function setPlanets(planets: Array<Planet>): void {
+    const scene = wrapper.state().scene
+    scene.planets = planets
+    wrapper.setState({scene: scene})
+  }
+
   beforeEach(() => {
     wrapper = mount(<SceneComponent />)
   })
@@ -34,10 +40,28 @@ describe('ui/scene', () => {
   })
 
   it('renders the player', () => {
-    expect(wrapper.find('circle').props()).to.include({
-      r: "1",
+    expect(wrapper.find('circle').at(0).props()).to.include({
       cx: 0,
       cy: 0,
+      r: 1,
+    })
+  })
+
+  it('renders planets', () => {
+    setPlanets([new Planet(4, 5, 10)])
+    expect(wrapper.find('circle').at(1).props()).to.include({
+      cx: 4,
+      cy: 5,
+      r: 10,
+    })
+  })
+
+  it('allows to set the level in the props', () => {
+    wrapper.setProps({level: 'test'})
+    expect(wrapper.find('circle').at(1).props()).to.include({
+      cx: 3,
+      cy: 4,
+      r: 2,
     })
   })
 
@@ -64,9 +88,9 @@ describe('ui/scene', () => {
   it('pressing a key has no effect on the scene', () => {
     simulateKeyEvent('keydown', 'ArrowLeft')
     expect(wrapper.find('circle').props()).to.include({
-      r: "1",
       cx: 0,
       cy: 0,
+      r: 1,
     })
   })
 
@@ -81,9 +105,9 @@ describe('ui/scene', () => {
       callRequestAnimationCallback(10000)
       callRequestAnimationCallback(10002)
       expect(wrapper.find('circle').props()).to.include({
-        r: "1",
         cx: 2 * 3,
         cy: 0,
+        r: 1,
       })
     })
 
@@ -92,9 +116,9 @@ describe('ui/scene', () => {
       simulateKeyEvent('keydown', 'ArrowLeft')
       callRequestAnimationCallback(10002)
       expect(wrapper.find('circle').props()).to.include({
-        r: "1",
         cx: -(2 * force * 2),
         cy: 0,
+        r: 1,
       })
     })
   })

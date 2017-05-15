@@ -18,16 +18,40 @@ type Player  = {|
   velocity: Vector,
 |}
 
+export class Planet {
+
+  position: Vector
+  radius: number
+
+  constructor(x: number, y: number, r: number) {
+    this.position = {x, y}
+    this.radius = r
+  }
+}
+
+export type Level = 'empty' | 'test' | 1
+
 export const force = 0.00001
 
 export class Scene {
 
   player: Player
+  planets: Array<Planet>
 
-  constructor() {
+  constructor(level: ?Level = 'empty') {
     this.player = {
       position: {x: 0, y: 0},
       velocity: {x: 0, y: 0},
+    }
+    this.planets = []
+    if (level === 'test') {
+      this.planets.push(
+        new Planet(3, 4, 2)
+      )
+    } else if (level === 1) {
+      this.planets.push(
+        new Planet(3, -4, 2)
+      )
     }
   }
 
@@ -56,8 +80,11 @@ export class Scene {
   }
 
   toObjects(): Array<Circle> {
-    return [
-      {type: 'circle', position: this.player.position}
-    ]
+    const result = []
+    result.push({position: this.player.position, radius: 1})
+    for (const planet of this.planets) {
+      result.push({position: planet.position, radius: planet.radius})
+    }
+    return result
   }
 }

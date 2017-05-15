@@ -4,7 +4,11 @@ const React = require('react')
 global.React = React
 
 import {Scene, castToDirection} from '../scene'
-import type {Direction} from '../scene'
+import type {Direction, Level} from '../scene'
+
+type Props = {|
+  level?: Level
+|}
 
 type State = {|
   scene: Scene,
@@ -12,12 +16,23 @@ type State = {|
   lastTime: ?number,
 |}
 
-export class SceneComponent extends React.Component<void, {}, State> {
+export class SceneComponent extends React.Component<void, Props, State> {
 
-  state = {
-    scene: new Scene(),
-    pressed: [],
-    lastTime: null,
+  state: State
+
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      scene: new Scene(props.level),
+      pressed: [],
+      lastTime: null,
+    }
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (this.props.level !== nextProps.level) {
+      this.setState({scene: new Scene(nextProps.level)})
+    }
   }
 
   componentDidMount() {
@@ -69,7 +84,10 @@ class Render extends React.Component<void, {scene: Scene}, void> {
       <rect x={-10} y={-10} width={20} height={20} fill="gray" />
       {objects.map((object, i) => {
         const position = object.position
-        return <circle key={i} r="1" cx={position.x} cy={position.y} fill="blue" />
+        return <circle key={i}
+          cx={position.x} cy={position.y}
+          r={object.radius}
+          fill="blue" />
       })}
     </svg>
   }
