@@ -2,7 +2,7 @@
 
 import {expect} from 'chai'
 
-import {Scene, force} from '../src/scene'
+import {Scene, Planet, force} from '../src/scene'
 import type {Direction} from '../src/scene'
 import type {Vector} from '../src/objects'
 
@@ -37,6 +37,51 @@ describe('scene', () => {
         scene.player.velocity.x = 3
         scene.step([], 3)
         expect(scene.player.position).to.eql({x: 9, y: 0})
+    })
+
+    describe('planet gravity', () => {
+      beforeEach(() => {
+        scene.gravityConstant = 1
+      })
+
+      it('adds velocity according to planet gravity', () => {
+        scene.planets.push(new Planet(1, 0, 1))
+        scene.step([], 1)
+        expect(scene.player.velocity).to.eql({x: 1, y: 0})
+      })
+
+      it('simulates gravity correctly with regard to time delta', () => {
+        scene.planets.push(new Planet(1, 0, 1))
+        scene.step([], 2)
+        expect(scene.player.velocity).to.eql({x: 2, y: 0})
+      })
+
+      it('works diagonally', () => {
+        scene.planets.push(new Planet(Math.sqrt(2), Math.sqrt(2), 1))
+        scene.step([], 1)
+        expect(scene.player.velocity).to.eql({x: Math.sqrt(2), y: Math.sqrt(2)})
+      })
+
+      it('works for multiple planets', () => {
+        scene.planets.push(new Planet(1, 0, 1))
+        scene.planets.push(new Planet(0, 1, 1))
+        scene.step([], 1)
+        expect(scene.player.velocity).to.eql({x: 1, y: 1})
+      })
+
+      it('increases gravity with the planet size', () => {
+        scene.planets.push(new Planet(1, 0, 2))
+        scene.step([], 1)
+        expect(scene.player.velocity).to.eql({x: 2, y: 0})
+      })
+
+      it('allows to tweak a gravity constant', () => {
+        scene.planets.push(new Planet(1, 0, 1))
+        scene.gravityConstant = 0.3
+        scene.step([], 1)
+        expect(scene.player.velocity).to.eql({x: 0.3, y: 0})
+      })
+
     })
 
     it('works for two keys pressed at once', () => {

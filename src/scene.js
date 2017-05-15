@@ -21,11 +21,11 @@ type Player  = {|
 export class Planet {
 
   position: Vector
-  radius: number
+  size: number
 
   constructor(x: number, y: number, r: number) {
     this.position = {x, y}
-    this.radius = r
+    this.size = r
   }
 }
 
@@ -37,6 +37,7 @@ export class Scene {
 
   player: Player
   planets: Array<Planet>
+  gravityConstant: number
 
   constructor(level: ?Level = 'empty') {
     this.player = {
@@ -53,10 +54,13 @@ export class Scene {
         new Planet(3, -4, 2)
       )
     }
+
+    this.gravityConstant = 0.00001
   }
 
   step(directions: Array<Direction>, timeDelta: number): void {
     this._stepVelocity(directions, timeDelta)
+    this._stepGravity(timeDelta)
     this._stepPosition(timeDelta)
   }
 
@@ -74,6 +78,17 @@ export class Scene {
     }
   }
 
+  _stepGravity(timeDelta: number) {
+    for (const planet of this.planets) {
+      const gravityVector = {
+        x: planet.position.x - this.player.position.x,
+        y: planet.position.y - this.player.position.y,
+      }
+      this.player.velocity.x += gravityVector.x * timeDelta * planet.size * this.gravityConstant
+      this.player.velocity.y += gravityVector.y * timeDelta * planet.size * this.gravityConstant
+    }
+  }
+
   _stepPosition(timeDelta: number) {
     this.player.position.x += this.player.velocity.x * timeDelta
     this.player.position.y += this.player.velocity.y * timeDelta
@@ -82,7 +97,7 @@ export class Scene {
   toObjects(): Array<Circle> {
     const result = []
     for (const planet of this.planets) {
-      result.push({type: 'planet', position: planet.position, radius: planet.radius})
+      result.push({type: 'planet', position: planet.position, radius: planet.size})
     }
     result.push({type: 'player', position: this.player.position, radius: 1})
     return result
