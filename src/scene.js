@@ -56,7 +56,7 @@ export class Scene {
   attractors: Array<Attractor> = []
 
   controlForce: number = 0.00001
-  gravityConstant: number = 0.00001
+  gravityConstant: number = 0.00005
 
   constructor(level: ?Level = 'empty') {
     if (level === 'test') {
@@ -64,11 +64,23 @@ export class Scene {
         new Planet(3, 4, 2)
       )
     } else if (level === 1) {
-      this.planets.push(
-        new Planet(3, -4, 0.4)
-      )
+      this.planets = [
+        new Planet(2, 3, 0.4),
+      ]
       this.attractors.push(
         new Attractor(-2, 5, 0.4)
+      )
+    } else if (level === 2) {
+      this.player.position = {x: -16.2, y: -5.4}
+      this.planets = [
+        new Planet(-16, -5, 0.4),
+        new Planet(-8, -5, 0.4),
+        new Planet(0, -5, 0.4),
+        new Planet(8, -5, 0.4),
+        new Planet(16, -5, 0.4),
+      ]
+      this.attractors.push(
+        new Attractor(-2, 5, 4)
       )
     }
   }

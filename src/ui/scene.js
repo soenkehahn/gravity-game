@@ -109,15 +109,15 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
   render() {
     const objects = this.props.scene.toObjects()
     return <svg
-      viewBox="-10 -10 20 20"
-      width="400" height="400"
+      viewBox="-20 -10 40 20"
+      width="800" height="400"
       xmlns="http://www.w3.org/2000/svg">
 
       <filter id="activeBlur">
         <feGaussianBlur in="SourceGraphic" stdDeviation="0.1" />
       </filter>
 
-      <rect x={-10} y={-10} width={20} height={20} fill="black" />
+      <rect x={-20} y={-10} width={40} height={20} fill="black" />
       {objects.map((o, i) => this._renderUIObject(o, i))}
     </svg>
   }
