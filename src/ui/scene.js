@@ -3,7 +3,7 @@
 const React = require('react')
 global.React = React
 
-import type {UIObjectType} from '../objects'
+import type {UIObject, UIObjectType} from '../objects'
 import {Scene, castToControl} from '../scene'
 import type {Control, Level} from '../scene'
 
@@ -71,19 +71,35 @@ export class SceneComponent extends React.Component<void, Props, State> {
   }
 
   render() {
-    return <Render scene={this.state.scene} />
+    const attractorsActive = this.state.pressed.includes('Space')
+    return <Render scene={this.state.scene} attractorsActive={attractorsActive} />
   }
 }
 
-class Render extends React.Component<void, {scene: Scene}, void> {
+class Render extends React.Component<void, {scene: Scene, attractorsActive: boolean}, void> {
 
-  typeColor(type: UIObjectType): string {
-    if (type === 'player') {
-      return 'blue'
-    } else if (type === 'planet') {
-      return 'yellow'
+  _renderUIObject(o: UIObject, i: number): * {
+    if (o.type === 'player') {
+      return <circle key={i}
+        cx={o.position.x} cy={o.position.y}
+        r={o.radius}
+        fill="blue" />
+    } else if (o.type === 'planet') {
+      return <circle key={i}
+        cx={o.position.x} cy={o.position.y}
+        r={o.radius}
+        fill="yellow" />
+    } else if (o.type === 'attractor') {
+      let active = null
+      if (this.props.attractorsActive) {
+        active = <circle key="active" cx={o.position.x} cy={o.position.y} r={o.radius / 2} fill="white" />
+      }
+      return <g key={i}>
+        <circle key="()" cx={o.position.x} cy={o.position.y} r={o.radius} fill="red" />
+        {active}
+      </g>
     }
-    return 'white'
+    throw new Error('unknown UIObjectType: ' + o.type)
   }
 
   render() {
@@ -93,13 +109,7 @@ class Render extends React.Component<void, {scene: Scene}, void> {
       width="400" height="400"
       xmlns="http://www.w3.org/2000/svg">
       <rect x={-10} y={-10} width={20} height={20} fill="gray" />
-      {objects.map((object, i) => {
-        const position = object.position
-        return <circle key={i}
-          cx={position.x} cy={position.y}
-          r={object.radius}
-          fill={this.typeColor(object.type)} />
-      })}
+      {objects.map((o, i) => this._renderUIObject(o, i))}
     </svg>
   }
 
