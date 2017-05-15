@@ -92,7 +92,11 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
     } else if (o.type === 'attractor') {
       let active = null
       if (this.props.attractorsActive) {
-        active = <circle key="active" cx={o.position.x} cy={o.position.y} r={o.radius / 2} fill="white" />
+        active = <circle key="active"
+          cx={o.position.x} cy={o.position.y}
+          r={o.radius * 1.3}
+          fill="red" filter="url(#activeBlur)"
+          />
       }
       return <g key={i}>
         <circle key="()" cx={o.position.x} cy={o.position.y} r={o.radius} fill="red" />
@@ -108,7 +112,12 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
       viewBox="-10 -10 20 20"
       width="400" height="400"
       xmlns="http://www.w3.org/2000/svg">
-      <rect x={-10} y={-10} width={20} height={20} fill="gray" />
+
+      <filter id="activeBlur">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="0.1" />
+      </filter>
+
+      <rect x={-10} y={-10} width={20} height={20} fill="black" />
       {objects.map((o, i) => this._renderUIObject(o, i))}
     </svg>
   }
