@@ -54,6 +54,7 @@ describe('scene', () => {
       const objects = scene.toObjects()
       expect(objects).to.eql([
         {
+          type: 'player',
           position: position,
           radius: 1,
         }

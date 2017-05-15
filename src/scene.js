@@ -81,10 +81,10 @@ export class Scene {
 
   toObjects(): Array<Circle> {
     const result = []
-    result.push({position: this.player.position, radius: 1})
     for (const planet of this.planets) {
-      result.push({position: planet.position, radius: planet.radius})
+      result.push({type: 'planet', position: planet.position, radius: planet.radius})
     }
+    result.push({type: 'player', position: this.player.position, radius: 1})
     return result
   }
 }

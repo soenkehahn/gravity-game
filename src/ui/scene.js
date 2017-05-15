@@ -3,6 +3,7 @@
 const React = require('react')
 global.React = React
 
+import type {ObjectType} from '../objects'
 import {Scene, castToDirection} from '../scene'
 import type {Direction, Level} from '../scene'
 
@@ -75,6 +76,16 @@ export class SceneComponent extends React.Component<void, Props, State> {
 }
 
 class Render extends React.Component<void, {scene: Scene}, void> {
+
+  typeColor(type: ObjectType): string {
+    if (type === 'player') {
+      return 'blue'
+    } else if (type === 'planet') {
+      return 'yellow'
+    }
+    return 'white'
+  }
+
   render() {
     const objects = this.props.scene.toObjects()
     return <svg
@@ -87,8 +98,9 @@ class Render extends React.Component<void, {scene: Scene}, void> {
         return <circle key={i}
           cx={position.x} cy={position.y}
           r={object.radius}
-          fill="blue" />
+          fill={this.typeColor(object.type)} />
       })}
     </svg>
   }
+
 }

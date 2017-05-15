@@ -49,7 +49,7 @@ describe('ui/scene', () => {
 
   it('renders planets', () => {
     setPlanets([new Planet(4, 5, 10)])
-    expect(wrapper.find('circle').at(1).props()).to.include({
+    expect(wrapper.find('circle').at(0).props()).to.include({
       cx: 4,
       cy: 5,
       r: 10,
@@ -58,7 +58,7 @@ describe('ui/scene', () => {
 
   it('allows to set the level in the props', () => {
     wrapper.setProps({level: 'test'})
-    expect(wrapper.find('circle').at(1).props()).to.include({
+    expect(wrapper.find('circle').at(0).props()).to.include({
       cx: 3,
       cy: 4,
       r: 2,
