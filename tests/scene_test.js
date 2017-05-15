@@ -2,7 +2,7 @@
 
 import {expect} from 'chai'
 
-import {Scene, Planet, force} from '../src/scene'
+import {Scene, Planet} from '../src/scene'
 import type {Direction} from '../src/scene'
 import type {Vector} from '../src/objects'
 
@@ -12,6 +12,7 @@ describe('scene', () => {
 
   beforeEach(() => {
     scene = new Scene()
+    scene.controlForce = 1
   })
 
   it('contains the player', () => {
@@ -19,7 +20,7 @@ describe('scene', () => {
   })
 
   describe('step', () => {
-    const expected = 500 * force
+    const expected = 500
     const tests = [
       {direction: 'ArrowRight', expected: {x: expected, y: 0}},
       {direction: 'ArrowLeft', expected: {x: -expected, y: 0}},
@@ -86,7 +87,7 @@ describe('scene', () => {
 
     it('works for two keys pressed at once', () => {
         scene.step(['ArrowRight', 'ArrowUp'], 3000)
-        const expected = 3000 * force * 3000
+        const expected = 3000 * 3000
         expect(scene.player.position).to.eql({x: expected, y: -expected})
     })
 

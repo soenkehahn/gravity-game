@@ -6,7 +6,7 @@ require('jsdom-global')()
 
 import {SceneComponent} from '../../src/ui/scene'
 import type {Direction} from '../../src/scene'
-import {force, Planet} from '../../src/scene'
+import {Planet} from '../../src/scene'
 
 describe('ui/scene', () => {
 
@@ -33,6 +33,7 @@ describe('ui/scene', () => {
 
   beforeEach(() => {
     wrapper = mount(<SceneComponent />)
+    wrapper.state().scene.controlForce = 1
   })
 
   afterEach(() => {
@@ -116,7 +117,7 @@ describe('ui/scene', () => {
       simulateKeyEvent('keydown', 'ArrowLeft')
       callRequestAnimationCallback(10002)
       expect(wrapper.find('circle').props()).to.include({
-        cx: -(2 * force * 2),
+        cx: -(2 * 2),
         cy: 0,
         r: 1,
       })

@@ -31,13 +31,12 @@ export class Planet {
 
 export type Level = 'empty' | 'test' | 1
 
-export const force = 0.00001
-
 export class Scene {
 
   player: Player
   planets: Array<Planet>
-  gravityConstant: number
+  controlForce: number = 0.00001
+  gravityConstant: number = 0.00001
 
   constructor(level: ?Level = 'empty') {
     this.player = {
@@ -54,8 +53,6 @@ export class Scene {
         new Planet(3, -4, 2)
       )
     }
-
-    this.gravityConstant = 0.00001
   }
 
   step(directions: Array<Direction>, timeDelta: number): void {
@@ -67,13 +64,13 @@ export class Scene {
   _stepVelocity(directions: Array<Direction>, timeDelta: number) {
     for (const direction of directions) {
       if (direction === 'ArrowRight') {
-        this.player.velocity.x += force * timeDelta
+        this.player.velocity.x += this.controlForce * timeDelta
       } else if (direction === 'ArrowLeft') {
-        this.player.velocity.x -= force * timeDelta
+        this.player.velocity.x -= this.controlForce * timeDelta
       } else if (direction === 'ArrowUp') {
-        this.player.velocity.y -= force * timeDelta
+        this.player.velocity.y -= this.controlForce * timeDelta
       } else if (direction === 'ArrowDown') {
-        this.player.velocity.y += force * timeDelta
+        this.player.velocity.y += this.controlForce * timeDelta
       }
     }
   }
