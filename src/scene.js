@@ -1,5 +1,6 @@
 // @flow
 
+import {add, scale, difference} from './objects'
 import type {Vector, UIObject} from './objects'
 
 export type Control
@@ -104,12 +105,10 @@ export class Scene {
   }
 
   _addGravityForObject(timeDelta: number, object: {position: Vector, size: number}) {
-    const gravityVector = {
-      x: object.position.x - this.player.position.x,
-      y: object.position.y - this.player.position.y,
-    }
-    this.player.velocity.x += gravityVector.x * timeDelta * object.size * this.gravityConstant
-    this.player.velocity.y += gravityVector.y * timeDelta * object.size * this.gravityConstant
+    const diff = difference(object.position, this.player.position)
+    const velocityChange =
+      scale(diff, timeDelta * object.size * this.gravityConstant)
+    this.player.velocity = add(this.player.velocity, velocityChange)
   }
 
   _stepPosition(timeDelta: number) {
