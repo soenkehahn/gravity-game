@@ -2,6 +2,7 @@
 
 import {equals, add, scale, difference, normalize} from './objects'
 import type {Vector, UIObject} from './objects'
+import {getLevel} from './real_levels'
 
 export type Control
   = 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown' | 'Space'
@@ -79,17 +80,9 @@ export class Scene {
       this.planets.push(
         new Planet({x: 3, y: 4}, 1)
       )
-
-    } else if (level === 1) {
-      this.player.position = {x: -5, y: 0}
-      this.planets = [
-        new Planet({x: -5, y: 0}, 0.1),
-      ]
-      this.endPlanets = [
-        new EndPlanet({x: 5, y: 0}, 1),
-      ]
+    } else {
+      getLevel(this, level)
     }
-
   }
 
   step(controls: Array<Control>, timeDelta: number): void {

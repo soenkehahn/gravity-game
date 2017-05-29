@@ -1,6 +1,7 @@
 test: dist_tests/tests/scene_test.js dist_tests/src/scene.js \
 	dist_tests/tests/ui/scene_test.js dist_tests/src/ui/scene.js \
-	dist_tests/tests/objects_test.js dist_tests/src/objects.js
+	dist_tests/tests/objects_test.js dist_tests/src/objects.js \
+	dist_tests/src/real_levels.js
 
 	mocha \
 		dist_tests/tests/objects_test.js \
