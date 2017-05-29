@@ -109,6 +109,9 @@ export class Scene {
   _addGravityForObject(timeDelta: number, object: {position: Vector, size: number}) {
     const diff = difference(object.position, this.player.position)
     const {direction: gravityDirection, length: distance} = normalize(diff)
+    if (distance === 0) {
+      return
+    }
     const distanceScalar = distance < 2 ? distance : 0
     const scalar = timeDelta * object.size * this.gravityConstant * distanceScalar
     const velocityChange = scale(gravityDirection, scalar)
