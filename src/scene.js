@@ -44,9 +44,6 @@ class SceneObject {
 export class Planet extends SceneObject {
 }
 
-export class Attractor extends SceneObject {
-}
-
 export class EndPlanet extends SceneObject {
   step(scene: Scene): void {
     const {length: distance} = normalize(difference(scene.player.position, this.position))
@@ -69,7 +66,6 @@ export class Scene {
   }
   planets: Array<Planet> = []
   planetInfluence: boolean = false
-  attractors: Array<Attractor> = []
   endPlanets: Array<EndPlanet> = []
 
   controlForce: number = 0.00001
@@ -114,11 +110,6 @@ export class Scene {
     for (const planet of this.planets) {
       this._addGravityForObject(timeDelta, planet)
     }
-    if (controls.includes('Space')) {
-      for (const attractor of this.attractors) {
-        this._addGravityForObject(timeDelta, attractor)
-      }
-    }
   }
 
   _addGravityForObject(timeDelta: number, object: {position: Vector, size: number}) {
@@ -145,9 +136,6 @@ export class Scene {
     const result = []
     for (const planet of this.planets) {
       result.push({type: 'planet', position: planet.position, radius: planet.size})
-    }
-    for (const attractor of this.attractors) {
-      result.push({type: 'attractor', position: attractor.position, radius: attractor.size})
     }
     for (const endPlanet of this.endPlanets) {
       result.push({type: 'end planet', position: endPlanet.position, radius: endPlanet.size})

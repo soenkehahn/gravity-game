@@ -119,19 +119,6 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
           fill="yellow"
           fillOpacity={0.5} />
       </g>
-    } else if (o.type === 'attractor') {
-      let active = null
-      if (this.props.attractorsActive) {
-        active = <circle key="active"
-          cx={o.position.x} cy={o.position.y}
-          r={o.radius * 1.3}
-          fill="red" filter="url(#activeBlur)"
-          />
-      }
-      return <g key={i}>
-        <circle key="()" cx={o.position.x} cy={o.position.y} r={o.radius} fill="red" />
-        {active}
-      </g>
     }
     throw new Error('unknown UIObjectType: ' + o.type)
   }

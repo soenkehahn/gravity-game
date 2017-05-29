@@ -2,7 +2,7 @@
 
 import {expect} from 'chai'
 
-import {Scene, Planet, Attractor, EndPlanet} from '../src/scene'
+import {Scene, Planet, EndPlanet} from '../src/scene'
 import type {Vector} from '../src/objects'
 
 describe('scene', () => {
@@ -117,21 +117,6 @@ describe('scene', () => {
 
       })
 
-      describe('attractor gravity', () => {
-
-        it("doesn't attract when space is not pushed", () => {
-          scene.attractors.push(new Attractor({x: 1, y: 0}, 1))
-          scene.step([], 1)
-          expect(scene.player.velocity).to.eql({x: 0, y: 0})
-        })
-
-        it("does attract when space is pushed", () => {
-          scene.attractors.push(new Attractor({x: 1, y: 0}, 1))
-          scene.step(['Space'], 1)
-          expect(scene.player.velocity).to.eql({x: 1, y: 0})
-        })
-
-      })
     })
 
     it('works for two keys pressed at once', () => {
@@ -183,18 +168,6 @@ describe('scene', () => {
           radius: 1,
         }
       ])
-    })
-
-    it('converts the attractors into abstract objects', () => {
-      scene.attractors = [
-        new Attractor({x: 2, y: 3}, 4)
-      ]
-      const objects = scene.toObjects()
-      expect(objects[0]).to.eql({
-        type: 'attractor',
-        position: {x: 2, y: 3},
-        radius: 4,
-      })
     })
 
     it('converts the end planets into abstract objects', () => {
