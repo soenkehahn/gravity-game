@@ -67,6 +67,8 @@ export class SceneComponent extends React.Component<void, Props, State> {
       scene.step(this.state.pressed, now - this.state.lastTime)
       if (scene.state === 'success') {
         this._nextLevel()
+      } else if (this.state.pressed.includes('Enter')) {
+        this.setState(this._newScene(this.state.level))
       } else {
         this.setState({scene: scene, lastTime: now})
       }
