@@ -77,10 +77,16 @@ describe('scene', () => {
           expect(scene.player.velocity).to.eql({x: 2, y: 0})
         })
 
-        it('decreases with the square of the distance', () => {
-          scene.planets.push(new Planet(2, 0, 1))
+        it('increases linearly with the distance', () => {
+          scene.planets.push(new Planet(1.5, 0, 1))
           scene.step([], 1)
-          expect(scene.player.velocity).to.eql({x: 0.25, y: 0})
+          expect(scene.player.velocity).to.eql({x: 1.5, y: 0})
+        })
+
+        it('exerts no force beyond a distance of 2', () => {
+          scene.planets.push(new Planet(2.1, 0, 1))
+          scene.step([], 1)
+          expect(scene.player.velocity).to.eql({x: 0, y: 0})
         })
 
         it('allows to tweak a gravity constant', () => {
