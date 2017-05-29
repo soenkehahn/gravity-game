@@ -81,7 +81,7 @@ export class Scene {
     } else if (level === 1) {
       this.player.position = {x: -5, y: 0}
       this.planets = [
-        new Planet({x: -5, y: 0}, 1),
+        new Planet({x: -5, y: 0}, 0.1),
       ]
       this.endPlanets = [
         new EndPlanet({x: 5, y: 0}, 1),
