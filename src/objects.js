@@ -41,7 +41,12 @@ export function normalize(vector: Vector): {direction: Vector, length: number} {
 export type UIObjectType = 'player' | 'planet' | 'attractor' | 'end planet'
 
 export type UIObject = {|
-  type: UIObjectType,
+  type: 'player' | 'end planet',
   position: Vector,
   radius: number,
+|} | {|
+  type: 'planet',
+  position: Vector,
+  radius: number,
+  influenceSize: number,
 |}

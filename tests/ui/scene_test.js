@@ -59,6 +59,15 @@ describe('ui/scene', () => {
     })
 
     it('renders influence spheres of planets', () => {
+      setPlanets([new Planet({x: 4, y: 5}, 10, 2.4)])
+      expectElementWithProps(wrapper.find('circle'), {
+        cx: 4,
+        cy: 5,
+        r: 2.4,
+      })
+    })
+
+    it('uses a default influence size of 2', () => {
       setPlanets([new Planet({x: 4, y: 5}, 10)])
       expectElementWithProps(wrapper.find('circle'), {
         cx: 4,

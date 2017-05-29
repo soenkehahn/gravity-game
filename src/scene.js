@@ -43,13 +43,20 @@ class SceneObject {
 
 export class Planet extends SceneObject {
 
+  influenceSize: number
+
+  constructor(position: Vector, size: number, influenceSize: number = 2) {
+    super(position, size)
+    this.influenceSize = influenceSize
+  }
+
   step(scene: Scene, timeDelta: number) {
     const diff = difference(this.position, scene.player.position)
     const {direction: gravityDirection, length: distance} = normalize(diff)
-    if (distance < 2) {
+    if (distance < this.influenceSize) {
       scene.planetInfluence = true
     }
-    if (distance === 0 || distance >= 2) {
+    if (distance === 0 || distance >= this.influenceSize) {
       return
     }
     const distanceScalar = distance
@@ -130,7 +137,7 @@ export class Scene {
   toObjects(): Array<UIObject> {
     const result = []
     for (const planet of this.planets) {
-      result.push({type: 'planet', position: planet.position, radius: planet.size})
+      result.push({type: 'planet', position: planet.position, radius: planet.size, influenceSize: planet.influenceSize})
     }
     for (const endPlanet of this.endPlanets) {
       result.push({type: 'end planet', position: endPlanet.position, radius: endPlanet.size})

@@ -120,7 +120,7 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
           fill="yellow" />
         <circle key="influence"
           cx={o.position.x} cy={o.position.y}
-          r={2}
+          r={o.influenceSize}
           fill="yellow"
           fillOpacity={0.5} />
       </g>

@@ -43,6 +43,12 @@ describe('scene', () => {
           scene.step([test.control], 500)
           expect(scene.player.velocity).to.eql({x: 0, y: 0})
         })
+
+        it("allows to specify the size of a planet's influence", () => {
+          scene.planets = [new Planet({x: 0, y: 10}, 0, 12)]
+          scene.step([test.control], 500)
+          expect(scene.player.velocity).to.eql(test.expected)
+        })
       })
     }
 
