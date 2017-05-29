@@ -42,6 +42,22 @@ class SceneObject {
 }
 
 export class Planet extends SceneObject {
+
+  step(scene: Scene, timeDelta: number) {
+    const diff = difference(this.position, scene.player.position)
+    const {direction: gravityDirection, length: distance} = normalize(diff)
+    if (distance < 2) {
+      scene.planetInfluence = true
+    }
+    if (distance === 0 || distance >= 2) {
+      return
+    }
+    const distanceScalar = distance
+    const scalar = timeDelta * this.size * scene.gravityConstant * distanceScalar
+    const velocityChange = scale(gravityDirection, scalar)
+    scene.player.velocity = add(scene.player.velocity, velocityChange)
+  }
+
 }
 
 export class EndPlanet extends SceneObject {
@@ -84,10 +100,10 @@ export class Scene {
 
   step(controls: Array<Control>, timeDelta: number): void {
     this.planetInfluence = false
-    this._stepGravity(controls, timeDelta)
+    this.planets.map((planet) => planet.step(this, timeDelta))
+    this.endPlanets.map((endPlanet) => endPlanet.step(this))
     this._stepControlVelocity(controls, timeDelta)
     this._stepPosition(timeDelta)
-    this.endPlanets.map((endPlanet) => endPlanet.step(this))
   }
 
   _stepControlVelocity(controls: Array<Control>, timeDelta: number) {
@@ -104,27 +120,6 @@ export class Scene {
         }
       }
     }
-  }
-
-  _stepGravity(controls: Array<Control>, timeDelta: number) {
-    for (const planet of this.planets) {
-      this._addGravityForObject(timeDelta, planet)
-    }
-  }
-
-  _addGravityForObject(timeDelta: number, object: {position: Vector, size: number}) {
-    const diff = difference(object.position, this.player.position)
-    const {direction: gravityDirection, length: distance} = normalize(diff)
-    if (distance < 2) {
-      this.planetInfluence = true
-    }
-    if (distance === 0) {
-      return
-    }
-    const distanceScalar = distance < 2 ? distance : 0
-    const scalar = timeDelta * object.size * this.gravityConstant * distanceScalar
-    const velocityChange = scale(gravityDirection, scalar)
-    this.player.velocity = add(this.player.velocity, velocityChange)
   }
 
   _stepPosition(timeDelta: number) {
