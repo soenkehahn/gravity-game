@@ -2,7 +2,7 @@
 
 import {expect} from 'chai'
 
-import {Scene, Planet, Attractor} from '../src/scene'
+import {Scene, Planet, Attractor, EndPlanet} from '../src/scene'
 import type {Vector} from '../src/objects'
 
 describe('scene', () => {
@@ -129,6 +129,33 @@ describe('scene', () => {
 
   })
 
+  describe('end planets', () => {
+    it('switches to the success state when touching an end planet', () => {
+      scene.endPlanets = [new EndPlanet({x: 1, y: 0}, 1)]
+      expect(scene.state).to.eql('playing')
+      scene.step(['ArrowRight'], 1)
+      expect(scene.state).to.eql('success')
+    })
+
+    it("stays in state 'playing' if they two objects don't touch", () => {
+      scene.endPlanets = [new EndPlanet({x: 2.1, y: 0}, 1)]
+      scene.step([], 1)
+      expect(scene.state).to.eql('playing')
+    })
+
+    it("switches to 'success' if the player and the end planet touch slightly", () => {
+      scene.endPlanets = [new EndPlanet({x: 0.9, y: 0}, 1)]
+      scene.step([], 1)
+      expect(scene.state).to.eql('success')
+    })
+
+    it('works with different end planet radiuses', () => {
+      scene.endPlanets = [new EndPlanet({x: 2.9, y: 0}, 2)]
+      scene.step([], 1)
+      expect(scene.state).to.eql('success')
+    })
+  })
+
   describe('toObjects', () => {
 
     it('converts the player into an abstract object', () => {
@@ -153,6 +180,18 @@ describe('scene', () => {
         type: 'attractor',
         position: {x: 2, y: 3},
         radius: 4,
+      })
+    })
+
+    it('converts the end planets into abstract objects', () => {
+      scene.endPlanets = [
+        new EndPlanet({x: 1, y: 2}, 3)
+      ]
+      const objects = scene.toObjects()
+      expect(objects[0]).to.eql({
+        type: 'end planet',
+        position: {x: 1, y: 2},
+        radius: 3,
       })
     })
 

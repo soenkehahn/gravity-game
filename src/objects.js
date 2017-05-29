@@ -5,6 +5,10 @@ export type Vector = {|
   y: number,
 |}
 
+export function equals(a: Vector, b: Vector): boolean {
+  return (a.x === b.x) && (a.y === b.y)
+}
+
 export function add(a: Vector, b: Vector): Vector {
   return {
     x: a.x + b.x,
@@ -34,7 +38,7 @@ export function normalize(vector: Vector): {direction: Vector, length: number} {
   }
 }
 
-export type UIObjectType = 'player' | 'planet' | 'attractor'
+export type UIObjectType = 'player' | 'planet' | 'attractor' | 'end planet'
 
 export type UIObject = {|
   type: UIObjectType,

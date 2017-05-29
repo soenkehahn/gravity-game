@@ -2,9 +2,23 @@
 
 import {expect} from 'chai'
 
-import {add, scale, difference, normalize} from '../src/objects'
+import {equals, add, scale, difference, normalize} from '../src/objects'
 
 describe('objects', () => {
+  describe('equals', () => {
+    it('identifies equal vectors', () => {
+      const a = {x: 2, y: 3}
+      const b = {x: 2, y: 3}
+      expect(equals(a, b)).to.be.true
+    })
+
+    it('identifies unequal vectors', () => {
+      const a = {x: 2, y: 3}
+      const b = {x: 2, y: 4}
+      expect(equals(a, b)).to.be.false
+    })
+  })
+
   describe('add', () => {
     it('adds componentwise', () => {
       const a = {x: 2, y: 3}

@@ -72,7 +72,11 @@ export class SceneComponent extends React.Component<void, Props, State> {
 
   render() {
     const attractorsActive = this.state.pressed.includes('Space')
-    return <Render scene={this.state.scene} attractorsActive={attractorsActive} />
+    return <div>
+      <Render scene={this.state.scene} attractorsActive={attractorsActive} />
+      <br/>
+      {this.state.scene.state}
+    </div>
   }
 }
 
@@ -84,6 +88,11 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
         cx={o.position.x} cy={o.position.y}
         r={o.radius}
         fill="blue" />
+    } else if (o.type === 'end planet') {
+      return <circle key={i}
+        cx={o.position.x} cy={o.position.y}
+        r={o.radius}
+        fill="green" />
     } else if (o.type === 'planet') {
       return <g key={i}>
         <circle key="planet"

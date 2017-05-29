@@ -1,6 +1,6 @@
 // @flow
 
-import {add, scale, difference, normalize} from './objects'
+import {equals, add, scale, difference, normalize} from './objects'
 import type {Vector, UIObject} from './objects'
 
 export type Control
@@ -44,11 +44,22 @@ export class Planet extends SceneObject {
 export class Attractor extends SceneObject {
 }
 
+export class EndPlanet extends SceneObject {
+  step(scene: Scene): void {
+    const {length: distance} = normalize(difference(scene.player.position, this.position))
+    if (distance < (1 + this.size)) {
+      scene.state = 'success'
+    }
+  }
+}
+
 export type Level =
   'empty' | 'test' |
   1
 
 export class Scene {
+
+  state: 'playing' | 'success' = 'playing'
 
   player: Player = {
     position: {x: 0, y: 0},
@@ -56,6 +67,7 @@ export class Scene {
   }
   planets: Array<Planet> = []
   attractors: Array<Attractor> = []
+  endPlanets: Array<EndPlanet> = []
 
   controlForce: number = 0.00001
   gravityConstant: number = 0.00005
@@ -71,6 +83,9 @@ export class Scene {
       this.planets = [
         new Planet({x: -5, y: 0}, 1),
       ]
+      this.endPlanets = [
+        new EndPlanet({x: 5, y: 0}, 1),
+      ]
     }
 
   }
@@ -79,6 +94,7 @@ export class Scene {
     this._stepVelocity(controls, timeDelta)
     this._stepGravity(controls, timeDelta)
     this._stepPosition(timeDelta)
+    this.endPlanets.map((endPlanet) => endPlanet.step(this))
   }
 
   _stepVelocity(controls: Array<Control>, timeDelta: number) {
@@ -130,6 +146,9 @@ export class Scene {
     }
     for (const attractor of this.attractors) {
       result.push({type: 'attractor', position: attractor.position, radius: attractor.size})
+    }
+    for (const endPlanet of this.endPlanets) {
+      result.push({type: 'end planet', position: endPlanet.position, radius: endPlanet.size})
     }
     result.push({type: 'player', position: this.player.position, radius: 1})
     return result
