@@ -1,7 +1,8 @@
 // @flow
 
-import {equals, add, scale, difference, normalize} from './objects'
 import type {Vector, UIObject} from './objects'
+import {equals, add, scale, difference, normalize} from './objects'
+import type {RealLevel} from './real_levels'
 import {getLevel} from './real_levels'
 
 export type Control
@@ -55,8 +56,7 @@ export class EndPlanet extends SceneObject {
 }
 
 export type Level =
-  'empty' | 'test' |
-  1
+  'empty' | 'test' | RealLevel
 
 export class Scene {
 

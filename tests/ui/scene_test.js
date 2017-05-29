@@ -31,111 +31,128 @@ describe('ui/scene', () => {
     wrapper.setState({scene: scene})
   }
 
-  beforeEach(() => {
-    wrapper = mount(<SceneComponent level="empty" />)
-    wrapper.state().scene.controlForce = 1
-  })
-
   afterEach(() => {
     requestAnimationFrameCallbacks = []
   })
 
-  it('renders the player', () => {
-    expectElementWithProps(wrapper.find('circle'), {
-      cx: 0,
-      cy: 0,
-      r: 1,
-    })
-  })
-
-  it('renders planets', () => {
-    setPlanets([new Planet({x: 4, y: 5}, 10)])
-    expectElementWithProps(wrapper.find('circle'), {
-      cx: 4,
-      cy: 5,
-      r: 10,
-    })
-  })
-
-  it('renders influence spheres of planets', () => {
-    setPlanets([new Planet({x: 4, y: 5}, 10)])
-    expectElementWithProps(wrapper.find('circle'), {
-      cx: 4,
-      cy: 5,
-      r: 2,
-    })
-  })
-
-  it('allows to set the level in the props', () => {
-    wrapper.setProps({level: 'test'})
-    expectElementWithProps(wrapper.find('circle'), {
-      cx: 3,
-      cy: 4,
-      r: 1,
-    })
-  })
-
-  describe('key presses', () => {
-    for (const controlKey of allControls) {
-      it(`remembers pressed control keys (${controlKey})`, () => {
-        simulateKeyEvent('keydown', controlKey)
-        expect(wrapper.state().pressed).to.eql([controlKey])
-      })
-    }
-
-    it('tracks released keys correctly', () => {
-      simulateKeyEvent('keydown', 'ArrowLeft')
-      simulateKeyEvent('keyup', 'ArrowLeft')
-      expect(wrapper.state().pressed).to.eql([])
+  describe('when playing the empty level', () => {
+    beforeEach(() => {
+      wrapper = mount(<SceneComponent startLevel="empty" />)
+      wrapper.state().scene.controlForce = 1
     })
 
-    it('tracks more than one key correctly', () => {
-      simulateKeyEvent('keydown', 'ArrowLeft')
-      simulateKeyEvent('keydown', 'ArrowDown')
-      simulateKeyEvent('keyup', 'ArrowLeft')
-      expect(wrapper.state().pressed).to.eql(['ArrowDown'])
-    })
-  })
-
-  it('pressing a key has no effect on the scene', () => {
-    simulateKeyEvent('keydown', 'ArrowLeft')
-    expectElementWithProps(wrapper.find('circle'), {
-      cx: 0,
-      cy: 0,
-      r: 1,
-    })
-  })
-
-  describe('when calling requestAnimationFrame callbacks', () => {
-    it('saves the last time at the first call', () => {
-      callRequestAnimationCallback(10000)
-      expect(wrapper.state().lastTime).to.eql(10000)
-    })
-
-    it('moves the player by the current velocity', () => {
-      wrapper.state().scene.player.velocity.x = 3
-      callRequestAnimationCallback(10000)
-      callRequestAnimationCallback(10002)
+    it('renders the player', () => {
       expectElementWithProps(wrapper.find('circle'), {
-        cx: 2 * 3,
+        cx: 0,
         cy: 0,
         r: 1,
       })
     })
 
-    it('works through keypresses', () => {
-      setPlanets([new Planet({x: 0, y: 0}, 0)])
-      callRequestAnimationCallback(10000)
-      simulateKeyEvent('keydown', 'ArrowLeft')
-      callRequestAnimationCallback(10002)
+    it('renders planets', () => {
+      setPlanets([new Planet({x: 4, y: 5}, 10)])
       expectElementWithProps(wrapper.find('circle'), {
-        cx: -(2 * 2),
+        cx: 4,
+        cy: 5,
+        r: 10,
+      })
+    })
+
+    it('renders influence spheres of planets', () => {
+      setPlanets([new Planet({x: 4, y: 5}, 10)])
+      expectElementWithProps(wrapper.find('circle'), {
+        cx: 4,
+        cy: 5,
+        r: 2,
+      })
+    })
+
+    describe('key presses', () => {
+      for (const controlKey of allControls) {
+        it(`remembers pressed control keys (${controlKey})`, () => {
+          simulateKeyEvent('keydown', controlKey)
+          expect(wrapper.state().pressed).to.eql([controlKey])
+        })
+      }
+
+      it('tracks released keys correctly', () => {
+        simulateKeyEvent('keydown', 'ArrowLeft')
+        simulateKeyEvent('keyup', 'ArrowLeft')
+        expect(wrapper.state().pressed).to.eql([])
+      })
+
+      it('tracks more than one key correctly', () => {
+        simulateKeyEvent('keydown', 'ArrowLeft')
+        simulateKeyEvent('keydown', 'ArrowDown')
+        simulateKeyEvent('keyup', 'ArrowLeft')
+        expect(wrapper.state().pressed).to.eql(['ArrowDown'])
+      })
+    })
+
+    it('pressing a key has no effect on the scene', () => {
+      simulateKeyEvent('keydown', 'ArrowLeft')
+      expectElementWithProps(wrapper.find('circle'), {
+        cx: 0,
         cy: 0,
         r: 1,
       })
     })
+
+    describe('when calling requestAnimationFrame callbacks', () => {
+      it('saves the last time at the first call', () => {
+        callRequestAnimationCallback(10000)
+        expect(wrapper.state().lastTime).to.eql(10000)
+      })
+
+      it('moves the player by the current velocity', () => {
+        wrapper.state().scene.player.velocity.x = 3
+        callRequestAnimationCallback(10000)
+        callRequestAnimationCallback(10002)
+        expectElementWithProps(wrapper.find('circle'), {
+          cx: 2 * 3,
+          cy: 0,
+          r: 1,
+        })
+      })
+
+      it('works through keypresses', () => {
+        setPlanets([new Planet({x: 0, y: 0}, 0)])
+        callRequestAnimationCallback(10000)
+        simulateKeyEvent('keydown', 'ArrowLeft')
+        callRequestAnimationCallback(10002)
+        expectElementWithProps(wrapper.find('circle'), {
+          cx: -(2 * 2),
+          cy: 0,
+          r: 1,
+        })
+      })
+    })
+
   })
 
+  describe('when playing level 1', () => {
+    beforeEach(() => {
+      wrapper = mount(<SceneComponent startLevel={1} />)
+    })
+
+    describe('when a level is solved', () => {
+      beforeEach(() => {
+        callRequestAnimationCallback(10000)
+        const state = wrapper.state()
+        state.scene.state = 'success'
+        wrapper.setState(state)
+        callRequestAnimationCallback(10002)
+      })
+
+      it('advances the level when solved', () => {
+        expect(wrapper.state().level).to.eql(2)
+      })
+
+      it("resets 'lastTime' when advancing to the next level", () => {
+        expect(wrapper.state().lastTime).to.eql(null)
+      })
+    })
+  })
 })
 
 function simulateKeyEvent(type: KeyboardEventTypes, code: Control) {

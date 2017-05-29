@@ -8,10 +8,11 @@ import {Scene, castToControl} from '../scene'
 import type {Control, Level} from '../scene'
 
 type Props = {|
-  level: Level
+  startLevel: Level
 |}
 
 type State = {|
+  level: Level,
   scene: Scene,
   pressed: Array<Control>,
   lastTime: ?number,
@@ -23,16 +24,15 @@ export class SceneComponent extends React.Component<void, Props, State> {
 
   constructor(props: Props) {
     super(props)
-    this.state = {
-      scene: new Scene(props.level),
-      pressed: [],
-      lastTime: null,
-    }
+    this.state = this._newScene(props.startLevel)
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (this.props.level !== nextProps.level) {
-      this.setState({scene: new Scene(nextProps.level)})
+  _newScene(level: Level): State {
+    return {
+      level: level,
+      scene: new Scene(level),
+      pressed: [],
+      lastTime: null,
     }
   }
 
@@ -65,9 +65,19 @@ export class SceneComponent extends React.Component<void, Props, State> {
     } else {
       const scene = this.state.scene
       scene.step(this.state.pressed, now - this.state.lastTime)
-      this.setState({scene: scene, lastTime: now})
+      if (scene.state === 'success') {
+        this._nextLevel()
+      } else {
+        this.setState({scene: scene, lastTime: now})
+      }
     }
     requestAnimationFrame((now) => this.loop(now))
+  }
+
+  _nextLevel() {
+    if (typeof(this.state.level) === 'number') {
+      this.setState(this._newScene(this.state.level + 1))
+    }
   }
 
   render() {
@@ -76,6 +86,8 @@ export class SceneComponent extends React.Component<void, Props, State> {
       <Render scene={this.state.scene} attractorsActive={attractorsActive} />
       <br/>
       {this.state.scene.state}
+      <br/>
+      {`Level: ${this.state.level}`}
     </div>
   }
 }
