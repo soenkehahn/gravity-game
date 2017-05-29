@@ -32,4 +32,15 @@ const levels: Array<(Scene) => void> = [
       new EndPlanet({x: 0, y: 5}, 1),
     ]
   },
+
+  (scene) => {
+    let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
+    scene.player.position = {x: unit, y: unit}
+    scene.planets = [
+      new Planet({x: unit, y: unit}, 0.1),
+    ]
+    scene.endPlanets = [
+      new EndPlanet({x: -unit, y: -unit}, 1),
+    ]
+  },
 ]
