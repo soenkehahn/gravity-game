@@ -32,9 +32,9 @@ class SceneObject {
   position: Vector
   size: number
 
-  constructor(x: number, y: number, r: number) {
-    this.position = {x, y}
-    this.size = r
+  constructor(position: Vector, size: number) {
+    this.position = position
+    this.size = size
   }
 }
 
@@ -61,26 +61,26 @@ export class Scene {
   constructor(level: ?Level = 'empty') {
     if (level === 'test') {
       this.planets.push(
-        new Planet(3, 4, 2)
+        new Planet({x: 3, y: 4}, 2)
       )
     } else if (level === 1) {
       this.planets = [
-        new Planet(2, 3, 0.4),
+        new Planet({x: 2, y: 3}, 0.4),
       ]
       this.attractors.push(
-        new Attractor(-2, 5, 0.4)
+        new Attractor({x: -2, y: 5}, 0.4)
       )
     } else if (level === 2) {
       this.player.position = {x: -16.2, y: -5.4}
       this.planets = [
-        new Planet(-16, -5, 0.4),
-        new Planet(-8, -5, 0.4),
-        new Planet(0, -5, 0.4),
-        new Planet(8, -5, 0.4),
-        new Planet(16, -5, 0.4),
+        new Planet({x: -16, y: -5}, 0.4),
+        new Planet({x: -8, y: -5}, 0.4),
+        new Planet({x: 0, y: -5}, 0.4),
+        new Planet({x: 8, y: -5}, 0.4),
+        new Planet({x: 16, y: -5}, 0.4),
       ]
       this.attractors.push(
-        new Attractor(-2, 5, 4)
+        new Attractor({x: -2, y: 5}, 4)
       )
     }
   }

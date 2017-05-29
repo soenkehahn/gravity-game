@@ -49,7 +49,7 @@ describe('ui/scene', () => {
   })
 
   it('renders planets', () => {
-    setPlanets([new Planet(4, 5, 10)])
+    setPlanets([new Planet({x: 4, y: 5}, 10)])
     expect(wrapper.find('circle').at(0).props()).to.include({
       cx: 4,
       cy: 5,
