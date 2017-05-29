@@ -8,7 +8,7 @@ import {Scene, castToControl} from '../scene'
 import type {Control, Level} from '../scene'
 
 type Props = {|
-  level?: Level
+  level: Level
 |}
 
 type State = {|

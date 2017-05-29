@@ -73,8 +73,9 @@ export class Scene {
   controlForce: number = 0.00001
   gravityConstant: number = 0.00005
 
-  constructor(level: ?Level = 'empty') {
-    if (level === 'test') {
+  constructor(level: Level) {
+    if (level === 'empty') {
+    } else if (level === 'test') {
       this.planets.push(
         new Planet({x: 3, y: 4}, 1)
       )

@@ -10,7 +10,7 @@ describe('scene', () => {
   let scene
 
   beforeEach(() => {
-    scene = new Scene()
+    scene = new Scene('empty')
     scene.controlForce = 1
   })
 

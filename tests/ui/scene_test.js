@@ -32,7 +32,7 @@ describe('ui/scene', () => {
   }
 
   beforeEach(() => {
-    wrapper = mount(<SceneComponent />)
+    wrapper = mount(<SceneComponent level="empty" />)
     wrapper.state().scene.controlForce = 1
   })
 
