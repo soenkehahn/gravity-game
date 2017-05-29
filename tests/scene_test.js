@@ -27,9 +27,18 @@ describe('scene', () => {
       {control: 'ArrowDown', expected: {x: 0, y: expected}},
     ]
     for (const test of tests) {
-      it(`allows to change the characters velocity (${test.control})`, () => {
-        scene.step([test.control], 500)
-        expect(scene.player.velocity).to.eql(test.expected)
+      describe(test.control, () => {
+        it('allows to change the characters velocity', () => {
+          scene.planets = [new Planet({x: 0, y: 0}, 0)]
+          scene.step([test.control], 500)
+          expect(scene.player.velocity).to.eql(test.expected)
+        })
+
+        it("doesn't move the player when not under the influence of a planet", () => {
+          scene.planets = []
+          scene.step([test.control], 500)
+          expect(scene.player.velocity).to.eql({x: 0, y: 0})
+        })
       })
     }
 
@@ -122,6 +131,7 @@ describe('scene', () => {
     })
 
     it('works for two keys pressed at once', () => {
+        scene.planets = [new Planet({x: 0, y: 0}, 0)]
         scene.step(['ArrowRight', 'ArrowUp'], 3000)
         const expected = 3000 * 3000
         expect(scene.player.position).to.eql({x: expected, y: -expected})

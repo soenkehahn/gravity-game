@@ -66,6 +66,7 @@ export class Scene {
     velocity: {x: 0, y: 0},
   }
   planets: Array<Planet> = []
+  planetInfluence: boolean = false
   attractors: Array<Attractor> = []
   endPlanets: Array<EndPlanet> = []
 
@@ -91,22 +92,25 @@ export class Scene {
   }
 
   step(controls: Array<Control>, timeDelta: number): void {
-    this._stepVelocity(controls, timeDelta)
+    this.planetInfluence = false
     this._stepGravity(controls, timeDelta)
+    this._stepControlVelocity(controls, timeDelta)
     this._stepPosition(timeDelta)
     this.endPlanets.map((endPlanet) => endPlanet.step(this))
   }
 
-  _stepVelocity(controls: Array<Control>, timeDelta: number) {
-    for (const control of controls) {
-      if (control === 'ArrowRight') {
-        this.player.velocity.x += this.controlForce * timeDelta
-      } else if (control === 'ArrowLeft') {
-        this.player.velocity.x -= this.controlForce * timeDelta
-      } else if (control === 'ArrowUp') {
-        this.player.velocity.y -= this.controlForce * timeDelta
-      } else if (control === 'ArrowDown') {
-        this.player.velocity.y += this.controlForce * timeDelta
+  _stepControlVelocity(controls: Array<Control>, timeDelta: number) {
+    if (this.planetInfluence) {
+      for (const control of controls) {
+        if (control === 'ArrowRight') {
+          this.player.velocity.x += this.controlForce * timeDelta
+        } else if (control === 'ArrowLeft') {
+          this.player.velocity.x -= this.controlForce * timeDelta
+        } else if (control === 'ArrowUp') {
+          this.player.velocity.y -= this.controlForce * timeDelta
+        } else if (control === 'ArrowDown') {
+          this.player.velocity.y += this.controlForce * timeDelta
+        }
       }
     }
   }
@@ -125,6 +129,9 @@ export class Scene {
   _addGravityForObject(timeDelta: number, object: {position: Vector, size: number}) {
     const diff = difference(object.position, this.player.position)
     const {direction: gravityDirection, length: distance} = normalize(diff)
+    if (distance < 2) {
+      this.planetInfluence = true
+    }
     if (distance === 0) {
       return
     }

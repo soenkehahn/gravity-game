@@ -99,7 +99,7 @@ describe('ui/scene', () => {
 
   it('pressing a key has no effect on the scene', () => {
     simulateKeyEvent('keydown', 'ArrowLeft')
-    expect(wrapper.find('circle').props()).to.include({
+    expectElementWithProps(wrapper.find('circle'), {
       cx: 0,
       cy: 0,
       r: 1,
@@ -116,7 +116,7 @@ describe('ui/scene', () => {
       wrapper.state().scene.player.velocity.x = 3
       callRequestAnimationCallback(10000)
       callRequestAnimationCallback(10002)
-      expect(wrapper.find('circle').props()).to.include({
+      expectElementWithProps(wrapper.find('circle'), {
         cx: 2 * 3,
         cy: 0,
         r: 1,
@@ -124,10 +124,11 @@ describe('ui/scene', () => {
     })
 
     it('works through keypresses', () => {
+      setPlanets([new Planet({x: 0, y: 0}, 0)])
       callRequestAnimationCallback(10000)
       simulateKeyEvent('keydown', 'ArrowLeft')
       callRequestAnimationCallback(10002)
-      expect(wrapper.find('circle').props()).to.include({
+      expectElementWithProps(wrapper.find('circle'), {
         cx: -(2 * 2),
         cy: 0,
         r: 1,
