@@ -67,13 +67,18 @@ export class SceneComponent extends React.Component<void, Props, State> {
       scene.step(this.state.pressed, now - this.state.lastTime)
       if (scene.state === 'success') {
         this._nextLevel()
-      } else if (this.state.pressed.includes('Enter')) {
+      } else if (this._shouldRestart()) {
         this.setState(this._newScene(this.state.level))
       } else {
         this.setState({scene: scene, lastTime: now})
       }
     }
     requestAnimationFrame((now) => this.loop(now))
+  }
+
+  _shouldRestart() {
+    const pressed = this.state.pressed
+    return pressed.includes('Enter') || pressed.includes('Space')
   }
 
   _nextLevel() {

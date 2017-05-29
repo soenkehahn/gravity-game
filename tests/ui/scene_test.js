@@ -128,20 +128,23 @@ describe('ui/scene', () => {
       })
     })
 
-    describe('when pressing Enter', () => {
-      it('restarts the current level', () => {
-        const state = wrapper.state()
-        state.scene.player.position.x = 1
-        wrapper.setState(state)
+    const restartKeys: Array<Control> = ['Enter', 'Space']
+    for (const restartKey of restartKeys) {
+      describe(`when pressing ${restartKey}`, () => {
+        it('restarts the current level', () => {
+          const state = wrapper.state()
+          state.scene.player.position.x = 1
+          wrapper.setState(state)
 
-        callRequestAnimationCallback(10000)
-        expect(wrapper.state().scene.player.position.x).to.eql(1)
+          callRequestAnimationCallback(10000)
+          expect(wrapper.state().scene.player.position.x).to.eql(1)
 
-        simulateKeyEvent('keydown', 'Enter')
-        callRequestAnimationCallback(10001)
-        expect(wrapper.state().scene.player.position.x).to.eql(0)
+          simulateKeyEvent('keydown', restartKey)
+          callRequestAnimationCallback(10001)
+          expect(wrapper.state().scene.player.position.x).to.eql(0)
+        })
       })
-    })
+    }
 
   })
 
