@@ -44,7 +44,9 @@ export class Planet extends SceneObject {
 export class Attractor extends SceneObject {
 }
 
-export type Level = 'empty' | 'test' | 1
+export type Level =
+  'empty' | 'test' |
+  1
 
 export class Scene {
 
@@ -63,26 +65,14 @@ export class Scene {
       this.planets.push(
         new Planet({x: 3, y: 4}, 1)
       )
+
     } else if (level === 1) {
+      this.player.position = {x: -5, y: 0}
       this.planets = [
-        new Planet({x: 2, y: 3}, 0.4),
+        new Planet({x: -5, y: 0}, 1),
       ]
-      this.attractors.push(
-        new Attractor({x: -2, y: 5}, 0.4)
-      )
-    } else if (level === 2) {
-      this.player.position = {x: -16.2, y: -5.4}
-      this.planets = [
-        new Planet({x: -16, y: -5}, 0.4),
-        new Planet({x: -8, y: -5}, 0.4),
-        new Planet({x: 0, y: -5}, 0.4),
-        new Planet({x: 8, y: -5}, 0.4),
-        new Planet({x: 16, y: -5}, 0.4),
-      ]
-      this.attractors.push(
-        new Attractor({x: -2, y: 5}, 4)
-      )
     }
+
   }
 
   step(controls: Array<Control>, timeDelta: number): void {
