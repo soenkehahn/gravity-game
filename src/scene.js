@@ -26,7 +26,7 @@ export function castToControl(input: mixed): ?Control {
   }
 }
 
-type Player  = {|
+type Player = {|
   position: Vector,
   velocity: Vector,
 |}
