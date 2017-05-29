@@ -18,6 +18,10 @@ describe('scene', () => {
     expect(scene.player.position).to.eql({x: 0, y: 0})
   })
 
+  it("doesn't crash for non-existing levels", () => {
+    new Scene(-1)
+  })
+
   describe('step', () => {
     const expected = 500
     const tests = [
