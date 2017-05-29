@@ -85,10 +85,17 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
         r={o.radius}
         fill="blue" />
     } else if (o.type === 'planet') {
-      return <circle key={i}
-        cx={o.position.x} cy={o.position.y}
-        r={o.radius}
-        fill="yellow" />
+      return <g key={i}>
+        <circle key="planet"
+          cx={o.position.x} cy={o.position.y}
+          r={o.radius}
+          fill="yellow" />
+        <circle key="influence"
+          cx={o.position.x} cy={o.position.y}
+          r={2}
+          fill="yellow"
+          fillOpacity={0.5} />
+      </g>
     } else if (o.type === 'attractor') {
       let active = null
       if (this.props.attractorsActive) {

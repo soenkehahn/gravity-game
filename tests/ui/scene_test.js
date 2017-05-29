@@ -41,7 +41,7 @@ describe('ui/scene', () => {
   })
 
   it('renders the player', () => {
-    expect(wrapper.find('circle').at(0).props()).to.include({
+    expectElementWithProps(wrapper.find('circle'), {
       cx: 0,
       cy: 0,
       r: 1,
@@ -50,19 +50,28 @@ describe('ui/scene', () => {
 
   it('renders planets', () => {
     setPlanets([new Planet({x: 4, y: 5}, 10)])
-    expect(wrapper.find('circle').at(0).props()).to.include({
+    expectElementWithProps(wrapper.find('circle'), {
       cx: 4,
       cy: 5,
       r: 10,
     })
   })
 
+  it('renders influence spheres of planets', () => {
+    setPlanets([new Planet({x: 4, y: 5}, 10)])
+    expectElementWithProps(wrapper.find('circle'), {
+      cx: 4,
+      cy: 5,
+      r: 2,
+    })
+  })
+
   it('allows to set the level in the props', () => {
     wrapper.setProps({level: 'test'})
-    expect(wrapper.find('circle').at(0).props()).to.include({
+    expectElementWithProps(wrapper.find('circle'), {
       cx: 3,
       cy: 4,
-      r: 2,
+      r: 1,
     })
   })
 
@@ -133,4 +142,41 @@ function simulateKeyEvent(type: KeyboardEventTypes, code: Control) {
     code: code,
   })
   document.dispatchEvent(event)
+}
+
+function expectElementWithProps(wrapper, object) {
+  const candidates = []
+  const found = wrapper.findWhere((e) => {
+    const candidate = e.props()
+    candidates.push(candidate)
+    if (typeof(candidate) !== 'object') {
+      return false
+    }
+    for (const key in object) {
+      if (! candidate.hasOwnProperty(key)) {
+        return false
+      } else if (candidate[key] !== object[key]) {
+        return false
+      }
+    }
+    return true
+  })
+  if (found.length === 1) {
+    return
+  } else {
+    const canditatesString = candidates.map((e) =>
+      JSON.stringify(e)).join('\n        ')
+    let message
+    if (found.length === 0) {
+      message = "Couldn't find element with the following properties";
+    } else {
+      message = "Found more than 1 element";
+    }
+    throw new Error(`
+      ${message}:
+        ${JSON.stringify(object)}
+      candidates:
+        ${canditatesString}
+    `)
+  }
 }

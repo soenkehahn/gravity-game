@@ -61,7 +61,7 @@ export class Scene {
   constructor(level: ?Level = 'empty') {
     if (level === 'test') {
       this.planets.push(
-        new Planet({x: 3, y: 4}, 2)
+        new Planet({x: 3, y: 4}, 1)
       )
     } else if (level === 1) {
       this.planets = [
