@@ -96,7 +96,7 @@ export class SceneComponent extends React.Component<void, Props, State> {
       position: "absolute",
       margin: "10px",
       color: "white",
-      'font-family': 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+      'fontFamily': 'Arial, "Helvetica Neue", Helvetica, sans-serif',
     }
     return <div>
       <div style={textStyle}>
