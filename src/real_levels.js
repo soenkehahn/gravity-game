@@ -2,7 +2,7 @@
 
 import type {Scene} from './scene'
 import {Planet, EndPlanet} from './scene'
-import {scale} from './objects'
+import {add, scale} from './objects'
 
 export type RealLevel = number
 
@@ -194,6 +194,21 @@ const levels: Array<Scene => void> = [
     ]
     scene.endPlanets = [
       new EndPlanet({x: unit, y: 0}, 1),
+    ]
+  },
+
+  (scene) => {
+    scene.name = "swing 2"
+    const unit = 9
+    const origin = () => ({x: -(unit / 2), y: 0})
+    scene.player.position = origin()
+    scene.planets = [
+      new Planet(origin(), 0.1, unit),
+    ]
+    const tau = 2 * Math.PI
+    const angle = tau / 16
+    scene.endPlanets = [
+      new EndPlanet(add(origin(), scale({x: Math.cos(angle), y: -Math.sin(angle)}, unit)), 1),
     ]
   },
 
