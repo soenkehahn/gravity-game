@@ -7,14 +7,14 @@ import {scale} from './objects'
 export type RealLevel = number
 
 export function getLevel(scene: Scene, level: RealLevel): void {
-  const createLevel = levels[level - 1]
+  const createLevel = levels[level.toString()]
   if (createLevel) {
     createLevel(scene)
   }
 }
 
-const levels: Array<(Scene) => void> = [
-  (scene) => {
+const levels: {[string]: ((Scene) => void)} = {
+  '1': (scene) => {
     scene.player.position = {x: -5, y: 0}
     scene.planets = [
       new Planet({x: -5, y: 0}, 0.2),
@@ -24,7 +24,7 @@ const levels: Array<(Scene) => void> = [
     ]
   },
 
-  (scene) => {
+  '2': (scene) => {
     scene.player.position = {x: 0, y: -5}
     scene.planets = [
       new Planet({x: 0, y: -5}, 0.2),
@@ -34,7 +34,7 @@ const levels: Array<(Scene) => void> = [
     ]
   },
 
-  (scene) => {
+  '3': (scene) => {
     let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
     scene.player.position = {x: unit, y: unit}
     scene.planets = [
@@ -45,7 +45,7 @@ const levels: Array<(Scene) => void> = [
     ]
   },
 
-  (scene) => {
+  '4': (scene) => {
     scene.player.position = scale({x: -3, y: 16}, 0.5)
     scene.planets = [
       new Planet(scale({x: -3, y: 16}, 0.5), 0.2),
@@ -55,7 +55,7 @@ const levels: Array<(Scene) => void> = [
     ]
   },
 
-  (scene) => {
+  '5': (scene) => {
     scene.player.position = scale({x: 16, y: -3}, 0.75)
     scene.planets = [
       new Planet(scale({x: 16, y: -3}, 0.75), 0.2),
@@ -65,7 +65,7 @@ const levels: Array<(Scene) => void> = [
     ]
   },
 
-  (scene) => {
+  '6': (scene) => {
     scene.player.position = scale({x: -5, y: 5}, 0.75)
     scene.planets = [
       new Planet(scale({x: -5, y: 5}, 0.75), 0.2),
@@ -76,7 +76,7 @@ const levels: Array<(Scene) => void> = [
     ]
   },
 
-  (scene) => {
+  '7': (scene) => {
     scene.player.position = scale({x: -10, y: 5}, 0.75)
     scene.planets = [
       new Planet(scale({x: -10, y: 5}, 0.75), 0.2),
@@ -88,7 +88,7 @@ const levels: Array<(Scene) => void> = [
     ]
   },
 
-  (scene) => {
+  '8': (scene) => {
     scene.player.position = scale({x: -10, y: 10}, 0.75)
     scene.planets = [
       new Planet(scale({x: -10, y: 10}, 0.75), 0.2),
@@ -101,7 +101,7 @@ const levels: Array<(Scene) => void> = [
     ]
   },
 
-  (scene) => {
+  '9': (scene) => {
     scene.player.position = {x: -10, y: 0}
     scene.planets = [
       new Planet({x: -10, y: 0}, 0.1),
@@ -112,7 +112,7 @@ const levels: Array<(Scene) => void> = [
     ]
   },
 
-  (scene) => {
+  '10': (scene) => {
     scene.player.position = {x: -10, y: 0}
     scene.planets = [
       new Planet({x: -10, y: 0}, 0.1),
@@ -122,5 +122,4 @@ const levels: Array<(Scene) => void> = [
       new EndPlanet({x: 10, y: 0}, 1),
     ]
   },
-
-]
+}
