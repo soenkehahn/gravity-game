@@ -94,6 +94,7 @@ export class SceneComponent extends React.Component<void, Props, State> {
     const attractorsActive = this.state.pressed.has('Space')
     const textStyle = {
       position: "absolute",
+      margin: "10px",
       color: "white",
       'font-family': 'Arial, "Helvetica Neue", Helvetica, sans-serif',
     }
