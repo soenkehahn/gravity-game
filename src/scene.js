@@ -128,16 +128,22 @@ export class Scene {
 
   _stepControlVelocity(controls: Set<Control>, timeDelta: number) {
     if (this.planetInfluence) {
+      let controlVector = {x: 0, y: 0}
       for (const control of controls) {
         if (control === 'ArrowRight') {
-          this.player.velocity.x += this.constants.controlForce * timeDelta
+          controlVector.x++
         } else if (control === 'ArrowLeft') {
-          this.player.velocity.x -= this.constants.controlForce * timeDelta
+          controlVector.x--
         } else if (control === 'ArrowUp') {
-          this.player.velocity.y -= this.constants.controlForce * timeDelta
+          controlVector.y--
         } else if (control === 'ArrowDown') {
-          this.player.velocity.y += this.constants.controlForce * timeDelta
+          controlVector.y++
         }
+      }
+      if (! equals(controlVector, {x: 0, y: 0})) {
+        console.log(controlVector)
+        this.player.velocity = add(this.player.velocity,
+          scale(normalize(controlVector).direction, this.constants.controlForce * timeDelta))
       }
     }
   }
