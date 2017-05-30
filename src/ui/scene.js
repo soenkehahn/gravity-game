@@ -39,6 +39,7 @@ export class SceneComponent extends React.Component<void, Props, State> {
     this.addKeyboardEventListener('keydown', event => {
       const control = castToControl(event.code)
       if (control) {
+        event.preventDefault()
         const state = this.state
         state.pressed.push(control)
         this.setState(state)
