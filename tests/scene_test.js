@@ -11,8 +11,8 @@ describe('scene', () => {
 
   beforeEach(() => {
     scene = new Scene('empty')
-    scene.controlForce = 1
-    scene.planetDrag = 0
+    scene.constants.controlForce = 1
+    scene.constants.planetDrag = 0
   })
 
   it('contains the player', () => {
@@ -61,7 +61,7 @@ describe('scene', () => {
 
     describe('gravity', () => {
       beforeEach(() => {
-        scene.gravityConstant = 1
+        scene.constants.gravity = 1
       })
 
       describe('planet gravity', () => {
@@ -117,14 +117,14 @@ describe('scene', () => {
 
         it('allows to tweak a gravity constant', () => {
           scene.planets.push(new Planet({x: 1, y: 0}, 1))
-          scene.gravityConstant = 0.3
+          scene.constants.gravity = 0.3
           scene.step([], 1)
           expect(scene.player.velocity).to.eql({x: 0.3, y: 0})
         })
 
         describe('drag', () => {
           beforeEach(() => {
-            scene.planetDrag = 0.1
+            scene.constants.planetDrag = 0.1
           })
 
           it('applies a bit of drag', () => {

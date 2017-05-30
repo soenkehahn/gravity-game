@@ -64,12 +64,12 @@ export class Planet extends SceneObject {
       return
     }
     const distanceScalar = distance
-    const scalar = timeDelta * this.radius * scene.gravityConstant * distanceScalar
+    const scalar = timeDelta * this.radius * scene.constants.gravity * distanceScalar
     const velocityChange = scale(gravityDirection, scalar)
     scene.player.velocity = add(scene.player.velocity, velocityChange)
 
     scene.player.velocity =
-      scale(scene.player.velocity, Math.pow(1 - scene.planetDrag, timeDelta))
+      scale(scene.player.velocity, Math.pow(1 - scene.constants.planetDrag, timeDelta))
   }
 
 }
@@ -86,11 +86,19 @@ export class EndPlanet extends SceneObject {
 export type Level =
   'empty' | 'test' | RealLevel
 
+type Constants = {
+  controlForce: number,
+  gravity: number,
+  planetDrag: number,
+}
+
 export class Scene {
 
-  controlForce: number = 0.00001
-  gravityConstant: number = 0.00005
-  planetDrag: number = 0.0008
+  constants: Constants = {
+    controlForce: 0.00001,
+    gravity: 0.00005,
+    planetDrag: 0.0008,
+  }
 
   state: 'playing' | 'success' = 'playing'
 
@@ -122,13 +130,13 @@ export class Scene {
     if (this.planetInfluence) {
       for (const control of controls) {
         if (control === 'ArrowRight') {
-          this.player.velocity.x += this.controlForce * timeDelta
+          this.player.velocity.x += this.constants.controlForce * timeDelta
         } else if (control === 'ArrowLeft') {
-          this.player.velocity.x -= this.controlForce * timeDelta
+          this.player.velocity.x -= this.constants.controlForce * timeDelta
         } else if (control === 'ArrowUp') {
-          this.player.velocity.y -= this.controlForce * timeDelta
+          this.player.velocity.y -= this.constants.controlForce * timeDelta
         } else if (control === 'ArrowDown') {
-          this.player.velocity.y += this.controlForce * timeDelta
+          this.player.velocity.y += this.constants.controlForce * timeDelta
         }
       }
     }

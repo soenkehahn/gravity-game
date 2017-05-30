@@ -38,7 +38,7 @@ describe('ui/scene', () => {
   describe('when playing the empty level', () => {
     beforeEach(() => {
       wrapper = mount(<SceneComponent startLevel="empty" />)
-      wrapper.state().scene.controlForce = 1
+      wrapper.state().scene.constants.controlForce = 1
     })
 
     it('renders the player', () => {
