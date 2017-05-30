@@ -151,8 +151,8 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
       </filter>
 
       <rect
-        x={viewBox.minX} y={viewBox.minY}
-        width={viewBox.width} height={viewBox.height}
+        x={-100} y={-100}
+        width={200} height={200}
         fill="black" />
       {objects.map((o, i) => this._renderUIObject(o, i))}
     </svg>
@@ -175,8 +175,6 @@ export function getViewBox() {
   return {
     width: window.innerWidth,
     height: window.innerHeight,
-    minX,
-    minY,
     viewBox: `${minX} ${minY} ${width.toString()} ${height.toString()}`,
   }
 }
