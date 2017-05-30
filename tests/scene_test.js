@@ -2,7 +2,7 @@
 
 import {expect} from 'chai'
 
-import {Scene, Planet, EndPlanet} from '../src/scene'
+import {Scene, Player, Planet, EndPlanet} from '../src/scene'
 import type {Vector} from '../src/objects'
 
 describe('scene', () => {
@@ -163,29 +163,20 @@ describe('scene', () => {
 
   describe('toObjects', () => {
 
-    it('converts the player into an abstract object', () => {
+    it('returns the player', () => {
       const position = {x: 42, y: 23}
       scene.player.position = position
       const objects = scene.toObjects()
-      expect(objects).to.eql([
-        {
-          type: 'player',
-          position: position,
-          radius: 1,
-        }
-      ])
+      const expected = new Player({x: 42, y: 23})
+      expect(objects).to.eql([expected])
     })
 
-    it('converts the end planets into abstract objects', () => {
+    it('returns the end planets', () => {
       scene.endPlanets = [
         new EndPlanet({x: 1, y: 2}, 3)
       ]
       const objects = scene.toObjects()
-      expect(objects[0]).to.eql({
-        type: 'end planet',
-        position: {x: 1, y: 2},
-        radius: 3,
-      })
+      expect(objects[0]).to.eql(new EndPlanet({x: 1, y: 2}, 3))
     })
 
   })

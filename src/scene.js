@@ -1,6 +1,6 @@
 // @flow
 
-import type {Vector, UIObject} from './objects'
+import type {Vector} from './objects'
 import {equals, add, scale, difference, normalize} from './objects'
 import type {RealLevel} from './real_levels'
 import {getLevel} from './real_levels'
@@ -26,18 +26,22 @@ export function castToControl(input: mixed): ?Control {
   }
 }
 
-type Player = {|
-  position: Vector,
-  velocity: Vector,
-|}
-
-class SceneObject {
+export class SceneObject {
   position: Vector
-  size: number
+  radius: number
 
-  constructor(position: Vector, size: number) {
+  constructor(position: Vector, radius: number) {
     this.position = position
-    this.size = size
+    this.radius = radius
+  }
+}
+
+export class Player extends SceneObject {
+
+  velocity: Vector = {x: 0, y: 0}
+
+  constructor(position: Vector = {x: 0, y: 0}) {
+    super(position, 1)
   }
 }
 
@@ -45,8 +49,8 @@ export class Planet extends SceneObject {
 
   influenceSize: number
 
-  constructor(position: Vector, size: number, influenceSize: number = 2) {
-    super(position, size)
+  constructor(position: Vector, radius: number, influenceSize: number = 2) {
+    super(position, radius)
     this.influenceSize = influenceSize
   }
 
@@ -60,7 +64,7 @@ export class Planet extends SceneObject {
       return
     }
     const distanceScalar = distance
-    const scalar = timeDelta * this.size * scene.gravityConstant * distanceScalar
+    const scalar = timeDelta * this.radius * scene.gravityConstant * distanceScalar
     const velocityChange = scale(gravityDirection, scalar)
     scene.player.velocity = add(scene.player.velocity, velocityChange)
   }
@@ -70,7 +74,7 @@ export class Planet extends SceneObject {
 export class EndPlanet extends SceneObject {
   step(scene: Scene): void {
     const {length: distance} = normalize(difference(scene.player.position, this.position))
-    if (distance < (1 + this.size)) {
+    if (distance < (1 + this.radius)) {
       scene.state = 'success'
     }
   }
@@ -83,10 +87,7 @@ export class Scene {
 
   state: 'playing' | 'success' = 'playing'
 
-  player: Player = {
-    position: {x: 0, y: 0},
-    velocity: {x: 0, y: 0},
-  }
+  player: Player = new Player()
   planets: Array<Planet> = []
   planetInfluence: boolean = false
   endPlanets: Array<EndPlanet> = []
@@ -134,15 +135,11 @@ export class Scene {
     this.player.position.y += this.player.velocity.y * timeDelta
   }
 
-  toObjects(): Array<UIObject> {
-    const result = []
-    for (const planet of this.planets) {
-      result.push({type: 'planet', position: planet.position, radius: planet.size, influenceSize: planet.influenceSize})
-    }
-    for (const endPlanet of this.endPlanets) {
-      result.push({type: 'end planet', position: endPlanet.position, radius: endPlanet.size})
-    }
-    result.push({type: 'player', position: this.player.position, radius: 1})
+  toObjects(): Array<SceneObject> {
+    let result = []
+    result = result.concat(this.planets)
+    result = result.concat(this.endPlanets)
+    result.push(this.player)
     return result
   }
 }

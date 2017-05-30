@@ -3,9 +3,8 @@
 const React = require('react')
 global.React = React
 
-import type {UIObject, UIObjectType} from '../objects'
-import {Scene, castToControl} from '../scene'
-import type {Control, Level} from '../scene'
+import type {Control, Level, SceneObject} from '../scene'
+import {Scene, castToControl, Player, Planet, EndPlanet} from '../scene'
 
 type Props = {|
   startLevel: Level
@@ -101,18 +100,18 @@ export class SceneComponent extends React.Component<void, Props, State> {
 
 class Render extends React.Component<void, {scene: Scene, attractorsActive: boolean}, void> {
 
-  _renderUIObject(o: UIObject, i: number): * {
-    if (o.type === 'player') {
+  _renderUIObject(o: SceneObject, i: number): * {
+    if (o instanceof Player) {
       return <circle key={i}
         cx={o.position.x} cy={o.position.y}
         r={o.radius}
         fill="blue" />
-    } else if (o.type === 'end planet') {
+    } else if (o instanceof EndPlanet) {
       return <circle key={i}
         cx={o.position.x} cy={o.position.y}
         r={o.radius}
         fill="green" />
-    } else if (o.type === 'planet') {
+    } else if (o instanceof Planet) {
       return <g key={i}>
         <circle key="planet"
           cx={o.position.x} cy={o.position.y}
@@ -125,7 +124,7 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
           fillOpacity={0.5} />
       </g>
     }
-    throw new Error('unknown UIObjectType: ' + o.type)
+    throw new Error('unknown SceneObject class: ' + o.constructor.name)
   }
 
   render() {
