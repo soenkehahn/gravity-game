@@ -66,12 +66,47 @@ const levels: Array<Scene => void> = [
   },
 
   (scene) => {
-    scene.player.position = scale({x: -3, y: 16}, 0.5)
+    let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
+    scene.player.position = {x: unit / 2, y: unit}
     scene.planets = [
-      new Planet(scale({x: -3, y: 16}, 0.5), 0.2),
+      new Planet({x: unit / 2, y: unit}, 0.2),
     ]
     scene.endPlanets = [
-      new EndPlanet(scale({x: 3, y: -16}, 0.5), 1),
+      new EndPlanet({x: -unit / 2, y: -unit}, 1),
+    ]
+  },
+
+  // slanted
+  (scene) => {
+    let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
+    scene.player.position = {x: unit / 2, y: unit * 1.5}
+    scene.planets = [
+      new Planet({x: unit / 2, y: unit * 1.5}, 0.2),
+    ]
+    scene.endPlanets = [
+      new EndPlanet({x: -unit / 2, y: -unit * 1.5}, 1),
+    ]
+  },
+
+  (scene) => {
+    let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
+    scene.player.position = {x: unit / 2, y: unit * 2}
+    scene.planets = [
+      new Planet({x: unit / 2, y: unit * 2}, 0.2),
+    ]
+    scene.endPlanets = [
+      new EndPlanet({x: -unit / 2, y: -unit * 2}, 1),
+    ]
+  },
+
+  (scene) => {
+    let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
+    scene.player.position = {x: unit / 2, y: unit * 2.5}
+    scene.planets = [
+      new Planet({x: unit / 2, y: unit * 2.5}, 0.2),
+    ]
+    scene.endPlanets = [
+      new EndPlanet({x: -unit / 2, y: -unit * 2.5}, 1),
     ]
   },
 
