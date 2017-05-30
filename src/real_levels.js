@@ -69,7 +69,18 @@ const levels: Array<(Scene) => void> = [
     scene.player.position = {x: -10, y: 0}
     scene.planets = [
       new Planet({x: -10, y: 0}, 0.1),
-      new Planet({x: 0, y: 1.8}, 1),
+      new Planet({x: 0, y: 1.8}, 0.4),
+    ]
+    scene.endPlanets = [
+      new EndPlanet({x: 10, y: 0}, 1),
+    ]
+  },
+
+  (scene) => {
+    scene.player.position = {x: -10, y: 0}
+    scene.planets = [
+      new Planet({x: -10, y: 0}, 0.1),
+      new Planet({x: 0, y: 2.2}, 0.4, 2.3),
     ]
     scene.endPlanets = [
       new EndPlanet({x: 10, y: 0}, 1),
