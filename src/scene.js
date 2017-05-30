@@ -97,7 +97,7 @@ export class Scene {
   constants: Constants = {
     controlForce: 0.00001,
     gravity: 0.00005,
-    planetDrag: 0.0008,
+    planetDrag: 0.0006,
   }
 
   name: string = "untitled"
