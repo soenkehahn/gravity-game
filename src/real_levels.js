@@ -187,10 +187,11 @@ const levels: Array<Scene => void> = [
     ]
   },
 
-  mkSwing('swing', 0),
-  mkSwing('swing 2', TAU / 4),
-  mkSwing('swing 3', TAU / 8),
-  mkSwing('swing 4', TAU / 16),
+  mkSwing('swing', () => 0),
+  mkSwing('swing 2', () => TAU / 4),
+  mkSwing('swing 3', () => TAU / 8),
+  mkSwing('swing 4', () => TAU / 16),
+  mkSwing('swing', (timeDelta) => 0.15 * (timeDelta / 1000) % TAU),
 
   (scene) => {
     scene.name = "slope"
@@ -211,7 +212,7 @@ const levels: Array<Scene => void> = [
 
 ]
 
-function mkSwing(name, angle) {
+function mkSwing(name, mkAngle: (number) => number) {
   return (scene) => {
     scene.name = name
     const unit = 9
@@ -220,8 +221,15 @@ function mkSwing(name, angle) {
     scene.planets = [
       new Planet(origin(), 0.1, unit),
     ]
-    scene.endPlanets = [
-      new EndPlanet(add(origin(), scale({x: Math.cos(angle), y: -Math.sin(angle)}, unit)), 1),
-    ]
+
+    let phase = 0
+    const endPlanet = new EndPlanet({x: 0, y: 0}, 1)
+    scene.customStep = (timeDelta) => {
+      phase += timeDelta
+      const angle = mkAngle(phase)
+      endPlanet.position =
+        add(origin(), scale({x: Math.cos(angle), y: -Math.sin(angle)}, unit))
+    }
+    scene.endPlanets = [endPlanet]
   }
 }

@@ -109,6 +109,8 @@ export class Scene {
   planetInfluence: boolean = false
   endPlanets: Array<EndPlanet> = []
 
+  customStep: (number) => void = (timeDelta) => {}
+
   constructor(level: Level) {
     if (level === 'empty') {
     } else if (level === 'test') {
@@ -121,6 +123,7 @@ export class Scene {
   }
 
   step(controls: Set<Control>, timeDelta: number): void {
+    this.customStep(timeDelta)
     this.planetInfluence = false
     this.planets.map((planet) => planet.step(this, timeDelta))
     this.endPlanets.map((endPlanet) => endPlanet.step(this))

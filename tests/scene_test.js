@@ -23,6 +23,15 @@ describe('scene', () => {
     new Scene(-1)
   })
 
+  it("executes the customStep for every step", () => {
+    let passedTimeDelta = 0
+    scene.customStep = (timeDelta) => {
+      passedTimeDelta = timeDelta
+    }
+    scene.step([], 42)
+    expect(passedTimeDelta).to.eql(42)
+  })
+
   describe('step', () => {
     const expected = 500
     const tests = [
