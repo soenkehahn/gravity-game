@@ -36,12 +36,14 @@ describe('ui/scene', () => {
   })
 
   describe('getViewBox', () => {
-    it('returns a viewbox filling the whole inner window', () => {
+    it('returns a viewBox filling the whole inner window', () => {
       window.innerWidth = 1000
       window.innerHeight = 600
       expect(getViewBox()).to.eql({
         width: 1000,
         height: 600,
+        minX: -33,
+        minY: -20,
         viewBox: "-33 -20 66 40",
       })
     })
@@ -52,6 +54,8 @@ describe('ui/scene', () => {
       expect(getViewBox()).to.eql({
         width: 400,
         height: 600,
+        minX: -20,
+        minY: -30,
         viewBox: "-20 -30 40 60",
       })
     })
