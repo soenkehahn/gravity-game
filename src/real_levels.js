@@ -15,6 +15,7 @@ export function getLevel(scene: Scene, level: RealLevel): void {
 
 const levels: Array<Scene => void> = [
   (scene) => {
+    scene.name = "tutorial"
     scene.player.position = {x: -5, y: 0}
     scene.planets = [
       new Planet({x: -5, y: 0}, 0.1),
@@ -25,6 +26,7 @@ const levels: Array<Scene => void> = [
   },
 
   (scene) => {
+    scene.name = "tutorial 2"
     scene.player.position = {x: 0, y: -5}
     scene.planets = [
       new Planet({x: 0, y: -5}, 0.1),
@@ -35,6 +37,7 @@ const levels: Array<Scene => void> = [
   },
 
   (scene) => {
+    scene.name = "heavier"
     scene.player.position = {x: 5, y: 0}
     scene.planets = [
       new Planet({x: 5, y: 0}, 0.2),
@@ -45,6 +48,7 @@ const levels: Array<Scene => void> = [
   },
 
   (scene) => {
+    scene.name = "heavier 2"
     scene.player.position = {x: 0, y: 5}
     scene.planets = [
       new Planet({x: 0, y: 5}, 0.2),
@@ -55,6 +59,7 @@ const levels: Array<Scene => void> = [
   },
 
   (scene) => {
+    scene.name = "45 degrees"
     let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
     scene.player.position = {x: unit, y: unit}
     scene.planets = [
@@ -66,6 +71,7 @@ const levels: Array<Scene => void> = [
   },
 
   (scene) => {
+    scene.name = "difficult angle"
     let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
     scene.player.position = {x: unit / 2, y: unit}
     scene.planets = [
@@ -76,8 +82,8 @@ const levels: Array<Scene => void> = [
     ]
   },
 
-  // slanted
   (scene) => {
+    scene.name = "difficult angle 2"
     let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
     scene.player.position = {x: unit / 2, y: unit * 1.5}
     scene.planets = [
@@ -89,6 +95,7 @@ const levels: Array<Scene => void> = [
   },
 
   (scene) => {
+    scene.name = "difficult angle 3"
     let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
     scene.player.position = {x: unit / 2, y: unit * 2}
     scene.planets = [
@@ -100,6 +107,7 @@ const levels: Array<Scene => void> = [
   },
 
   (scene) => {
+    scene.name = "difficult angle 4"
     let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
     scene.player.position = {x: unit / 2, y: unit * 2.5}
     scene.planets = [
@@ -111,19 +119,10 @@ const levels: Array<Scene => void> = [
   },
 
   (scene) => {
-    scene.player.position = scale({x: 16, y: -3}, 0.75)
-    scene.planets = [
-      new Planet(scale({x: 16, y: -3}, 0.75), 0.2),
-    ]
-    scene.endPlanets = [
-      new EndPlanet(scale({x: -16, y: 3}, 0.75), 1),
-    ]
-  },
-
-  (scene) => {
+    scene.name = "corners"
     scene.player.position = scale({x: -5, y: 5}, 0.75)
     scene.planets = [
-      new Planet(scale({x: -5, y: 5}, 0.75), 0.2),
+      new Planet(scale({x: -5, y: 5}, 0.75), 0.1),
       new Planet(scale({x: 5, y: 5}, 0.75), 0.2),
     ]
     scene.endPlanets = [
@@ -132,9 +131,10 @@ const levels: Array<Scene => void> = [
   },
 
   (scene) => {
+    scene.name = "corners 2"
     scene.player.position = scale({x: -10, y: 5}, 0.75)
     scene.planets = [
-      new Planet(scale({x: -10, y: 5}, 0.75), 0.2),
+      new Planet(scale({x: -10, y: 5}, 0.75), 0.1),
       new Planet(scale({x: 0, y: 5}, 0.75), 0.2),
       new Planet(scale({x: 0, y: -5}, 0.75), 0.2),
     ]
@@ -144,9 +144,10 @@ const levels: Array<Scene => void> = [
   },
 
   (scene) => {
+    scene.name = "corners 3"
     scene.player.position = scale({x: -10, y: 10}, 0.75)
     scene.planets = [
-      new Planet(scale({x: -10, y: 10}, 0.75), 0.2),
+      new Planet(scale({x: -10, y: 10}, 0.75), 0.1),
       new Planet(scale({x: -10, y: 0}, 0.75), 0.2),
       new Planet(scale({x: 0, y: 0}, 0.75), 0.2),
       new Planet(scale({x: 0, y: -10}, 0.75), 0.2),
@@ -157,12 +158,13 @@ const levels: Array<Scene => void> = [
   },
 
   (scene) => {
+    scene.name = "corners 4"
     scene.player.position = scale({x: -10, y: 10}, 0.75)
     scene.planets = [
-      new Planet(scale({x: -10, y: 10}, 0.75), 0.2),
+      new Planet(scale({x: -10, y: 10}, 0.75), 0.1),
       new Planet(scale({x: -10, y: 0}, 0.75), 0.2),
       new Planet(scale({x: 0, y: 0}, 0.75), 0.2),
-      new Planet(scale({x: 0, y: -10}, 0.75), 1),
+      new Planet(scale({x: 0, y: -10}, 0.75), 0.3),
     ]
     scene.endPlanets = [
       new EndPlanet(scale({x: 10, y: -10}, 0.75), 1),
@@ -170,24 +172,17 @@ const levels: Array<Scene => void> = [
   },
 
   (scene) => {
-    scene.player.position = {x: -10, y: 0}
+    scene.name = "corners 5"
+    scene.player.position = scale({x: -10, y: 10}, 0.75)
     scene.planets = [
-      new Planet({x: -10, y: 0}, 0.1),
-      new Planet({x: 0, y: 1.8}, 0.4),
+      new Planet(scale({x: -10, y: 10}, 0.75), 0.1),
+      new Planet(scale({x: -10, y: 0}, 0.75), 0.2),
+      new Planet(scale({x: 0, y: 0}, 0.75), 0.2),
+      new Planet(scale({x: 0, y: -10}, 0.75), 0.5),
     ]
     scene.endPlanets = [
-      new EndPlanet({x: 10, y: 0}, 1),
+      new EndPlanet(scale({x: 10, y: -10}, 0.75), 1),
     ]
   },
 
-  (scene) => {
-    scene.player.position = {x: -10, y: 0}
-    scene.planets = [
-      new Planet({x: -10, y: 0}, 0.1),
-      new Planet({x: 0, y: 2.2}, 0.4, 2.3),
-    ]
-    scene.endPlanets = [
-      new EndPlanet({x: 10, y: 0}, 1),
-    ]
-  },
 ]

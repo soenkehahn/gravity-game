@@ -97,7 +97,7 @@ export class SceneComponent extends React.Component<void, Props, State> {
       <br/>
       Controls: Arrow keys to move, Space to restart the level
       <br/>
-      {`Level: ${this.state.level}`}
+      {`Level: ${this.state.scene.name}`}
     </div>
   }
 }

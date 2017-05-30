@@ -100,6 +100,8 @@ export class Scene {
     planetDrag: 0.0008,
   }
 
+  name: string = "untitled"
+
   state: 'playing' | 'success' = 'playing'
 
   player: Player = new Player()
