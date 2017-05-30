@@ -185,4 +185,16 @@ const levels: Array<Scene => void> = [
     ]
   },
 
+  (scene) => {
+    scene.name = "swing"
+    const unit = 4.5
+    scene.player.position = {x: -unit, y: 0}
+    scene.planets = [
+      new Planet({x: -unit, y: 0}, 0.1, (unit * 2)),
+    ]
+    scene.endPlanets = [
+      new EndPlanet({x: unit, y: 0}, 1),
+    ]
+  },
+
 ]
