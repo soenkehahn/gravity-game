@@ -6,6 +6,8 @@ import {add, scale} from './objects'
 
 export type RealLevel = number
 
+const TAU = 2 * Math.PI
+
 export function getLevel(scene: Scene, level: RealLevel): void {
   const createLevel = levels[level - 1]
   if (createLevel) {
@@ -185,32 +187,10 @@ const levels: Array<Scene => void> = [
     ]
   },
 
-  (scene) => {
-    scene.name = "swing"
-    const unit = 4.5
-    scene.player.position = {x: -unit, y: 0}
-    scene.planets = [
-      new Planet({x: -unit, y: 0}, 0.1, (unit * 2)),
-    ]
-    scene.endPlanets = [
-      new EndPlanet({x: unit, y: 0}, 1),
-    ]
-  },
-
-  (scene) => {
-    scene.name = "swing 2"
-    const unit = 9
-    const origin = () => ({x: -(unit / 2), y: 0})
-    scene.player.position = origin()
-    scene.planets = [
-      new Planet(origin(), 0.1, unit),
-    ]
-    const tau = 2 * Math.PI
-    const angle = tau / 16
-    scene.endPlanets = [
-      new EndPlanet(add(origin(), scale({x: Math.cos(angle), y: -Math.sin(angle)}, unit)), 1),
-    ]
-  },
+  mkSwing('swing', 0),
+  mkSwing('swing 2', TAU / 4),
+  mkSwing('swing 3', TAU / 8),
+  mkSwing('swing 4', TAU / 16),
 
   (scene) => {
     scene.name = "slope"
@@ -230,3 +210,18 @@ const levels: Array<Scene => void> = [
   },
 
 ]
+
+function mkSwing(name, angle) {
+  return (scene) => {
+    scene.name = name
+    const unit = 9
+    const origin = () => ({x: -(unit / 2), y: 0})
+    scene.player.position = origin()
+    scene.planets = [
+      new Planet(origin(), 0.1, unit),
+    ]
+    scene.endPlanets = [
+      new EndPlanet(add(origin(), scale({x: Math.cos(angle), y: -Math.sin(angle)}, unit)), 1),
+    ]
+  }
+}
