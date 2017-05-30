@@ -92,12 +92,18 @@ export class SceneComponent extends React.Component<void, Props, State> {
 
   render() {
     const attractorsActive = this.state.pressed.has('Space')
+    const textStyle = {
+      position: "absolute",
+      color: "white",
+      'font-family': 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+    }
     return <div>
+      <div style={textStyle}>
+        Controls: Arrow keys to move, Space to restart the level
+        <br/>
+        {`Level: ${this.state.scene.name}`}
+      </div>
       <Render scene={this.state.scene} attractorsActive={attractorsActive} />
-      <br/>
-      Controls: Arrow keys to move, Space to restart the level
-      <br/>
-      {`Level: ${this.state.scene.name}`}
     </div>
   }
 }
