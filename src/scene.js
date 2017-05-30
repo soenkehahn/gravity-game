@@ -143,7 +143,6 @@ export class Scene {
         }
       }
       if (! equals(controlVector, {x: 0, y: 0})) {
-        console.log(controlVector)
         this.player.velocity = add(this.player.velocity,
           scale(normalize(controlVector).direction, this.constants.controlForce * timeDelta))
       }

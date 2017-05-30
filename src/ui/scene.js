@@ -133,18 +133,39 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
 
   render() {
     const objects = this.props.scene.toObjects()
+    const viewBox = getViewBox()
     return <svg
-      viewBox="-20 -20 40 40"
-      width="500" height="500"
+      viewBox={viewBox.viewBox}
+      width={viewBox.width}
+      height={viewBox.height}
       xmlns="http://www.w3.org/2000/svg">
 
       <filter id="activeBlur">
         <feGaussianBlur in="SourceGraphic" stdDeviation="0.1" />
       </filter>
 
-      <rect x={-20} y={-20} width={40} height={40} fill="black" />
+      <rect x={-2000} y={-2000} width={4000} height={4000} fill="black" />
       {objects.map((o, i) => this._renderUIObject(o, i))}
     </svg>
   }
 
+}
+
+export function getViewBox() {
+  const ratio = window.innerWidth / window.innerHeight
+  let height, width
+  if (ratio > 1) {
+    height = 40
+    width = Math.floor(height * ratio)
+  } else {
+    width = 40
+    height = Math.floor(width / ratio)
+  }
+  const minX = -width / 2
+  const minY = -height / 2
+  return {
+    width: window.innerWidth,
+    height: window.innerHeight,
+    viewBox: `${minX} ${minY} ${width.toString()} ${height.toString()}`,
+  }
 }

@@ -4,7 +4,7 @@ import {expect} from 'chai'
 import {mount} from 'enzyme'
 require('jsdom-global')()
 
-import {SceneComponent} from '../../src/ui/scene'
+import {SceneComponent, getViewBox} from '../../src/ui/scene'
 import type {Control} from '../../src/scene'
 import {Planet, allControls} from '../../src/scene'
 
@@ -33,6 +33,28 @@ describe('ui/scene', () => {
 
   afterEach(() => {
     requestAnimationFrameCallbacks = []
+  })
+
+  describe('getViewBox', () => {
+    it('returns a viewbox filling the whole inner window', () => {
+      window.innerWidth = 1000
+      window.innerHeight = 600
+      expect(getViewBox()).to.eql({
+        width: 1000,
+        height: 600,
+        viewBox: "-33 -20 66 40",
+      })
+    })
+
+    it('works for a ratio with width < height', () => {
+      window.innerWidth = 400
+      window.innerHeight = 600
+      expect(getViewBox()).to.eql({
+        width: 400,
+        height: 600,
+        viewBox: "-20 -30 40 60",
+      })
+    })
   })
 
   describe('when playing the empty level', () => {
