@@ -2,6 +2,7 @@
 
 import type {Scene} from './scene'
 import {Planet, EndPlanet} from './scene'
+import type {Vector} from './objects'
 import {add, scale} from './objects'
 
 export type RealLevel = number
@@ -222,13 +223,15 @@ function mkSwing(name, mkAngle: (number) => number) {
       new Planet(origin(), 0.1, unit),
     ]
 
+    function mkPosition(phase: number): Vector {
+      const angle = mkAngle(phase)
+      return add(origin(), scale({x: Math.cos(angle), y: -Math.sin(angle)}, unit))
+    }
     let phase = 0
-    const endPlanet = new EndPlanet({x: 0, y: 0}, 1)
+    const endPlanet = new EndPlanet(mkPosition(phase), 1)
     scene.customStep = (timeDelta) => {
       phase += timeDelta
-      const angle = mkAngle(phase)
-      endPlanet.position =
-        add(origin(), scale({x: Math.cos(angle), y: -Math.sin(angle)}, unit))
+      endPlanet.position = mkPosition(phase)
     }
     scene.endPlanets = [endPlanet]
   }
