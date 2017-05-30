@@ -12,6 +12,7 @@ describe('scene', () => {
   beforeEach(() => {
     scene = new Scene('empty')
     scene.controlForce = 1
+    scene.planetDrag = 0
   })
 
   it('contains the player', () => {
@@ -121,8 +122,24 @@ describe('scene', () => {
           expect(scene.player.velocity).to.eql({x: 0.3, y: 0})
         })
 
-      })
+        describe('drag', () => {
+          beforeEach(() => {
+            scene.planetDrag = 0.1
+          })
 
+          it('applies a bit of drag', () => {
+            scene.planets.push(new Planet({x: 1, y: 0}, 1))
+            scene.step([], 1)
+            expect(scene.player.velocity).to.eql({x: 0.9, y: 0})
+          })
+
+          it('increases drag with timeDelta correctly', () => {
+            scene.planets.push(new Planet({x: 1, y: 0}, 1))
+            scene.step([], 2)
+            expect(scene.player.velocity).to.eql({x: 2 * Math.pow(0.9, 2), y: 0})
+          })
+        })
+      })
     })
 
     it('works for two keys pressed at once', () => {

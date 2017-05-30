@@ -67,6 +67,9 @@ export class Planet extends SceneObject {
     const scalar = timeDelta * this.radius * scene.gravityConstant * distanceScalar
     const velocityChange = scale(gravityDirection, scalar)
     scene.player.velocity = add(scene.player.velocity, velocityChange)
+
+    scene.player.velocity =
+      scale(scene.player.velocity, Math.pow(1 - scene.planetDrag, timeDelta))
   }
 
 }
@@ -85,15 +88,16 @@ export type Level =
 
 export class Scene {
 
+  controlForce: number = 0.00001
+  gravityConstant: number = 0.00005
+  planetDrag: number = 0.0008
+
   state: 'playing' | 'success' = 'playing'
 
   player: Player = new Player()
   planets: Array<Planet> = []
   planetInfluence: boolean = false
   endPlanets: Array<EndPlanet> = []
-
-  controlForce: number = 0.00001
-  gravityConstant: number = 0.00005
 
   constructor(level: Level) {
     if (level === 'empty') {
