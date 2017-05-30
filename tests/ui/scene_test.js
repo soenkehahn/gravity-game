@@ -80,21 +80,32 @@ describe('ui/scene', () => {
       for (const controlKey of allControls) {
         it(`remembers pressed control keys (${controlKey})`, () => {
           simulateKeyEvent('keydown', controlKey)
-          expect(wrapper.state().pressed).to.eql([controlKey])
+          expect([...wrapper.state().pressed]).to.eql([controlKey])
         })
       }
 
       it('tracks released keys correctly', () => {
         simulateKeyEvent('keydown', 'ArrowLeft')
         simulateKeyEvent('keyup', 'ArrowLeft')
-        expect(wrapper.state().pressed).to.eql([])
+        expect([...wrapper.state().pressed]).to.eql([])
       })
 
       it('tracks more than one key correctly', () => {
         simulateKeyEvent('keydown', 'ArrowLeft')
         simulateKeyEvent('keydown', 'ArrowDown')
         simulateKeyEvent('keyup', 'ArrowLeft')
-        expect(wrapper.state().pressed).to.eql(['ArrowDown'])
+        expect([...wrapper.state().pressed]).to.eql(['ArrowDown'])
+      })
+
+      it("doesn't track keypresses twice", () => {
+        simulateKeyEvent('keydown', 'ArrowLeft')
+        simulateKeyEvent('keydown', 'ArrowLeft')
+        expect([...wrapper.state().pressed]).to.eql(['ArrowLeft'])
+      })
+
+      it("doesn't track keypresses that are marked as 'repeat'", () => {
+        simulateKeyEvent('keydown', 'ArrowLeft', true)
+        expect([...wrapper.state().pressed]).to.eql([])
       })
     })
 
@@ -182,9 +193,10 @@ describe('ui/scene', () => {
   })
 })
 
-function simulateKeyEvent(type: KeyboardEventTypes, code: Control) {
+function simulateKeyEvent(type: KeyboardEventTypes, code: Control, repeat: boolean = false) {
   const event = new KeyboardEvent(type, {
     code: code,
+    repeat: repeat,
   })
   document.dispatchEvent(event)
 }

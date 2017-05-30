@@ -13,7 +13,7 @@ type Props = {|
 type State = {|
   level: Level,
   scene: Scene,
-  pressed: Array<Control>,
+  pressed: Set<Control>,
   lastTime: ?number,
 |}
 
@@ -30,7 +30,7 @@ export class SceneComponent extends React.Component<void, Props, State> {
     return {
       level: level,
       scene: new Scene(level),
-      pressed: [],
+      pressed: new Set(),
       lastTime: null,
     }
   }
@@ -38,18 +38,21 @@ export class SceneComponent extends React.Component<void, Props, State> {
   componentDidMount() {
     this.addKeyboardEventListener('keydown', event => {
       const control = castToControl(event.code)
-      if (control) {
+      if (control && (! event.repeat)) {
         event.preventDefault()
         const state = this.state
-        state.pressed.push(control)
+        state.pressed.add(control)
         this.setState(state)
       }
     })
 
     this.addKeyboardEventListener('keyup', event => {
       const state = this.state
-      state.pressed = state.pressed.filter((d) => d !== event.code)
-      this.setState(state)
+      const control = castToControl(event.code)
+      if (control) {
+        state.pressed.delete(control)
+        this.setState(state)
+      }
     })
 
     requestAnimationFrame((now) => this.loop(now))
@@ -78,7 +81,7 @@ export class SceneComponent extends React.Component<void, Props, State> {
 
   _shouldRestart() {
     const pressed = this.state.pressed
-    return pressed.includes('Enter') || pressed.includes('Space')
+    return pressed.has('Enter') || pressed.has('Space')
   }
 
   _nextLevel() {
@@ -88,7 +91,7 @@ export class SceneComponent extends React.Component<void, Props, State> {
   }
 
   render() {
-    const attractorsActive = this.state.pressed.includes('Space')
+    const attractorsActive = this.state.pressed.has('Space')
     return <div>
       <Render scene={this.state.scene} attractorsActive={attractorsActive} />
       <br/>

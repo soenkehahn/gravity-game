@@ -118,7 +118,7 @@ export class Scene {
     }
   }
 
-  step(controls: Array<Control>, timeDelta: number): void {
+  step(controls: Set<Control>, timeDelta: number): void {
     this.planetInfluence = false
     this.planets.map((planet) => planet.step(this, timeDelta))
     this.endPlanets.map((endPlanet) => endPlanet.step(this))
@@ -126,7 +126,7 @@ export class Scene {
     this._stepPosition(timeDelta)
   }
 
-  _stepControlVelocity(controls: Array<Control>, timeDelta: number) {
+  _stepControlVelocity(controls: Set<Control>, timeDelta: number) {
     if (this.planetInfluence) {
       for (const control of controls) {
         if (control === 'ArrowRight') {
