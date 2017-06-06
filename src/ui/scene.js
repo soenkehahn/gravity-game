@@ -68,8 +68,10 @@ export class SceneComponent extends React.Component<void, Props, State> {
     } else {
       const scene = this.state.scene
       scene.step(this.state.pressed, now - this.state.lastTime)
-      if (scene.state === 'success') {
+      if (scene.state === 'success' || this.state.pressed.has('F7')) {
         this._nextLevel()
+      } else if (this.state.pressed.has('F6')) {
+        this._previousLevel()
       } else if (this._shouldRestart()) {
         this.setState(this._newScene(this.state.level))
       } else {
@@ -87,6 +89,12 @@ export class SceneComponent extends React.Component<void, Props, State> {
   _nextLevel() {
     if (typeof(this.state.level) === 'number') {
       this.setState(this._newScene(this.state.level + 1))
+    }
+  }
+
+  _previousLevel() {
+    if (typeof(this.state.level) === 'number') {
+      this.setState(this._newScene(this.state.level - 1))
     }
   }
 

@@ -204,12 +204,32 @@ describe('ui/scene', () => {
         callRequestAnimationCallback(10002)
       })
 
-      it('advances the level when solved', () => {
+      it('advances the level', () => {
         expect(wrapper.state().level).to.eql(2)
       })
 
       it("resets 'lastTime' when advancing to the next level", () => {
         expect(wrapper.state().lastTime).to.eql(null)
+      })
+    })
+
+    describe.only('when cheating', () => {
+      it('F7 advances the level', () => {
+        callRequestAnimationCallback(10000)
+        simulateKeyEvent('keydown', 'F7')
+        callRequestAnimationCallback(10002)
+        expect(wrapper.state().level).to.eql(2)
+      })
+
+      it('F6 goes back one level', () => {
+        callRequestAnimationCallback(10000)
+        simulateKeyEvent('keydown', 'F7')
+        callRequestAnimationCallback(10002)
+        simulateKeyEvent('keyup', 'F7')
+        callRequestAnimationCallback(10003)
+        simulateKeyEvent('keydown', 'F6')
+        callRequestAnimationCallback(10004)
+        expect(wrapper.state().level).to.eql(1)
       })
     })
   })

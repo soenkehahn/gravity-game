@@ -6,7 +6,8 @@ import type {RealLevel} from './real_levels'
 import {getLevel} from './real_levels'
 
 export type Control
-  = 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown' | 'Space' | 'Enter'
+  = 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown'
+  | 'Space' | 'Enter' | 'F6' | 'F7'
 
 export const allControls: Array<Control> = [
   'ArrowRight',
@@ -15,6 +16,8 @@ export const allControls: Array<Control> = [
   'ArrowDown',
   'Space',
   'Enter',
+  'F6',
+  'F7',
 ]
 
 export function castToControl(input: mixed): ?Control {
