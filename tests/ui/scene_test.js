@@ -213,7 +213,7 @@ describe('ui/scene', () => {
       })
     })
 
-    describe.only('when cheating', () => {
+    describe('when cheating', () => {
       it('F7 advances the level', () => {
         callRequestAnimationCallback(10000)
         simulateKeyEvent('keydown', 'F7')
