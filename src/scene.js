@@ -48,7 +48,7 @@ export class Player extends SceneObject {
   }
 }
 
-export class Planet extends SceneObject {
+export class GravityPlanet extends SceneObject {
 
   influenceSize: number
 
@@ -117,7 +117,8 @@ export class Scene {
   state: 'playing' | 'success' | 'game over' = 'playing'
 
   player: Player = new Player()
-  planets: Array<Planet> = []
+
+  gravityPlanets: Array<GravityPlanet> = []
   planetInfluence: boolean = false
 
   forbiddenPlanets: Array<ForbiddenPlanet> = []
@@ -129,8 +130,8 @@ export class Scene {
   constructor(level: Level) {
     if (level === 'empty') {
     } else if (level === 'test') {
-      this.planets.push(
-        new Planet({x: 3, y: 4}, 1)
+      this.gravityPlanets.push(
+        new GravityPlanet({x: 3, y: 4}, 1)
       )
     } else {
       getLevel(this, level)
@@ -141,7 +142,7 @@ export class Scene {
     if (this.state === 'playing') {
       this.customStep(timeDelta)
       this.planetInfluence = false
-      this.planets.map((planet) => planet.step(this, timeDelta))
+      this.gravityPlanets.map((planet) => planet.step(this, timeDelta))
       this.forbiddenPlanets.map((planet) => planet.step(this, timeDelta))
       this.endPlanets.map((endPlanet) => endPlanet.step(this))
       this._stepControlVelocity(controls, timeDelta)
@@ -177,7 +178,7 @@ export class Scene {
 
   toObjects(): Array<SceneObject> {
     let result = []
-    result = result.concat(this.planets)
+    result = result.concat(this.gravityPlanets)
     result = result.concat(this.forbiddenPlanets)
     result = result.concat(this.endPlanets)
     result.push(this.player)

@@ -4,7 +4,7 @@ const React = require('react')
 global.React = React
 
 import type {Control, Level, SceneObject} from '../scene'
-import {Scene, castToControl, Player, Planet, ForbiddenPlanet, EndPlanet} from '../scene'
+import {Scene, castToControl, Player, GravityPlanet, ForbiddenPlanet, EndPlanet} from '../scene'
 
 type Props = {|
   startLevel: Level
@@ -136,7 +136,7 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
         cx={o.position.x} cy={o.position.y}
         r={o.radius}
         fill="green" />
-    } else if (o instanceof Planet) {
+    } else if (o instanceof GravityPlanet) {
       return <g key={i}>
         <circle key="planet"
           cx={o.position.x} cy={o.position.y}

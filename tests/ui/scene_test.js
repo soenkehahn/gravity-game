@@ -6,7 +6,7 @@ require('jsdom-global')()
 
 import {SceneComponent, getViewBox} from '../../src/ui/scene'
 import type {Scene, Control} from '../../src/scene'
-import {Planet, allControls} from '../../src/scene'
+import {GravityPlanet, allControls} from '../../src/scene'
 
 describe('ui/scene', () => {
 
@@ -31,8 +31,8 @@ describe('ui/scene', () => {
     wrapper.setState({scene: scene})
   }
 
-  function setPlanets(planets: Array<Planet>): void {
-    modifyScene((s) => {s.planets = planets})
+  function setGravityPlanets(gravityPlanets: Array<GravityPlanet>): void {
+    modifyScene((s) => {s.gravityPlanets = gravityPlanets})
   }
 
   afterEach(() => {
@@ -86,9 +86,9 @@ describe('ui/scene', () => {
       })
     })
 
-    describe('planets', () => {
-      it('renders planets', () => {
-        setPlanets([new Planet({x: 4, y: 5}, 10)])
+    describe('gravityPlanets', () => {
+      it('renders gravityPlanets', () => {
+        setGravityPlanets([new GravityPlanet({x: 4, y: 5}, 10)])
         expectElementWithProps(wrapper.find('circle'), {
           cx: 4,
           cy: 5,
@@ -96,8 +96,8 @@ describe('ui/scene', () => {
         })
       })
 
-      it('renders influence spheres of planets', () => {
-        setPlanets([new Planet({x: 4, y: 5}, 10, 2.4)])
+      it('renders influence spheres of gravityPlanets', () => {
+        setGravityPlanets([new GravityPlanet({x: 4, y: 5}, 10, 2.4)])
         expectElementWithProps(wrapper.find('circle'), {
           cx: 4,
           cy: 5,
@@ -106,7 +106,7 @@ describe('ui/scene', () => {
       })
 
       it('uses a default influence size of 2', () => {
-        setPlanets([new Planet({x: 4, y: 5}, 10)])
+        setGravityPlanets([new GravityPlanet({x: 4, y: 5}, 10)])
         expectElementWithProps(wrapper.find('circle'), {
           cx: 4,
           cy: 5,
@@ -115,7 +115,7 @@ describe('ui/scene', () => {
       })
 
       it('renders forbidden planets', () => {
-        modifyScene(s => {s.forbiddenPlanets.push(new Planet({x: 5, y: 7}, 6))})
+        modifyScene(s => {s.forbiddenPlanets.push(new GravityPlanet({x: 5, y: 7}, 6))})
         expectElementWithProps(wrapper.find('circle'), {
           cx: 5,
           cy: 7,
@@ -184,7 +184,7 @@ describe('ui/scene', () => {
       })
 
       it('works through keypresses', () => {
-        setPlanets([new Planet({x: 0, y: 0}, 0)])
+        setGravityPlanets([new GravityPlanet({x: 0, y: 0}, 0)])
         callRequestAnimationCallback(10000)
         simulateKeyEvent('keydown', 'ArrowLeft')
         callRequestAnimationCallback(10002)
