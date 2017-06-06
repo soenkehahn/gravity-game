@@ -157,10 +157,6 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
       height={viewBox.height}
       >
 
-      <filter id="activeBlur">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="0.1" />
-      </filter>
-
       <rect
         x={-100} y={-100}
         width={200} height={200}
