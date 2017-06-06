@@ -203,6 +203,18 @@ levels.push((scene) => {
   ]
 })
 
+levels.push((scene) => {
+  scene.name = "corners 7"
+  scene.player.position = scale({x: 0, y: 10}, 0.75)
+  scene.planets = [
+    new Planet(scale({x: 0, y: 10}, 0.75), 0.9),
+    new Planet(scale({x: 0, y: 0}, 0.75), 0.9),
+  ]
+  scene.endPlanets = [
+    new EndPlanet(scale({x: 0, y: -10}, 0.75), 1),
+  ]
+})
+
 function mkSwing(name, mkAngle: (number) => number) {
   return (scene) => {
     scene.name = name
@@ -292,6 +304,7 @@ levels.push(mkOrbit({name: 'orbit', player: (u) => ({x: -u, y: 0})}))
 levels.push(mkOrbit({name: 'orbit 2', player: (u) => ({x: -u, y: u})}))
 
 levels.push((scene) => {
+  scene.name = 'overlap'
   const u = 4
   scene.player.position = {x: -2 * u, y: 0}
   scene.endPlanets = [
