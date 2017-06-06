@@ -152,10 +152,10 @@ describe('scene', () => {
     })
 
     it('works for two keys pressed at once', () => {
-        scene.planets = [new Planet({x: 0, y: 0}, 0)]
-        scene.step(['ArrowRight', 'ArrowUp'], 3000)
-        const expected = Math.sqrt(Math.pow(3000, 2) / 2)
-        expect(scene.player.velocity).to.eql({x: expected, y: -expected})
+      scene.planets = [new Planet({x: 0, y: 0}, 0)]
+      scene.step(['ArrowRight', 'ArrowUp'], 3000)
+      const expected = Math.sqrt(Math.pow(3000, 2) / 2)
+      expect(scene.player.velocity).to.eql({x: expected, y: -expected})
     })
 
   })
