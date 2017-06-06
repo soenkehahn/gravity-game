@@ -248,38 +248,43 @@ levels.push((scene) => {
   ]
 })
 
-levels.push((scene) => {
-  scene.name = "orbit"
-  const u = 10
-  scene.player.position = {x: -u, y: 0}
-  scene.planets = [
-    new Planet({x: -u, y: 0}, 0.2)
-  ]
+function mkOrbit({name, player}) {
+  return (scene) => {
+    scene.name = name
+    const u = 10
+    scene.player.position = player(u)
+    scene.planets = [
+      new Planet(player(u), 0.2)
+    ]
 
-  const length = 11
-  const movingPlanets = []
-  for (let i = 0; i < length; i++) {
-    const position = mkPosition(i, 0)
-    const planet = new Planet(position, 0.6)
-    movingPlanets.push(planet)
-  }
-  scene.planets = scene.planets.concat(movingPlanets)
-  scene.endPlanets = [
-    new EndPlanet({x: u, y: 0}, 1),
-  ]
+    const length = 11
+    const movingPlanets = []
+    for (let i = 0; i < length; i++) {
+      const position = mkPosition(i, 0)
+      const planet = new Planet(position, 0.6)
+      movingPlanets.push(planet)
+    }
+    scene.planets = scene.planets.concat(movingPlanets)
+    scene.endPlanets = [
+      new EndPlanet({x: u, y: 0}, 1),
+    ]
 
-  function mkPosition(i, phase) {
-    const angle = (0.15 * (phase / 1000) % TAU) + (TAU / length) * i
-    return add(scale(fromAngle(angle), u), {x: u, y: 0})
-  }
+    function mkPosition(i, phase) {
+      const angle = (0.15 * (phase / 1000) % TAU) + (TAU / length) * i
+      return add(scale(fromAngle(angle), u), {x: u, y: 0})
+    }
 
-  let phase = 0
-  scene.customStep = (timeDelta) => {
-    phase += timeDelta
-    let i = 0
-    for (const planet of movingPlanets) {
-      planet.position = mkPosition(i, phase)
-      i++
+    let phase = 0
+    scene.customStep = (timeDelta) => {
+      phase += timeDelta
+      let i = 0
+      for (const planet of movingPlanets) {
+        planet.position = mkPosition(i, phase)
+        i++
+      }
     }
   }
-})
+}
+
+levels.push(mkOrbit({name: 'orbit', player: (u) => ({x: -u, y: 0})}))
+levels.push(mkOrbit({name: 'orbit 2', player: (u) => ({x: -u, y: u})}))
