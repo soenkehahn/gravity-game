@@ -77,6 +77,15 @@ export class Planet extends SceneObject {
 
 }
 
+export class ForbiddenPlanet extends SceneObject {
+  step(scene: Scene): void {
+    const {length: distance} = normalize(difference(scene.player.position, this.position))
+    if (distance < (1 + this.radius)) {
+      scene.state = 'game over'
+    }
+  }
+}
+
 export class EndPlanet extends SceneObject {
   step(scene: Scene): void {
     const {length: distance} = normalize(difference(scene.player.position, this.position))
@@ -105,11 +114,14 @@ export class Scene {
 
   name: ?string
 
-  state: 'playing' | 'success' = 'playing'
+  state: 'playing' | 'success' | 'game over' = 'playing'
 
   player: Player = new Player()
   planets: Array<Planet> = []
   planetInfluence: boolean = false
+
+  forbiddenPlanets: Array<ForbiddenPlanet> = []
+
   endPlanets: Array<EndPlanet> = []
 
   customStep: (number) => void = (timeDelta) => {}
@@ -126,12 +138,15 @@ export class Scene {
   }
 
   step(controls: Set<Control>, timeDelta: number): void {
-    this.customStep(timeDelta)
-    this.planetInfluence = false
-    this.planets.map((planet) => planet.step(this, timeDelta))
-    this.endPlanets.map((endPlanet) => endPlanet.step(this))
-    this._stepControlVelocity(controls, timeDelta)
-    this._stepPosition(timeDelta)
+    if (this.state === 'playing') {
+      this.customStep(timeDelta)
+      this.planetInfluence = false
+      this.planets.map((planet) => planet.step(this, timeDelta))
+      this.forbiddenPlanets.map((planet) => planet.step(this, timeDelta))
+      this.endPlanets.map((endPlanet) => endPlanet.step(this))
+      this._stepControlVelocity(controls, timeDelta)
+      this._stepPosition(timeDelta)
+    }
   }
 
   _stepControlVelocity(controls: Set<Control>, timeDelta: number) {
@@ -163,6 +178,7 @@ export class Scene {
   toObjects(): Array<SceneObject> {
     let result = []
     result = result.concat(this.planets)
+    result = result.concat(this.forbiddenPlanets)
     result = result.concat(this.endPlanets)
     result.push(this.player)
     return result

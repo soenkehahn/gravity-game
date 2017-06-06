@@ -5,7 +5,7 @@ import {mount} from 'enzyme'
 require('jsdom-global')()
 
 import {SceneComponent, getViewBox} from '../../src/ui/scene'
-import type {Control} from '../../src/scene'
+import type {Scene, Control} from '../../src/scene'
 import {Planet, allControls} from '../../src/scene'
 
 describe('ui/scene', () => {
@@ -25,10 +25,14 @@ describe('ui/scene', () => {
 
   let wrapper
 
-  function setPlanets(planets: Array<Planet>): void {
-    const scene = wrapper.state().scene
-    scene.planets = planets
+  function modifyScene(f: Scene => void) {
+    let scene = wrapper.state().scene
+    f(scene)
     wrapper.setState({scene: scene})
+  }
+
+  function setPlanets(planets: Array<Planet>): void {
+    modifyScene((s) => {s.planets = planets})
   }
 
   afterEach(() => {
@@ -82,30 +86,41 @@ describe('ui/scene', () => {
       })
     })
 
-    it('renders planets', () => {
-      setPlanets([new Planet({x: 4, y: 5}, 10)])
-      expectElementWithProps(wrapper.find('circle'), {
-        cx: 4,
-        cy: 5,
-        r: 10,
+    describe('planets', () => {
+      it('renders planets', () => {
+        setPlanets([new Planet({x: 4, y: 5}, 10)])
+        expectElementWithProps(wrapper.find('circle'), {
+          cx: 4,
+          cy: 5,
+          r: 10,
+        })
       })
-    })
 
-    it('renders influence spheres of planets', () => {
-      setPlanets([new Planet({x: 4, y: 5}, 10, 2.4)])
-      expectElementWithProps(wrapper.find('circle'), {
-        cx: 4,
-        cy: 5,
-        r: 2.4,
+      it('renders influence spheres of planets', () => {
+        setPlanets([new Planet({x: 4, y: 5}, 10, 2.4)])
+        expectElementWithProps(wrapper.find('circle'), {
+          cx: 4,
+          cy: 5,
+          r: 2.4,
+        })
       })
-    })
 
-    it('uses a default influence size of 2', () => {
-      setPlanets([new Planet({x: 4, y: 5}, 10)])
-      expectElementWithProps(wrapper.find('circle'), {
-        cx: 4,
-        cy: 5,
-        r: 2,
+      it('uses a default influence size of 2', () => {
+        setPlanets([new Planet({x: 4, y: 5}, 10)])
+        expectElementWithProps(wrapper.find('circle'), {
+          cx: 4,
+          cy: 5,
+          r: 2,
+        })
+      })
+
+      it('renders forbidden planets', () => {
+        modifyScene(s => {s.forbiddenPlanets.push(new Planet({x: 5, y: 7}, 6))})
+        expectElementWithProps(wrapper.find('circle'), {
+          cx: 5,
+          cy: 7,
+          r: 6,
+        })
       })
     })
 
@@ -204,6 +219,7 @@ describe('ui/scene', () => {
   describe('when playing level 1', () => {
     beforeEach(() => {
       wrapper = mount(<SceneComponent startLevel={1} />)
+      wrapper.state().scene.constants.controlForce = 1
     })
 
     describe('when a level is solved', () => {

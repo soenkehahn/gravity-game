@@ -3,7 +3,7 @@
 import _ from 'lodash'
 
 import type {Scene} from './scene'
-import {Planet, EndPlanet} from './scene'
+import {Planet, ForbiddenPlanet, EndPlanet} from './scene'
 import type {Vector} from './objects'
 import {add, scale, fromAngle, TAU} from './objects'
 

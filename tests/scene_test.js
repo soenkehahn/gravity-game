@@ -2,7 +2,7 @@
 
 import {expect} from 'chai'
 
-import {Scene, Player, Planet, EndPlanet} from '../src/scene'
+import {Scene, Player, Planet, ForbiddenPlanet, EndPlanet} from '../src/scene'
 import type {Vector} from '../src/objects'
 
 describe('scene', () => {
@@ -158,6 +158,31 @@ describe('scene', () => {
         expect(scene.player.velocity).to.eql({x: expected, y: -expected})
     })
 
+  })
+
+  describe('forbidden planets', () => {
+    describe('when touching a forbidden planet', () => {
+      beforeEach(() => {
+        scene.forbiddenPlanets.push(new ForbiddenPlanet({x: 1.9, y: 0}, 1))
+        scene.step([], 500)
+      })
+
+      it("sets the state to 'game over' when touching a forbidden planet", () => {
+        expect(scene.state).to.eql('game over')
+      })
+
+      it('stops the simulation', () => {
+        scene.planets.push(new Planet({x: 0, y: 0}, 0))
+        scene.step(['ArrowRight'], 500)
+        expect(scene.player.position).to.eql({x: 0, y: 0})
+      })
+    })
+
+    it("doesn't end the game when not touching a forbidden planet", () => {
+      scene.forbiddenPlanets.push(new ForbiddenPlanet({x: 2.1, y: 0}, 1))
+      scene.step([], 1)
+      expect(scene.state).to.eql('playing')
+    })
   })
 
   describe('end planets', () => {
