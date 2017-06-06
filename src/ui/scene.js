@@ -106,7 +106,7 @@ export class SceneComponent extends React.Component<void, Props, State> {
       color: "white",
       'fontFamily': 'Arial, "Helvetica Neue", Helvetica, sans-serif',
     }
-    return <div>
+    return <div style={{cursor: "none"}}>
       <div style={textStyle}>
         Controls: Arrow keys to move, Space to reset the level
         <br/>
@@ -150,10 +150,12 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
     const objects = this.props.scene.toObjects()
     const viewBox = getViewBox()
     return <svg
+      xmlns="http://www.w3.org/2000/svg"
+
       viewBox={viewBox.viewBox}
       width={viewBox.width}
       height={viewBox.height}
-      xmlns="http://www.w3.org/2000/svg">
+      >
 
       <filter id="activeBlur">
         <feGaussianBlur in="SourceGraphic" stdDeviation="0.1" />
