@@ -243,7 +243,7 @@ levels.push(mkSwing('swing', () => 0))
 levels.push(mkSwing('swing 2', () => TAU / 4))
 levels.push(mkSwing('swing 3', () => TAU / 8))
 levels.push(mkSwing('swing 4', () => TAU / 16))
-levels.push(mkSwing('swing', (phase) => 0.15 * (phase / 1000) % TAU))
+levels.push(mkSwing('swing', (phase) => 0.023 * (phase / 1000) * TAU))
 
 levels.push((scene) => {
   scene.name = "slope"
@@ -284,7 +284,7 @@ function mkOrbit({name, player}) {
     ]
 
     function mkPosition(i, phase) {
-      const angle = (0.15 * (phase / 1000) % TAU) + (TAU / length) * i
+      const angle = (0.023 * (phase / 1000) * TAU) + (TAU / length) * i
       return add(scale(fromAngle(angle), u), {x: u, y: 0})
     }
 
@@ -324,7 +324,7 @@ levels.push((scene) => {
   const u = 10
   scene.planets.push(new Planet(_.cloneDeep(scene.player.position), 0.5))
   function mkPosition(phase) {
-    const angle = 0.3 * (phase / 1000) % TAU
+    const angle = 0.048 * (phase / 1000) * TAU
     return scale(fromAngle(angle), u)
   }
   const endPlanet = new EndPlanet(mkPosition(0), 1)
@@ -338,6 +338,7 @@ levels.push((scene) => {
 })
 
 levels.push((s) => {
+  s.name = 'axis'
   const u = 10
   s.player.position = {x: 0, y: u}
   s.planets.push(new Planet({x: 0, y: u}, 0.4))
