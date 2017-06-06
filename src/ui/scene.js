@@ -106,11 +106,17 @@ export class SceneComponent extends React.Component<void, Props, State> {
       color: "white",
       'fontFamily': 'Arial, "Helvetica Neue", Helvetica, sans-serif',
     }
+    let levelName: string
+    if (this.state.scene.name) {
+      levelName = this.state.scene.name
+    } else {
+      levelName = `untitled (${this.state.level})`
+    }
     return <div style={{cursor: "none"}}>
       <div style={textStyle}>
         Controls: Arrow keys to move, Space to reset the level
         <br/>
-        {`Level: ${this.state.scene.name}`}
+        <div>{`Level: ${levelName}`}</div>
       </div>
       <Render scene={this.state.scene} attractorsActive={attractorsActive} />
     </div>

@@ -103,7 +103,7 @@ export class Scene {
     planetDrag: 0.0006,
   }
 
-  name: string = "untitled"
+  name: ?string
 
   state: 'playing' | 'success' = 'playing'
 

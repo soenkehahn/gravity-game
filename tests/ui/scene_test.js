@@ -57,6 +57,17 @@ describe('ui/scene', () => {
     })
   })
 
+  describe('when playing a level without a name', () => {
+    beforeEach(() => {
+      wrapper = mount(<SceneComponent startLevel={-1} />)
+    })
+
+    it('renders the level number', () => {
+      const needle = wrapper.findWhere((e) => e.text() === 'Level: untitled (-1)')
+      expect(needle.length).to.eql(1)
+    })
+  })
+
   describe('when playing the empty level', () => {
     beforeEach(() => {
       wrapper = mount(<SceneComponent startLevel="empty" />)
