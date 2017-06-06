@@ -336,3 +336,24 @@ levels.push((scene) => {
     endPlanet.position = mkPosition(phase)
   }
 })
+
+levels.push((s) => {
+  const u = 10
+  s.player.position = {x: 0, y: u}
+  s.planets.push(new Planet({x: 0, y: u}, 0.4))
+  s.planets.push(new Planet({x: 0, y: -u}, 0.4))
+  function position(phase) {
+    const angle = 0.5 * (phase / 1000) * TAU
+    const position = fromAngle(angle)
+    position.x *= u * 3
+    position.y *= u * 0.25
+    return position
+  }
+  const endPlanet = new EndPlanet(position(0), 1)
+  s.endPlanets.push(endPlanet)
+  let phase = 0
+  s.customStep = (delta) => {
+    phase += delta
+    endPlanet.position = position(phase)
+  }
+})
