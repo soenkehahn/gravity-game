@@ -338,6 +338,27 @@ levels.push((scene) => {
 })
 
 levels.push((s) => {
+  s.name = 'pills'
+  const u = 10
+  s.gravityPlanets.push(new GravityPlanet({x: 0, y: 0}, 0.3))
+  s.forbiddenPlanets.push(new ForbiddenPlanet({x: -u, y: 0}, 1))
+  s.endPlanets.push(new EndPlanet({x: u, y: 0}, 1))
+})
+
+levels.push((s) => {
+  s.name = 'pills 2'
+  const u = 10
+  s.player.position = {x: 0, y: u}
+  s.gravityPlanets = [
+    new GravityPlanet({x: 0, y: u}, 0.3),
+    new GravityPlanet({x: u, y: 0}, 0.3),
+    new GravityPlanet({x: -u, y: 0}, 0.3),
+  ]
+  s.forbiddenPlanets.push(new ForbiddenPlanet({x: 0, y: 0}, 1))
+  s.endPlanets.push(new EndPlanet({x: 0, y: -u}, 1))
+})
+
+levels.push((s) => {
   s.name = 'axis'
   const u = 10
   s.player.position = {x: 0, y: u}
