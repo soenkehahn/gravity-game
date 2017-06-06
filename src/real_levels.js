@@ -260,7 +260,7 @@ levels.push((scene) => {
   const movingPlanets = []
   for (let i = 0; i < length; i++) {
     const position = mkPosition(i, 0)
-    const planet = new Planet(position, 0.8)
+    const planet = new Planet(position, 0.6)
     movingPlanets.push(planet)
   }
   scene.planets = scene.planets.concat(movingPlanets)
