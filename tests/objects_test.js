@@ -2,7 +2,8 @@
 
 import {expect} from 'chai'
 
-import {equals, add, scale, difference, normalize} from '../src/objects'
+import {equals, add, scale, difference, normalize, fromAngle, TAU}
+  from '../src/objects'
 
 describe('objects', () => {
   describe('equals', () => {
@@ -17,6 +18,21 @@ describe('objects', () => {
       const b = {x: 2, y: 4}
       expect(equals(a, b)).to.be.false
     })
+
+    describe('when specifying an epsilon', () => {
+      it('detects close vectors', () => {
+        const a = {x: 2, y: 3}
+        const b = {x: 2, y: 3.0000001}
+        expect(equals(a, b, {epsilon: 0.001})).to.be.true
+      })
+
+      it('detects vectors that are out of the epsilon environment', () => {
+        const a = {x: 2, y: 3}
+        const b = {x: 2, y: 3.0011}
+        expect(equals(a, b, {epsilon: 0.001})).to.be.false
+      })
+    })
+
   })
 
   describe('add', () => {
@@ -53,6 +69,26 @@ describe('objects', () => {
     it('returns the length', () => {
       const v = {x: 1, y: 1}
       expect(normalize(v).length).to.eql(Math.sqrt(2))
+    })
+  })
+
+  describe('fromAngle', () => {
+    describe('returns a vector with the given angle and length 1', () => {
+
+      it('works for 0º', () => {
+        expect(equals(fromAngle(0), {x: 1, y: 0})).to.be.true
+      })
+
+      const epsilon = 0.00001
+
+      it('works for 90º', () => {
+        expect(equals(fromAngle(TAU / 4), {x: 0, y: -1}, {epsilon})).to.be.true
+      })
+
+      it('works for 45º', () => {
+        const expected = Math.sqrt(2) / 2
+        expect(equals(fromAngle(TAU / 8), {x: expected, y: -expected}, {epsilon})).to.be.true
+      })
     })
   })
 })

@@ -1,12 +1,25 @@
 // @flow
 
+export const TAU = 2 * Math.PI
+
 export type Vector = {|
   x: number,
   y: number,
 |}
 
-export function equals(a: Vector, b: Vector): boolean {
-  return (a.x === b.x) && (a.y === b.y)
+export function equals(a: Vector, b: Vector, config: {epsilon?: number} = {}): boolean {
+  if (config.epsilon) {
+    const epsilon: number = config.epsilon
+    const difference = {x: a.x - b.x, y: a.y - b.y}
+    const res = normalize(difference)
+    if (res.length < epsilon) {
+      return true
+    } else {
+      return false
+    }
+  } else {
+    return (a.x === b.x) && (a.y === b.y)
+  }
 }
 
 export function add(a: Vector, b: Vector): Vector {
@@ -36,4 +49,8 @@ export function normalize(vector: Vector): {direction: Vector, length: number} {
     direction: scale(vector, 1 / length),
     length: length,
   }
+}
+
+export function fromAngle(angle: number): Vector {
+  return {x: Math.cos(angle), y: -Math.sin(angle)}
 }

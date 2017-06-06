@@ -3,11 +3,9 @@
 import type {Scene} from './scene'
 import {Planet, EndPlanet} from './scene'
 import type {Vector} from './objects'
-import {add, scale} from './objects'
+import {add, scale, fromAngle, TAU} from './objects'
 
 export type RealLevel = number
-
-const TAU = 2 * Math.PI
 
 export function getLevel(scene: Scene, level: RealLevel): void {
   const createLevel = levels[level - 1]
@@ -204,7 +202,7 @@ const levels: Array<Scene => void> = [
   mkSwing('swing 2', () => TAU / 4),
   mkSwing('swing 3', () => TAU / 8),
   mkSwing('swing 4', () => TAU / 16),
-  mkSwing('swing', (timeDelta) => 0.15 * (timeDelta / 1000) % TAU),
+  mkSwing('swing', (phase) => 0.15 * (phase / 1000) % TAU),
 
   (scene) => {
     scene.name = "slope"
@@ -223,6 +221,43 @@ const levels: Array<Scene => void> = [
     ]
   },
 
+  (scene) => {
+    scene.name = "orbit"
+    const u = 10
+    scene.player.position = {x: -u, y: 0}
+    scene.planets = [
+      new Planet({x: -u, y: 0}, 0.2)
+    ]
+
+    const length = 11
+    const movingPlanets = []
+    for (let i = 0; i < length; i++) {
+      const position = mkPosition(i, 0)
+      const planet = new Planet(position, 0.8)
+      movingPlanets.push(planet)
+    }
+    scene.planets = scene.planets.concat(movingPlanets)
+    scene.endPlanets = [
+      new EndPlanet({x: u, y: 0}, 1),
+    ]
+
+    function mkPosition(i, phase) {
+      const angle = (0.15 * (phase / 1000) % TAU) + (TAU / length) * i
+      return add(scale(fromAngle(angle), u), {x: u, y: 0})
+    }
+
+    let phase = 0
+    scene.customStep = (timeDelta) => {
+      phase += timeDelta
+      let i = 0
+      for (const planet of movingPlanets) {
+        planet.position = mkPosition(i, phase)
+        i++
+      }
+    }
+
+  }
+
 ]
 
 function mkSwing(name, mkAngle: (number) => number) {
@@ -237,7 +272,7 @@ function mkSwing(name, mkAngle: (number) => number) {
 
     function mkPosition(phase: number): Vector {
       const angle = mkAngle(phase)
-      return add(origin(), scale({x: Math.cos(angle), y: -Math.sin(angle)}, unit))
+      return add(origin(), scale(fromAngle(angle), unit))
     }
     let phase = 0
     const endPlanet = new EndPlanet(mkPosition(phase), 1)
