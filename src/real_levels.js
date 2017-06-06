@@ -192,7 +192,7 @@ const levels: Array<Scene => void> = [
     scene.name = "corners 6"
     scene.player.position = scale({x: 0, y: 10}, 0.75)
     scene.planets = [
-      new Planet(scale({x: 0, y: 10}, 0.75), 0.1),
+      new Planet(scale({x: 0, y: 10}, 0.75), 0.2),
       new Planet(scale({x: 0, y: 0}, 0.75), 0.9),
     ]
     scene.endPlanets = [
