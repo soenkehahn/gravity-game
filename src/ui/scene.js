@@ -141,11 +141,11 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
         <circle key="planet"
           cx={o.position.x} cy={o.position.y}
           r={o.radius}
-          fill="yellow" />
+          fill="gray" />
         <circle key="influence"
           cx={o.position.x} cy={o.position.y}
           r={o.influenceSize}
-          fill="yellow"
+          fill="gray"
           fillOpacity={0.5} />
       </g>
     }
