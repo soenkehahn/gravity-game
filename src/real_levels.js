@@ -125,7 +125,7 @@ const levels: Array<Scene => void> = [
     scene.name = "corners"
     scene.player.position = scale({x: -5, y: 5}, 0.75)
     scene.planets = [
-      new Planet(scale({x: -5, y: 5}, 0.75), 0.1),
+      new Planet(scale({x: -5, y: 5}, 0.75), 0.2),
       new Planet(scale({x: 5, y: 5}, 0.75), 0.2),
     ]
     scene.endPlanets = [
@@ -137,7 +137,7 @@ const levels: Array<Scene => void> = [
     scene.name = "corners 2"
     scene.player.position = scale({x: -10, y: 5}, 0.75)
     scene.planets = [
-      new Planet(scale({x: -10, y: 5}, 0.75), 0.1),
+      new Planet(scale({x: -10, y: 5}, 0.75), 0.2),
       new Planet(scale({x: 0, y: 5}, 0.75), 0.2),
       new Planet(scale({x: 0, y: -5}, 0.75), 0.2),
     ]
@@ -150,7 +150,7 @@ const levels: Array<Scene => void> = [
     scene.name = "corners 3"
     scene.player.position = scale({x: -10, y: 10}, 0.75)
     scene.planets = [
-      new Planet(scale({x: -10, y: 10}, 0.75), 0.1),
+      new Planet(scale({x: -10, y: 10}, 0.75), 0.2),
       new Planet(scale({x: -10, y: 0}, 0.75), 0.2),
       new Planet(scale({x: 0, y: 0}, 0.75), 0.2),
       new Planet(scale({x: 0, y: -10}, 0.75), 0.2),
@@ -164,10 +164,10 @@ const levels: Array<Scene => void> = [
     scene.name = "corners 4"
     scene.player.position = scale({x: -10, y: 10}, 0.75)
     scene.planets = [
-      new Planet(scale({x: -10, y: 10}, 0.75), 0.1),
+      new Planet(scale({x: -10, y: 10}, 0.75), 0.2),
       new Planet(scale({x: -10, y: 0}, 0.75), 0.2),
-      new Planet(scale({x: 0, y: 0}, 0.75), 0.2),
-      new Planet(scale({x: 0, y: -10}, 0.75), 0.3),
+      new Planet(scale({x: 0, y: 0}, 0.75), 0.55),
+      new Planet(scale({x: 0, y: -10}, 0.75), 0.2),
     ]
     scene.endPlanets = [
       new EndPlanet(scale({x: 10, y: -10}, 0.75), 1),
@@ -178,13 +178,25 @@ const levels: Array<Scene => void> = [
     scene.name = "corners 5"
     scene.player.position = scale({x: -10, y: 10}, 0.75)
     scene.planets = [
-      new Planet(scale({x: -10, y: 10}, 0.75), 0.1),
+      new Planet(scale({x: -10, y: 10}, 0.75), 0.2),
       new Planet(scale({x: -10, y: 0}, 0.75), 0.2),
-      new Planet(scale({x: 0, y: 0}, 0.75), 0.2),
-      new Planet(scale({x: 0, y: -10}, 0.75), 0.5),
+      new Planet(scale({x: 0, y: 0}, 0.75), 0.9),
+      new Planet(scale({x: 0, y: -10}, 0.75), 0.2),
     ]
     scene.endPlanets = [
       new EndPlanet(scale({x: 10, y: -10}, 0.75), 1),
+    ]
+  },
+
+  (scene) => {
+    scene.name = "corners 6"
+    scene.player.position = scale({x: 0, y: 10}, 0.75)
+    scene.planets = [
+      new Planet(scale({x: 0, y: 10}, 0.75), 0.1),
+      new Planet(scale({x: 0, y: 0}, 0.75), 0.9),
+    ]
+    scene.endPlanets = [
+      new EndPlanet(scale({x: 0, y: -10}, 0.75), 1),
     ]
   },
 
