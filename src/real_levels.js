@@ -1,5 +1,7 @@
 // @flow
 
+import _ from 'lodash'
+
 import type {Scene} from './scene'
 import {Planet, EndPlanet} from './scene'
 import type {Vector} from './objects'
@@ -288,3 +290,36 @@ function mkOrbit({name, player}) {
 
 levels.push(mkOrbit({name: 'orbit', player: (u) => ({x: -u, y: 0})}))
 levels.push(mkOrbit({name: 'orbit 2', player: (u) => ({x: -u, y: u})}))
+
+levels.push((scene) => {
+  const u = 4
+  scene.player.position = {x: -2 * u, y: 0}
+  scene.endPlanets = [
+    new EndPlanet({x: 2 * u, y: 0}, 1)
+  ]
+  const radius = 0.2
+  const influence = 5
+  scene.planets = [
+    new Planet(_.cloneDeep(scene.player.position), 0.2),
+    new Planet({x: 0, y: -u}, radius, influence),
+    new Planet({x: 0, y: u}, radius, influence),
+  ]
+})
+
+levels.push((scene) => {
+  scene.name = 'which direction'
+  const u = 10
+  scene.planets.push(new Planet(_.cloneDeep(scene.player.position), 0.5))
+  function mkPosition(phase) {
+    const angle = 0.3 * (phase / 1000) % TAU
+    return scale(fromAngle(angle), u)
+  }
+  const endPlanet = new EndPlanet(mkPosition(0), 1)
+  scene.endPlanets.push(endPlanet)
+
+  let phase = 0
+  scene.customStep = (timeDelta) => {
+    phase += timeDelta
+    endPlanet.position = mkPosition(phase)
+  }
+})
