@@ -249,10 +249,7 @@ levels.push((scene) => {
   scene.name = "slope"
   const unit = 4
   scene.player.position = {x: unit * -5, y: unit * 3}
-  scene.gravityPlanets = [
-    new GravityPlanet({x: unit * -5, y: unit * 3}, 0.4),
-  ]
-  for (let x = -4; x < 5; x++) {
+  for (let x = -5; x < 5; x++) {
     scene.gravityPlanets.push(
       new GravityPlanet({x: unit * x, y: unit * - x * 3 / 5}, 0.1),
     )
