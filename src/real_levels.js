@@ -386,3 +386,29 @@ levels.push(mkAxis('axis', (s, u) => {
 levels.push(mkAxis('axis', (s, u) => {
   s.forbiddenPlanets.push(new ForbiddenPlanet({x: 0, y: -u}, 1))
 }))
+
+const detour = (name, custom) => (s) => {
+  s.name = name
+  const u = 8
+  s.player.position = {x: -u, y: u}
+  s.forbiddenPlanets = [
+    new ForbiddenPlanet({x: -u, y: 0}, 0.1),
+    new ForbiddenPlanet({x: 0, y: 0}, 0.1),
+    new ForbiddenPlanet({x: u, y: 0}, 0.1),
+  ]
+  s.gravityPlanets = [
+    new GravityPlanet({x: -u, y: u}, 0.3),
+    new GravityPlanet({x: 0, y: u}, 0.3),
+    new GravityPlanet({x: u, y: u}, 0.3),
+    new GravityPlanet({x: 2 * u, y: 0}, 0.3),
+    new GravityPlanet({x: u, y: -u}, 0.3),
+    new GravityPlanet({x: 0, y: -u}, 0.3),
+  ]
+  s.endPlanets.push(new EndPlanet({x: -u, y: -u}, 1))
+  custom(s, u)
+}
+
+levels.push(detour('detour', () => {}))
+levels.push(detour('detour 2', (s, u) => {
+  s.gravityPlanets.push(new GravityPlanet({x: -2 * u, y: -2 * u}, 0.3))
+}))
