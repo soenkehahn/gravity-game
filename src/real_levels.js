@@ -231,7 +231,7 @@ function mkSwing(name, mkAngle: (number) => number) {
     }
     let phase = 0
     const endPlanet = new EndPlanet(mkPosition(phase), 1)
-    scene.customStep = (timeDelta) => {
+    endPlanet.customStep = (timeDelta) => {
       phase += timeDelta
       endPlanet.position = mkPosition(phase)
     }
@@ -274,6 +274,12 @@ function mkOrbit({name, player}) {
       const position = mkPosition(i, 0)
       const planet = new GravityPlanet(position, 0.6)
       movingPlanets.push(planet)
+
+      let phase = 0
+      planet.customStep = (timeDelta) => {
+        phase += timeDelta
+        planet.position = mkPosition(i, phase)
+      }
     }
     scene.gravityPlanets = scene.gravityPlanets.concat(movingPlanets)
     scene.endPlanets = [
@@ -285,15 +291,6 @@ function mkOrbit({name, player}) {
       return add(scale(fromAngle(angle), u), {x: u, y: 0})
     }
 
-    let phase = 0
-    scene.customStep = (timeDelta) => {
-      phase += timeDelta
-      let i = 0
-      for (const planet of movingPlanets) {
-        planet.position = mkPosition(i, phase)
-        i++
-      }
-    }
   }
 }
 
@@ -328,7 +325,7 @@ levels.push((scene) => {
   scene.endPlanets.push(endPlanet)
 
   let phase = 0
-  scene.customStep = (timeDelta) => {
+  endPlanet.customStep = (timeDelta) => {
     phase += timeDelta
     endPlanet.position = mkPosition(phase)
   }
@@ -372,7 +369,7 @@ function mkAxis(name: string, custom: (Scene, number) => void) {
     const endPlanet = new EndPlanet(position(0), 1)
     s.endPlanets.push(endPlanet)
     let phase = 0
-    s.customStep = (delta) => {
+    endPlanet.customStep = (delta) => {
       phase += delta
       endPlanet.position = position(phase)
     }

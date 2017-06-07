@@ -68,6 +68,49 @@ describe('scene', () => {
         expect(scene.player.position).to.eql({x: 9, y: 0})
     })
 
+    describe('customStep', () => {
+
+      function customMock(timeDelta: number): void {
+        passedTimeDelta = timeDelta
+      }
+
+      function expectCustomStepCalled(): void {
+        scene.step([], 42)
+        expect(passedTimeDelta).to.eql(42)
+      }
+
+      let passedTimeDelta: number
+      beforeEach(() => {
+        passedTimeDelta = 0
+      })
+
+      it("executes player's customSteps for every step", () => {
+        scene.player.customStep = customMock
+        expectCustomStepCalled()
+      })
+
+      it("executes gravityplanet's customSteps for every step", () => {
+        const planet = new GravityPlanet({x: 0, y: 0}, 1)
+        planet.customStep = customMock
+        scene.gravityPlanets.push(planet)
+        expectCustomStepCalled()
+      })
+
+      it("executes forbiddenPlanet's customSteps for every step", () => {
+        const planet = new ForbiddenPlanet({x: 0, y: 0}, 1)
+        planet.customStep = customMock
+        scene.forbiddenPlanets.push(planet)
+        expectCustomStepCalled()
+      })
+
+      it("executes forbiddenPlanet's customSteps for every step", () => {
+        const planet = new EndPlanet({x: 0, y: 0}, 1)
+        planet.customStep = customMock
+        scene.endPlanets.push(planet)
+        expectCustomStepCalled()
+      })
+    })
+
     describe('gravity', () => {
       beforeEach(() => {
         scene.constants.gravity = 1

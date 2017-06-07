@@ -32,6 +32,7 @@ export function castToControl(input: mixed): ?Control {
 export class SceneObject {
   position: Vector
   radius: number
+  customStep: ?((timeDelta: number) => void) = null
 
   constructor(position: Vector, radius: number) {
     this.position = position
@@ -141,6 +142,7 @@ export class Scene {
   step(controls: Set<Control>, timeDelta: number): void {
     if (this.state === 'playing') {
       this.customStep(timeDelta)
+      this._customSteps(timeDelta)
       this.planetInfluence = false
       this.gravityPlanets.map((planet) => planet.step(this, timeDelta))
       this.forbiddenPlanets.map((planet) => planet.step(this, timeDelta))
@@ -148,6 +150,14 @@ export class Scene {
       this._stepControlVelocity(controls, timeDelta)
       this._stepPosition(timeDelta)
     }
+  }
+
+  _customSteps(timeDelta: number) {
+    this.toObjects().map((object) => {
+      if (object.customStep) {
+        object.customStep(timeDelta)
+      }
+    })
   }
 
   _stepControlVelocity(controls: Set<Control>, timeDelta: number) {
