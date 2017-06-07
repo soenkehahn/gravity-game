@@ -137,16 +137,17 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
         r={o.radius}
         fill="green" />
     } else if (o instanceof GravityPlanet) {
+      const color = "yellow"
       return <g key={i}>
         <circle key="planet"
           cx={o.position.x} cy={o.position.y}
           r={o.radius}
-          fill="gray" />
+          fill={color} />
         <circle key="influence"
           cx={o.position.x} cy={o.position.y}
           r={o.influenceSize}
-          fill="gray"
-          fillOpacity={0.5} />
+          fill={color}
+          fillOpacity={0.7} />
       </g>
     } else if (o instanceof ForbiddenPlanet) {
       return <g key={i}>
