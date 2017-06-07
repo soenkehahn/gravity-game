@@ -1,21 +1,15 @@
 // @flow
 
 const path = require('path')
+const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
-  entry: ['babel-polyfill', './src/index.js'],
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
-  },
+  target: 'node',
+  externals: [nodeExternals()],
   module: {
     loaders: [
       {
         loader: "babel-loader",
-
-        include: [
-          path.resolve(__dirname, "src"),
-        ],
 
         test: /\.js$/,
 
