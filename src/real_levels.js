@@ -358,24 +358,34 @@ levels.push((s) => {
   s.endPlanets.push(new EndPlanet({x: 0, y: -u}, 1))
 })
 
-levels.push((s) => {
-  s.name = 'axis'
-  const u = 10
-  s.player.position = {x: 0, y: u}
-  s.gravityPlanets.push(new GravityPlanet({x: 0, y: u}, 0.4))
+function mkAxis(name: string, custom: (Scene, number) => void) {
+  return (s) => {
+    s.name = name
+    const u = 10
+    s.player.position = {x: 0, y: u}
+    s.gravityPlanets.push(new GravityPlanet({x: 0, y: u}, 0.4))
+    custom(s, u)
+    function position(phase) {
+      const angle = 0.5 * (phase / 1000) * TAU
+      const position = fromAngle(angle)
+      position.x *= u * 3
+      position.y *= u * 0.25
+      return position
+    }
+    const endPlanet = new EndPlanet(position(0), 1)
+    s.endPlanets.push(endPlanet)
+    let phase = 0
+    s.customStep = (delta) => {
+      phase += delta
+      endPlanet.position = position(phase)
+    }
+  }
+}
+
+levels.push(mkAxis('axis', (s, u) => {
   s.gravityPlanets.push(new GravityPlanet({x: 0, y: -u}, 0.4))
-  function position(phase) {
-    const angle = 0.5 * (phase / 1000) * TAU
-    const position = fromAngle(angle)
-    position.x *= u * 3
-    position.y *= u * 0.25
-    return position
-  }
-  const endPlanet = new EndPlanet(position(0), 1)
-  s.endPlanets.push(endPlanet)
-  let phase = 0
-  s.customStep = (delta) => {
-    phase += delta
-    endPlanet.position = position(phase)
-  }
-})
+}))
+
+levels.push(mkAxis('axis', (s, u) => {
+  s.forbiddenPlanets.push(new ForbiddenPlanet({x: 0, y: -u}, 1))
+}))
