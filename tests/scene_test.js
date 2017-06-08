@@ -2,7 +2,7 @@
 
 import {expect} from 'chai'
 
-import {Scene, Player, GravityPlanet, ForbiddenPlanet, EndPlanet} from '../src/scene'
+import {Scene, Player, GravityPlanet, ControlPlanet, ForbiddenPlanet, EndPlanet} from '../src/scene'
 import type {Vector} from '../src/objects'
 
 describe('scene', () => {
@@ -34,7 +34,7 @@ describe('scene', () => {
     for (const test of tests) {
       describe(test.control, () => {
         it('allows to change the characters velocity', () => {
-          scene.gravityPlanets = [new GravityPlanet({x: 0, y: 0}, 0)]
+          scene.gravityPlanets = [new ControlPlanet({x: 0, y: 0}, 0)]
           scene.step(new Set([test.control]), 500)
           expect(scene.player.velocity).to.eql(test.expected)
         })
@@ -45,8 +45,24 @@ describe('scene', () => {
           expect(scene.player.velocity).to.eql({x: 0, y: 0})
         })
 
+        it("doesn't move the player when under the influence of a passive gravity planet", () => {
+          scene.gravityPlanets = [new GravityPlanet({x: 0, y: 0}, 0)]
+          scene.step(new Set([test.control]), 500)
+          expect(scene.player.velocity).to.eql({x: 0, y: 0})
+        })
+
+        it("passive planets don't overwrite active planets", () => {
+          scene.gravityPlanets = [
+            new GravityPlanet({x: 0, y: 0}, 0),
+            new ControlPlanet({x: 0, y: 0}, 0),
+            new GravityPlanet({x: 0, y: 0}, 0),
+          ]
+          scene.step(new Set([test.control]), 500)
+          expect(scene.player.velocity).to.eql(test.expected)
+        })
+
         it("allows to specify the size of a planet's influence", () => {
-          scene.gravityPlanets = [new GravityPlanet({x: 0, y: 10}, 0, 12)]
+          scene.gravityPlanets = [new ControlPlanet({x: 0, y: 10}, 0, 12)]
           scene.step(new Set([test.control]), 500)
           expect(scene.player.velocity).to.eql(test.expected)
         })
@@ -80,8 +96,8 @@ describe('scene', () => {
         expectCustomStepCalled()
       })
 
-      it("executes gravityplanet's customSteps for every step", () => {
-        const planet = new GravityPlanet({x: 0, y: 0}, 1)
+      it("executes ControlPlanet's customSteps for every step", () => {
+        const planet = new ControlPlanet({x: 0, y: 0}, 1)
         planet.customStep = customMock
         scene.gravityPlanets.push(planet)
         expectCustomStepCalled()
@@ -107,86 +123,84 @@ describe('scene', () => {
         scene.constants.gravity = 1
       })
 
-      describe('planet gravity', () => {
-        it('adds velocity according to planet gravity', () => {
-          scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
-          scene.step(new Set(), 1)
-          expect(scene.player.velocity).to.eql({x: 1, y: 0})
+      it('adds velocity according to planet gravity', () => {
+        scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
+        scene.step(new Set(), 1)
+        expect(scene.player.velocity).to.eql({x: 1, y: 0})
+      })
+
+      it('simulates gravity correctly with regard to time delta', () => {
+        scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
+        scene.step(new Set(), 2)
+        expect(scene.player.velocity).to.eql({x: 2, y: 0})
+      })
+
+      it('works diagonally', () => {
+        const c = Math.sqrt(2) / 2
+        scene.gravityPlanets.push(new GravityPlanet({x: c, y: c}, 1))
+        scene.step(new Set(), 1)
+        expect(scene.player.velocity).to.eql({x: c, y: c})
+      })
+
+      it('works for multiple planets', () => {
+        scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
+        scene.gravityPlanets.push(new GravityPlanet({x: 0, y: 1}, 1))
+        scene.step(new Set(), 1)
+        expect(scene.player.velocity).to.eql({x: 1, y: 1})
+      })
+
+      it('increases gravity with the planet size', () => {
+        scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 2))
+        scene.step(new Set(), 1)
+        expect(scene.player.velocity).to.eql({x: 2, y: 0})
+      })
+
+      it('increases linearly with the distance', () => {
+        scene.gravityPlanets.push(new GravityPlanet({x: 1.5, y: 0}, 1))
+        scene.step(new Set(), 1)
+        expect(scene.player.velocity).to.eql({x: 1.5, y: 0})
+      })
+
+      it('exerts no force beyond a distance of 2', () => {
+        scene.gravityPlanets.push(new GravityPlanet({x: 2.1, y: 0}, 1))
+        scene.step(new Set(), 1)
+        expect(scene.player.velocity).to.eql({x: 0, y: 0})
+      })
+
+      it('exerts no force at a distance of 0', () => {
+        scene.gravityPlanets.push(new GravityPlanet({x: 0, y: 0}, 1))
+        scene.step(new Set(), 1)
+        expect(scene.player.velocity).to.eql({x: 0, y: 0})
+      })
+
+      it('allows to tweak a gravity constant', () => {
+        scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
+        scene.constants.gravity = 0.3
+        scene.step(new Set(), 1)
+        expect(scene.player.velocity).to.eql({x: 0.3, y: 0})
+      })
+
+      describe('drag', () => {
+        beforeEach(() => {
+          scene.constants.planetDrag = 0.1
         })
 
-        it('simulates gravity correctly with regard to time delta', () => {
+        it('applies a bit of drag', () => {
+          scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
+          scene.step(new Set(), 1)
+          expect(scene.player.velocity).to.eql({x: 0.9, y: 0})
+        })
+
+        it('increases drag with timeDelta correctly', () => {
           scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
           scene.step(new Set(), 2)
-          expect(scene.player.velocity).to.eql({x: 2, y: 0})
-        })
-
-        it('works diagonally', () => {
-          const c = Math.sqrt(2) / 2
-          scene.gravityPlanets.push(new GravityPlanet({x: c, y: c}, 1))
-          scene.step(new Set(), 1)
-          expect(scene.player.velocity).to.eql({x: c, y: c})
-        })
-
-        it('works for multiple planets', () => {
-          scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
-          scene.gravityPlanets.push(new GravityPlanet({x: 0, y: 1}, 1))
-          scene.step(new Set(), 1)
-          expect(scene.player.velocity).to.eql({x: 1, y: 1})
-        })
-
-        it('increases gravity with the planet size', () => {
-          scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 2))
-          scene.step(new Set(), 1)
-          expect(scene.player.velocity).to.eql({x: 2, y: 0})
-        })
-
-        it('increases linearly with the distance', () => {
-          scene.gravityPlanets.push(new GravityPlanet({x: 1.5, y: 0}, 1))
-          scene.step(new Set(), 1)
-          expect(scene.player.velocity).to.eql({x: 1.5, y: 0})
-        })
-
-        it('exerts no force beyond a distance of 2', () => {
-          scene.gravityPlanets.push(new GravityPlanet({x: 2.1, y: 0}, 1))
-          scene.step(new Set(), 1)
-          expect(scene.player.velocity).to.eql({x: 0, y: 0})
-        })
-
-        it('exerts no force at a distance of 0', () => {
-          scene.gravityPlanets.push(new GravityPlanet({x: 0, y: 0}, 1))
-          scene.step(new Set(), 1)
-          expect(scene.player.velocity).to.eql({x: 0, y: 0})
-        })
-
-        it('allows to tweak a gravity constant', () => {
-          scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
-          scene.constants.gravity = 0.3
-          scene.step(new Set(), 1)
-          expect(scene.player.velocity).to.eql({x: 0.3, y: 0})
-        })
-
-        describe('drag', () => {
-          beforeEach(() => {
-            scene.constants.planetDrag = 0.1
-          })
-
-          it('applies a bit of drag', () => {
-            scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
-            scene.step(new Set(), 1)
-            expect(scene.player.velocity).to.eql({x: 0.9, y: 0})
-          })
-
-          it('increases drag with timeDelta correctly', () => {
-            scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
-            scene.step(new Set(), 2)
-            expect(scene.player.velocity).to.eql({x: 2 * Math.pow(0.9, 2), y: 0})
-          })
+          expect(scene.player.velocity).to.eql({x: 2 * Math.pow(0.9, 2), y: 0})
         })
       })
     })
 
     it('works for two keys pressed at once', () => {
-      scene.gravityPlanets = [new GravityPlanet({x: 0, y: 0}, 0)]
+      scene.gravityPlanets = [new ControlPlanet({x: 0, y: 0}, 0)]
       scene.step(new Set(['ArrowRight', 'ArrowUp']), 3000)
       const expected = Math.sqrt(Math.pow(3000, 2) / 2)
       expect(scene.player.velocity).to.eql({x: expected, y: -expected})

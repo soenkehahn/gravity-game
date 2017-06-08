@@ -61,9 +61,6 @@ export class GravityPlanet extends SceneObject {
   step(scene: Scene, timeDelta: number) {
     const diff = difference(this.position, scene.player.position)
     const {direction: gravityDirection, length: distance} = normalize(diff)
-    if (distance < this.influenceSize) {
-      scene.planetInfluence = true
-    }
     if (distance === 0 || distance >= this.influenceSize) {
       return
     }
@@ -76,6 +73,17 @@ export class GravityPlanet extends SceneObject {
       scale(scene.player.velocity, Math.pow(1 - scene.constants.planetDrag, timeDelta))
   }
 
+}
+
+export class ControlPlanet extends GravityPlanet {
+  step(scene: Scene, timeDelta: number) {
+    const diff = difference(this.position, scene.player.position)
+    const {direction: gravityDirection, length: distance} = normalize(diff)
+    if (distance < this.influenceSize) {
+      scene.planetInfluence = true
+    }
+    super.step(scene, timeDelta)
+  }
 }
 
 export class ForbiddenPlanet extends SceneObject {
@@ -130,7 +138,7 @@ export class Scene {
     if (level === 'empty') {
     } else if (level === 'test') {
       this.gravityPlanets.push(
-        new GravityPlanet({x: 3, y: 4}, 1)
+        new ControlPlanet({x: 3, y: 4}, 1)
       )
     } else {
       getLevel(this, level)
