@@ -4,7 +4,7 @@ const React = require('react')
 global.React = React
 
 import type {Control, Level, SceneObject} from '../scene'
-import {Scene, castToControl, Player, GravityPlanet, ControlPlanet, ForbiddenPlanet, EndPlanet}
+import {Scene, castToControl, Player, GravityPlanet, ForbiddenPlanet, EndPlanet}
   from '../scene'
 
 type Props = {|
@@ -139,7 +139,7 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
         fill="green" />
     } else if (o instanceof GravityPlanet) {
       let color = "gray"
-      if (o instanceof ControlPlanet) {
+      if (o.isActive) {
         color = "yellow"
       }
       return <g key={i}>

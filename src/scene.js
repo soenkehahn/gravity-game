@@ -53,39 +53,45 @@ export class GravityPlanet extends SceneObject {
 
   influenceSize: number
 
-  constructor(position: Vector, radius: number, influenceSize: number = 2) {
+  isActive: boolean
+
+  constructor(position: Vector, radius: number, influenceSize: number = 2, isActive: boolean = true) {
     super(position, radius)
     this.influenceSize = influenceSize
+    this.isActive = isActive
   }
 
   step(scene: Scene, timeDelta: number) {
     const diff = difference(this.position, scene.player.position)
     const {direction: gravityDirection, length: distance} = normalize(diff)
-    if (distance === 0 || distance >= this.influenceSize) {
-      return
+
+    if (distance <= this.influenceSize) {
+      if (this.isActive) {
+        scene.planetInfluence = true
+      }
+
+      if (distance !== 0) {
+        const distanceScalar = distance
+        const scalar = timeDelta * this.radius * scene.constants.gravity * distanceScalar
+        const velocityChange = scale(gravityDirection, scalar)
+        scene.player.velocity = add(scene.player.velocity, velocityChange)
+      }
+
+      if (this.isActive) {
+        scene.player.velocity =
+          scale(scene.player.velocity, Math.pow(1 - scene.constants.planetDrag, timeDelta))
+      }
     }
-    const distanceScalar = distance
-    const scalar = timeDelta * this.radius * scene.constants.gravity * distanceScalar
-    const velocityChange = scale(gravityDirection, scalar)
-    scene.player.velocity = add(scene.player.velocity, velocityChange)
   }
 
 }
 
-export class ControlPlanet extends GravityPlanet {
-  step(scene: Scene, timeDelta: number) {
-    const diff = difference(this.position, scene.player.position)
-    const {direction: gravityDirection, length: distance} = normalize(diff)
-    if (distance < this.influenceSize) {
-      scene.planetInfluence = true
-    }
-    super.step(scene, timeDelta)
+export function newGravityPlanet(position: Vector, radius: number, influenceSize: number = 2): GravityPlanet {
+  return new GravityPlanet(position, radius, influenceSize, false)
+}
 
-    if (distance < this.influenceSize) {
-      scene.player.velocity =
-        scale(scene.player.velocity, Math.pow(1 - scene.constants.planetDrag, timeDelta))
-    }
-  }
+export function newControlPlanet(position: Vector, radius: number, influenceSize: number = 2): GravityPlanet {
+  return new GravityPlanet(position, radius, influenceSize, true)
 }
 
 export class ForbiddenPlanet extends SceneObject {
@@ -140,7 +146,7 @@ export class Scene {
     if (level === 'empty') {
     } else if (level === 'test') {
       this.gravityPlanets.push(
-        new ControlPlanet({x: 3, y: 4}, 1)
+        newControlPlanet({x: 3, y: 4}, 1)
       )
     } else {
       getLevel(this, level)

@@ -6,7 +6,8 @@ require('jsdom-global')()
 
 import {SceneComponent, getViewBox} from '../../src/ui/scene'
 import type {Scene, Control} from '../../src/scene'
-import {GravityPlanet, ControlPlanet, allControls} from '../../src/scene'
+import {SceneObject, GravityPlanet, newControlPlanet, ForbiddenPlanet, allControls}
+  from '../../src/scene'
 
 describe('ui/scene', () => {
 
@@ -88,7 +89,7 @@ describe('ui/scene', () => {
 
     describe('gravityPlanets', () => {
       it('renders gravityPlanets', () => {
-        setGravityPlanets([new ControlPlanet({x: 4, y: 5}, 10)])
+        setGravityPlanets([newControlPlanet({x: 4, y: 5}, 10)])
         expectElementWithProps(wrapper.find('circle'), {
           cx: 4,
           cy: 5,
@@ -97,7 +98,7 @@ describe('ui/scene', () => {
       })
 
       it('renders influence spheres of gravityPlanets', () => {
-        setGravityPlanets([new ControlPlanet({x: 4, y: 5}, 10, 2.4)])
+        setGravityPlanets([newControlPlanet({x: 4, y: 5}, 10, 2.4)])
         expectElementWithProps(wrapper.find('circle'), {
           cx: 4,
           cy: 5,
@@ -106,7 +107,7 @@ describe('ui/scene', () => {
       })
 
       it('uses a default influence size of 2', () => {
-        setGravityPlanets([new ControlPlanet({x: 4, y: 5}, 10)])
+        setGravityPlanets([newControlPlanet({x: 4, y: 5}, 10)])
         expectElementWithProps(wrapper.find('circle'), {
           cx: 4,
           cy: 5,
@@ -115,7 +116,7 @@ describe('ui/scene', () => {
       })
 
       it('renders forbidden planets', () => {
-        modifyScene(s => {s.forbiddenPlanets.push(new ControlPlanet({x: 5, y: 7}, 6))})
+        modifyScene(s => {s.forbiddenPlanets.push(new ForbiddenPlanet({x: 5, y: 7}, 6))})
         expectElementWithProps(wrapper.find('circle'), {
           cx: 5,
           cy: 7,
@@ -184,7 +185,7 @@ describe('ui/scene', () => {
       })
 
       it('works through keypresses', () => {
-        setGravityPlanets([new ControlPlanet({x: 0, y: 0}, 0)])
+        setGravityPlanets([newControlPlanet({x: 0, y: 0}, 0)])
         callRequestAnimationCallback(10000)
         simulateKeyEvent('keydown', 'ArrowLeft')
         callRequestAnimationCallback(10002)
