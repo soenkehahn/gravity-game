@@ -451,3 +451,18 @@ const squaredance = (length: number) => (s) => {
 for (let length = 2; length <= 7; length++) {
   levels.push(squaredance(length))
 }
+
+const slingshot = (name, endPlanetSize) => (s) => {
+  s.name = name
+  const u = 10
+  s.player.position = {x: u, y: 0}
+  s.gravityPlanets = [
+    newControlPlanet({x: u, y: 0}, 0.1, u / 2)
+  ]
+  s.forbiddenPlanets.push(new ForbiddenPlanet({x: 0, y: 0}, 1))
+  s.endPlanets.push(new EndPlanet({x: -u, y: 0}, endPlanetSize(u)))
+}
+
+levels.push(slingshot('slingshot', (u) => u / 2))
+levels.push(slingshot('slingshot 2', (u) => ((u / 2) + 1) / 2))
+levels.push(slingshot('slingshot 3', (u) => 1))
