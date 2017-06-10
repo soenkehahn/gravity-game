@@ -466,3 +466,18 @@ const slingshot = (name, endPlanetSize) => (s) => {
 levels.push(slingshot('slingshot', (u) => u / 2))
 levels.push(slingshot('slingshot 2', (u) => ((u / 2) + 1) / 2))
 levels.push(slingshot('slingshot 3', (u) => 1))
+
+levels.push((s) => {
+  s.name = 'crowded'
+  const u = 13
+  s.player.position = {x: u, y: 0}
+  s.gravityPlanets = [
+    newControlPlanet({x: u, y: 0}, 0.2),
+    newGravityPlanet({x: 0, y: 0}, 0.02, u - 2),
+  ]
+  const n = TAU * 0.05
+  s.endPlanets = [
+    new EndPlanet(scale(fromAngle((TAU / 3) + n), u), 2),
+    new EndPlanet(scale(fromAngle((TAU * 2 / 3) - n), u), 2),
+  ]
+})
