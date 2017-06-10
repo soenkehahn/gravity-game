@@ -181,20 +181,49 @@ describe('scene', () => {
       })
 
       describe('drag', () => {
+
         beforeEach(() => {
           scene.constants.planetDrag = 0.1
         })
 
-        it('applies a bit of drag', () => {
-          scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
+        it("by default doesn't apply drag", () => {
+          scene.player.velocity = {x: 1, y: 0}
           scene.step(new Set(), 1)
-          expect(scene.player.velocity).to.eql({x: 0.9, y: 0})
+          expect(scene.player.velocity).to.eql({x: 1, y: 0})
         })
 
-        it('increases drag with timeDelta correctly', () => {
-          scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
-          scene.step(new Set(), 2)
-          expect(scene.player.velocity).to.eql({x: 2 * Math.pow(0.9, 2), y: 0})
+        it("doesn't apply drag when to far away from a ControlPlanet", () => {
+          scene.gravityPlanets.push(new ControlPlanet({x: 10, y: 0}, 1))
+          scene.player.velocity = {x: 1, y: 0}
+          scene.step(new Set(), 1)
+          expect(scene.player.velocity).to.eql({x: 1, y: 0})
+        })
+
+        describe('when under the influence of a ControlPlanet', () => {
+          beforeEach(() => {
+            scene.gravityPlanets.push(new ControlPlanet({x: 1, y: 0}, 1))
+          })
+
+          it('applies a bit of drag', () => {
+            scene.step(new Set(), 1)
+            expect(scene.player.velocity).to.eql({x: 0.9, y: 0})
+          })
+
+          it('increases drag with timeDelta correctly', () => {
+            scene.step(new Set(), 2)
+            expect(scene.player.velocity).to.eql({x: 2 * Math.pow(0.9, 2), y: 0})
+          })
+        })
+
+        describe('when under the influence of a passive gravity planet', () => {
+          beforeEach(() => {
+            scene.gravityPlanets.push(new GravityPlanet({x: 1, y: 0}, 1))
+          })
+
+          it("doesn't apply any drag", () => {
+            scene.step(new Set(), 1)
+            expect(scene.player.velocity).to.eql({x: 1, y: 0})
+          })
         })
       })
     })

@@ -68,9 +68,6 @@ export class GravityPlanet extends SceneObject {
     const scalar = timeDelta * this.radius * scene.constants.gravity * distanceScalar
     const velocityChange = scale(gravityDirection, scalar)
     scene.player.velocity = add(scene.player.velocity, velocityChange)
-
-    scene.player.velocity =
-      scale(scene.player.velocity, Math.pow(1 - scene.constants.planetDrag, timeDelta))
   }
 
 }
@@ -83,6 +80,11 @@ export class ControlPlanet extends GravityPlanet {
       scene.planetInfluence = true
     }
     super.step(scene, timeDelta)
+
+    if (distance < this.influenceSize) {
+      scene.player.velocity =
+        scale(scene.player.velocity, Math.pow(1 - scene.constants.planetDrag, timeDelta))
+    }
   }
 }
 
