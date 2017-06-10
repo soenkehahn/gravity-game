@@ -16,7 +16,7 @@ export function getLevel(scene: Scene, level: RealLevel): void {
   }
 }
 
-const levels: Array<Scene => void> = []
+let levels: Array<Scene => void> = []
 
 // * levels
 
@@ -409,3 +409,45 @@ levels.push(detour('detour', () => {}))
 levels.push(detour('detour 2', (s, u) => {
   s.gravityPlanets.push(newControlPlanet({x: -2 * u, y: -2 * u}, 0.3))
 }))
+
+const squaredance = (length: number) => (s) => {
+  s.name = `squaredance ${length - 1}`
+
+  const u = 5
+  const edge = ((length - 1) / 2)
+
+  function isEdge(n: number): boolean {
+    return (n === 0) || (n === (length - 1))
+  }
+
+  for (let j = 0; j < length; j++) {
+    for (let i = 0; i < length; i++) {
+      const position = () => ({x: (-edge + i) * u, y: (-edge + j) * u})
+      if (j === length - 1 && i === j) {
+        s.player.position = position()
+        s.gravityPlanets.push(newControlPlanet(position(), 0.2, u / 2))
+      } else if (j === 0 && i === j) {
+        s.gravityPlanets.push(newControlPlanet(position(), 0.2, u / 2))
+      } else if (isEdge(j) && isEdge(i)) {
+        s.endPlanets.push(new EndPlanet(position(), 1))
+      } else if (isEdge(j) || isEdge(i)) {
+      } else {
+        s.gravityPlanets.push(newGravityPlanet(position(), 0.7, u / 2))
+      }
+    }
+  }
+
+  if (length > 2) {
+    const size = 1
+    s.forbiddenPlanets = [
+      new ForbiddenPlanet({x: -edge * u, y: 0}, size),
+      new ForbiddenPlanet({x: edge * u, y: 0}, size),
+      new ForbiddenPlanet({x: 0, y: -edge * u}, size),
+      new ForbiddenPlanet({x: 0, y: edge * u}, size),
+    ]
+  }
+}
+
+for (let length = 2; length <= 7; length++) {
+  levels.push(squaredance(length))
+}
