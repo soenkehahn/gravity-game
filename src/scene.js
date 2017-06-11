@@ -38,6 +38,9 @@ export class SceneObject {
     this.position = position
     this.radius = radius
   }
+
+  step(scene: Scene, timeDelta: number) {
+  }
 }
 
 export class Player extends SceneObject {
@@ -157,20 +160,20 @@ export class Scene {
     if (this.state === 'playing') {
       this._customSteps(timeDelta)
       this.planetInfluence = false
-      this.gravityPlanets.map((planet) => planet.step(this, timeDelta))
-      this.forbiddenPlanets.map((planet) => planet.step(this, timeDelta))
-      this.endPlanets.map((endPlanet) => endPlanet.step(this))
+      for (const object of this.toObjects()) {
+        object.step(this, timeDelta)
+      }
       this._stepControlVelocity(controls, timeDelta)
       this._stepPosition(timeDelta)
     }
   }
 
   _customSteps(timeDelta: number) {
-    this.toObjects().map((object) => {
+    for (const object of this.toObjects()) {
       if (object.customStep) {
         object.customStep(timeDelta)
       }
-    })
+    }
   }
 
   _stepControlVelocity(controls: Set<Control>, timeDelta: number) {
