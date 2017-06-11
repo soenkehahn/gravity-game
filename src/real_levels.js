@@ -438,7 +438,7 @@ const squaredance = (length: number) => (s) => {
   }
 
   if (length > 2) {
-    const size = 1
+    const size = 0.2
     s.forbiddenPlanets = [
       new ForbiddenPlanet({x: -edge * u, y: 0}, size),
       new ForbiddenPlanet({x: edge * u, y: 0}, size),
