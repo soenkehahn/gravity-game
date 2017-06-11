@@ -2,6 +2,7 @@
 
 import {expect} from 'chai'
 
+import {Controls} from '../src/control'
 import {Scene, Player, newGravityPlanet, newControlPlanet, ForbiddenPlanet, EndPlanet}
   from '../src/scene'
 import type {Vector} from '../src/objects'
@@ -36,24 +37,24 @@ describe('scene', () => {
       describe(test.control, () => {
         it('allows to change the characters velocity', () => {
           scene.addObject(newControlPlanet({x: 0, y: 0}, 0))
-          scene.step(new Set([test.control]), 500)
+          scene.step(new Controls([test.control]), 500)
           expect(scene.player.velocity).to.eql(test.expected)
         })
 
         it("doesn't move the player when there's no control planet", () => {
-          scene.step(new Set([test.control]), 500)
+          scene.step(new Controls([test.control]), 500)
           expect(scene.player.velocity).to.eql({x: 0, y: 0})
         })
 
         it("doesn't move the player when too far away from a control planet", () => {
           scene.addObject(newControlPlanet({x: 2.1, y: 0}, 0))
-          scene.step(new Set([test.control]), 500)
+          scene.step(new Controls([test.control]), 500)
           expect(scene.player.velocity).to.eql({x: 0, y: 0})
         })
 
         it("doesn't move the player when under the influence of a passive gravity planet", () => {
           scene.addObject(newGravityPlanet({x: 0, y: 0}, 0))
-          scene.step(new Set([test.control]), 500)
+          scene.step(new Controls([test.control]), 500)
           expect(scene.player.velocity).to.eql({x: 0, y: 0})
         })
 
@@ -63,13 +64,13 @@ describe('scene', () => {
             newControlPlanet({x: 0, y: 0}, 0),
             newGravityPlanet({x: 0, y: 0}, 0),
           ])
-          scene.step(new Set([test.control]), 500)
+          scene.step(new Controls([test.control]), 500)
           expect(scene.player.velocity).to.eql(test.expected)
         })
 
         it("allows to specify the size of a planet's influence", () => {
           scene.addObject(newControlPlanet({x: 0, y: 10}, 0, 12))
-          scene.step(new Set([test.control]), 500)
+          scene.step(new Controls([test.control]), 500)
           expect(scene.player.velocity).to.eql(test.expected)
         })
       })
@@ -77,7 +78,7 @@ describe('scene', () => {
 
     it('moves the player when no keys are pressed', () => {
         scene.player.velocity.x = 3
-        scene.step(new Set(), 3)
+        scene.step(new Controls(), 3)
         expect(scene.player.position).to.eql({x: 9, y: 0})
     })
 
@@ -88,7 +89,7 @@ describe('scene', () => {
       }
 
       function expectCustomStepCalled(): void {
-        scene.step(new Set(), 42)
+        scene.step(new Controls(), 42)
         expect(passedTimeDelta).to.eql(42)
       }
 
@@ -126,58 +127,58 @@ describe('scene', () => {
 
       it('adds velocity according to planet gravity', () => {
         scene.addObject(newGravityPlanet({x: 1, y: 0}, 1))
-        scene.step(new Set(), 1)
+        scene.step(new Controls(), 1)
         expect(scene.player.velocity).to.eql({x: 1, y: 0})
       })
 
       it('simulates gravity correctly with regard to time delta', () => {
         scene.addObject(newGravityPlanet({x: 1, y: 0}, 1))
-        scene.step(new Set(), 2)
+        scene.step(new Controls(), 2)
         expect(scene.player.velocity).to.eql({x: 2, y: 0})
       })
 
       it('works diagonally', () => {
         const c = Math.sqrt(2) / 2
         scene.addObject(newGravityPlanet({x: c, y: c}, 1))
-        scene.step(new Set(), 1)
+        scene.step(new Controls(), 1)
         expect(scene.player.velocity).to.eql({x: c, y: c})
       })
 
       it('works for multiple planets', () => {
         scene.addObject(newGravityPlanet({x: 1, y: 0}, 1))
         scene.addObject(newGravityPlanet({x: 0, y: 1}, 1))
-        scene.step(new Set(), 1)
+        scene.step(new Controls(), 1)
         expect(scene.player.velocity).to.eql({x: 1, y: 1})
       })
 
       it('increases gravity with the planet size', () => {
         scene.addObject(newGravityPlanet({x: 1, y: 0}, 2))
-        scene.step(new Set(), 1)
+        scene.step(new Controls(), 1)
         expect(scene.player.velocity).to.eql({x: 2, y: 0})
       })
 
       it('increases linearly with the distance', () => {
         scene.addObject(newGravityPlanet({x: 1.5, y: 0}, 1))
-        scene.step(new Set(), 1)
+        scene.step(new Controls(), 1)
         expect(scene.player.velocity).to.eql({x: 1.5, y: 0})
       })
 
       it('exerts no force beyond a distance of 2', () => {
         scene.addObject(newGravityPlanet({x: 2.1, y: 0}, 1))
-        scene.step(new Set(), 1)
+        scene.step(new Controls(), 1)
         expect(scene.player.velocity).to.eql({x: 0, y: 0})
       })
 
       it('exerts no force at a distance of 0', () => {
         scene.addObject(newGravityPlanet({x: 0, y: 0}, 1))
-        scene.step(new Set(), 1)
+        scene.step(new Controls(), 1)
         expect(scene.player.velocity).to.eql({x: 0, y: 0})
       })
 
       it('allows to tweak a gravity constant', () => {
         scene.addObject(newGravityPlanet({x: 1, y: 0}, 1))
         scene.constants.gravity = 0.3
-        scene.step(new Set(), 1)
+        scene.step(new Controls(), 1)
         expect(scene.player.velocity).to.eql({x: 0.3, y: 0})
       })
 
@@ -189,14 +190,14 @@ describe('scene', () => {
 
         it("by default doesn't apply drag", () => {
           scene.player.velocity = {x: 1, y: 0}
-          scene.step(new Set(), 1)
+          scene.step(new Controls(), 1)
           expect(scene.player.velocity).to.eql({x: 1, y: 0})
         })
 
         it("doesn't apply drag when to far away from a ControlPlanet", () => {
           scene.addObject(newControlPlanet({x: 10, y: 0}, 1))
           scene.player.velocity = {x: 1, y: 0}
-          scene.step(new Set(), 1)
+          scene.step(new Controls(), 1)
           expect(scene.player.velocity).to.eql({x: 1, y: 0})
         })
 
@@ -206,12 +207,12 @@ describe('scene', () => {
           })
 
           it('applies a bit of drag', () => {
-            scene.step(new Set(), 1)
+            scene.step(new Controls(), 1)
             expect(scene.player.velocity).to.eql({x: 0.9, y: 0})
           })
 
           it('increases drag with timeDelta correctly', () => {
-            scene.step(new Set(), 2)
+            scene.step(new Controls(), 2)
             expect(scene.player.velocity).to.eql({x: 2 * Math.pow(0.9, 2), y: 0})
           })
         })
@@ -222,7 +223,7 @@ describe('scene', () => {
           })
 
           it("doesn't apply any drag", () => {
-            scene.step(new Set(), 1)
+            scene.step(new Controls(), 1)
             expect(scene.player.velocity).to.eql({x: 1, y: 0})
           })
         })
@@ -231,7 +232,7 @@ describe('scene', () => {
 
     it('works for two keys pressed at once', () => {
       scene.addObject(newControlPlanet({x: 0, y: 0}, 0))
-      scene.step(new Set(['ArrowRight', 'ArrowUp']), 3000)
+      scene.step(new Controls(['ArrowRight', 'ArrowUp']), 3000)
       const expected = Math.sqrt(Math.pow(3000, 2) / 2)
       expect(scene.player.velocity).to.eql({x: expected, y: -expected})
     })
@@ -242,7 +243,7 @@ describe('scene', () => {
     describe('when touching a forbidden planet', () => {
       beforeEach(() => {
         scene.addObject(new ForbiddenPlanet({x: 1.9, y: 0}, 1))
-        scene.step(new Set(), 500)
+        scene.step(new Controls(), 500)
       })
 
       it("sets the state to 'game over' when touching a forbidden planet", () => {
@@ -251,14 +252,14 @@ describe('scene', () => {
 
       it('stops the simulation', () => {
         scene.addObject(newGravityPlanet({x: 0, y: 0}, 0))
-        scene.step(new Set(['ArrowRight']), 500)
+        scene.step(new Controls(['ArrowRight']), 500)
         expect(scene.player.position).to.eql({x: 0, y: 0})
       })
     })
 
     it("doesn't end the game when not touching a forbidden planet", () => {
       scene.addObject(new ForbiddenPlanet({x: 2.1, y: 0}, 1))
-      scene.step(new Set(), 1)
+      scene.step(new Controls(), 1)
       expect(scene.state).to.eql('playing')
     })
   })
@@ -267,25 +268,25 @@ describe('scene', () => {
     it('switches to the success state when touching an end planet', () => {
       scene.addObject(new EndPlanet({x: 1, y: 0}, 1))
       expect(scene.state).to.eql('playing')
-      scene.step(new Set(['ArrowRight']), 1)
+      scene.step(new Controls(['ArrowRight']), 1)
       expect(scene.state).to.eql('success')
     })
 
     it("stays in state 'playing' if they two objects don't touch", () => {
       scene.addObject(new EndPlanet({x: 2.1, y: 0}, 1))
-      scene.step(new Set(), 1)
+      scene.step(new Controls(), 1)
       expect(scene.state).to.eql('playing')
     })
 
     it("switches to 'success' if the player and the end planet touch slightly", () => {
       scene.addObject(new EndPlanet({x: 0.9, y: 0}, 1))
-      scene.step(new Set(), 1)
+      scene.step(new Controls(), 1)
       expect(scene.state).to.eql('success')
     })
 
     it('works with different end planet radiuses', () => {
       scene.addObject(new EndPlanet({x: 2.9, y: 0}, 2))
-      scene.step(new Set(), 1)
+      scene.step(new Controls(), 1)
       expect(scene.state).to.eql('success')
     })
   })
@@ -305,7 +306,5 @@ describe('scene', () => {
       const objects = scene.toSceneObjects()
       expect(objects[0]).to.eql(new EndPlanet({x: 1, y: 2}, 3))
     })
-
   })
-
 })

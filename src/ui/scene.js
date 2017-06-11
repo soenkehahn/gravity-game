@@ -3,8 +3,9 @@
 const React = require('react')
 global.React = React
 
-import type {Control, Level, SceneObject} from '../scene'
-import {Scene, castToControl, Player, GravityPlanet, ForbiddenPlanet, EndPlanet}
+import {Controls} from '../control'
+import type {Level, SceneObject} from '../scene'
+import {Scene, Player, GravityPlanet, ForbiddenPlanet, EndPlanet}
   from '../scene'
 
 type Props = {|
@@ -14,7 +15,7 @@ type Props = {|
 type State = {|
   level: Level,
   scene: Scene,
-  pressed: Set<Control>,
+  controls: Controls,
   lastTime: ?number,
 |}
 
@@ -31,29 +32,20 @@ export class SceneComponent extends React.Component<void, Props, State> {
     return {
       level: level,
       scene: new Scene(level),
-      pressed: new Set(),
+      controls: new Controls(),
       lastTime: null,
     }
   }
 
   componentDidMount() {
     this.addKeyboardEventListener('keydown', event => {
-      const control = castToControl(event.code)
-      if (control && (! event.repeat)) {
-        event.preventDefault()
-        const state = this.state
-        state.pressed.add(control)
-        this.setState(state)
-      }
+      this.state.controls.update(event)
+      this.setState({controls: this.state.controls})
     })
 
     this.addKeyboardEventListener('keyup', event => {
-      const state = this.state
-      const control = castToControl(event.code)
-      if (control) {
-        state.pressed.delete(control)
-        this.setState(state)
-      }
+      this.state.controls.update(event)
+      this.setState({controls: this.state.controls})
     })
 
     requestAnimationFrame((now) => this.loop(now))
@@ -68,23 +60,18 @@ export class SceneComponent extends React.Component<void, Props, State> {
       this.setState({lastTime: now})
     } else {
       const scene = this.state.scene
-      scene.step(this.state.pressed, now - this.state.lastTime)
-      if (scene.state === 'success' || this.state.pressed.has('F7')) {
+      scene.step(this.state.controls, now - this.state.lastTime)
+      if (scene.state === 'success' || this.state.controls.shouldSkipLevel()) {
         this._nextLevel()
-      } else if (this.state.pressed.has('F6')) {
+      } else if (this.state.controls.shouldGotoPreviousLevel()) {
         this._previousLevel()
-      } else if (this._shouldRestart()) {
+      } else if (this.state.controls.shouldRestartLevel()) {
         this.setState(this._newScene(this.state.level))
       } else {
         this.setState({scene: scene, lastTime: now})
       }
     }
     requestAnimationFrame((now) => this.loop(now))
-  }
-
-  _shouldRestart() {
-    const pressed = this.state.pressed
-    return pressed.has('Enter') || pressed.has('Space')
   }
 
   _nextLevel() {

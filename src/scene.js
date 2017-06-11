@@ -4,30 +4,7 @@ import type {Vector} from './objects'
 import {equals, add, scale, difference, normalize} from './objects'
 import type {RealLevel} from './real_levels'
 import {getLevel} from './real_levels'
-
-export type Control
-  = 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown'
-  | 'Space' | 'Enter' | 'F6' | 'F7'
-
-export const allControls: Array<Control> = [
-  'ArrowRight',
-  'ArrowLeft',
-  'ArrowUp',
-  'ArrowDown',
-  'Space',
-  'Enter',
-  'F6',
-  'F7',
-]
-
-export function castToControl(input: mixed): ?Control {
-  const a: any = input
-  if (allControls.includes(a)) {
-    return a
-  } else {
-    return null
-  }
-}
+import type {Controls} from './control'
 
 export class SceneObject {
   position: Vector
@@ -167,7 +144,7 @@ export class Scene {
     }
   }
 
-  step(controls: Set<Control>, timeDelta: number): void {
+  step(controls: Controls, timeDelta: number): void {
     if (this.state === 'playing') {
       this._customSteps(timeDelta)
       this.planetInfluence = false
@@ -187,23 +164,12 @@ export class Scene {
     }
   }
 
-  _stepControlVelocity(controls: Set<Control>, timeDelta: number) {
+  _stepControlVelocity(controls: Controls, timeDelta: number) {
     if (this.planetInfluence) {
-      let controlVector = {x: 0, y: 0}
-      for (const control of controls) {
-        if (control === 'ArrowRight') {
-          controlVector.x++
-        } else if (control === 'ArrowLeft') {
-          controlVector.x--
-        } else if (control === 'ArrowUp') {
-          controlVector.y--
-        } else if (control === 'ArrowDown') {
-          controlVector.y++
-        }
-      }
-      if (! equals(controlVector, {x: 0, y: 0})) {
+      const controlVector = controls.controlVector()
+      if (controlVector) {
         this.player.velocity = add(this.player.velocity,
-          scale(normalize(controlVector).direction, this.constants.controlForce * timeDelta))
+          scale(controlVector, this.constants.controlForce * timeDelta))
       }
     }
   }

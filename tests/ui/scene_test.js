@@ -4,9 +4,11 @@ import {expect} from 'chai'
 import {mount} from 'enzyme'
 require('jsdom-global')()
 
+import type {UIControl} from '../../src/control'
+import {allControls} from '../../src/control'
 import {SceneComponent, getViewBox} from '../../src/ui/scene'
-import type {Scene, Control} from '../../src/scene'
-import {SceneObject, GravityPlanet, newControlPlanet, ForbiddenPlanet, allControls}
+import type {Scene} from '../../src/scene'
+import {SceneObject, GravityPlanet, newControlPlanet, ForbiddenPlanet}
   from '../../src/scene'
 
 describe('ui/scene', () => {
@@ -126,32 +128,32 @@ describe('ui/scene', () => {
       for (const controlKey of allControls) {
         it(`remembers pressed control keys (${controlKey})`, () => {
           simulateKeyEvent('keydown', controlKey)
-          expect([...wrapper.state().pressed]).to.eql([controlKey])
+          expect([...wrapper.state().controls._set]).to.eql([controlKey])
         })
       }
 
       it('tracks released keys correctly', () => {
         simulateKeyEvent('keydown', 'ArrowLeft')
         simulateKeyEvent('keyup', 'ArrowLeft')
-        expect([...wrapper.state().pressed]).to.eql([])
+        expect([...wrapper.state().controls._set]).to.eql([])
       })
 
       it('tracks more than one key correctly', () => {
         simulateKeyEvent('keydown', 'ArrowLeft')
         simulateKeyEvent('keydown', 'ArrowDown')
         simulateKeyEvent('keyup', 'ArrowLeft')
-        expect([...wrapper.state().pressed]).to.eql(['ArrowDown'])
+        expect([...wrapper.state().controls._set]).to.eql(['ArrowDown'])
       })
 
       it("doesn't track keypresses twice", () => {
         simulateKeyEvent('keydown', 'ArrowLeft')
         simulateKeyEvent('keydown', 'ArrowLeft')
-        expect([...wrapper.state().pressed]).to.eql(['ArrowLeft'])
+        expect([...wrapper.state().controls._set]).to.eql(['ArrowLeft'])
       })
 
       it("doesn't track keypresses that are marked as 'repeat'", () => {
         simulateKeyEvent('keydown', 'ArrowLeft', true)
-        expect([...wrapper.state().pressed]).to.eql([])
+        expect([...wrapper.state().controls._set]).to.eql([])
       })
     })
 
@@ -194,7 +196,7 @@ describe('ui/scene', () => {
       })
     })
 
-    const restartKeys: Array<Control> = ['Enter', 'Space']
+    const restartKeys: Array<UIControl> = ['Enter', 'Space']
     for (const restartKey of restartKeys) {
       describe(`when pressing ${restartKey}`, () => {
         it('restarts the current level', () => {
@@ -260,7 +262,7 @@ describe('ui/scene', () => {
   })
 })
 
-function simulateKeyEvent(type: KeyboardEventTypes, code: Control, repeat: boolean = false) {
+function simulateKeyEvent(type: KeyboardEventTypes, code: UIControl, repeat: boolean = false) {
   const event = new KeyboardEvent(type, {
     code: code,
     repeat: repeat,
