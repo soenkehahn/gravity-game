@@ -100,7 +100,6 @@ export class SceneComponent extends React.Component<void, Props, State> {
   }
 
   render() {
-    const attractorsActive = this.state.pressed.has('Space')
     const textStyle = {
       position: "absolute",
       margin: "10px",
@@ -119,12 +118,12 @@ export class SceneComponent extends React.Component<void, Props, State> {
         <br/>
         <div>{`Level: ${levelName}`}</div>
       </div>
-      <Render scene={this.state.scene} attractorsActive={attractorsActive} />
+      <Render scene={this.state.scene} />
     </div>
   }
 }
 
-class Render extends React.Component<void, {scene: Scene, attractorsActive: boolean}, void> {
+class Render extends React.Component<void, {scene: Scene}, void> {
 
   _renderUIObject(o: SceneObject, i: number): * {
     if (o instanceof Player) {
