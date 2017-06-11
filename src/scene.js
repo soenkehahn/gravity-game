@@ -32,14 +32,10 @@ export function castToControl(input: mixed): ?Control {
 export class SceneObject {
   position: Vector
   radius: number
-  customStep: ?((timeDelta: number) => void) = null
 
   constructor(position: Vector, radius: number) {
     this.position = position
     this.radius = radius
-  }
-
-  step(scene: Scene, timeDelta: number) {
   }
 }
 
@@ -52,7 +48,15 @@ export class Player extends SceneObject {
   }
 }
 
-export class GravityPlanet extends SceneObject {
+export class Planet extends SceneObject {
+
+  customStep: ?((timeDelta: number) => void) = null
+
+  step(scene: Scene, timeDelta: number) {
+  }
+}
+
+export class GravityPlanet extends Planet {
 
   influenceSize: number
 
@@ -97,7 +101,7 @@ export function newControlPlanet(position: Vector, radius: number, influenceSize
   return new GravityPlanet(position, radius, influenceSize, true)
 }
 
-export class ForbiddenPlanet extends SceneObject {
+export class ForbiddenPlanet extends Planet {
   step(scene: Scene): void {
     const {length: distance} = normalize(difference(scene.player.position, this.position))
     if (distance < (1 + this.radius)) {
@@ -106,7 +110,7 @@ export class ForbiddenPlanet extends SceneObject {
   }
 }
 
-export class EndPlanet extends SceneObject {
+export class EndPlanet extends Planet {
   step(scene: Scene): void {
     const {length: distance} = normalize(difference(scene.player.position, this.position))
     if (distance < (1 + this.radius)) {
@@ -140,12 +144,12 @@ export class Scene {
 
   planetInfluence: boolean = false
 
-  objects: Array<SceneObject> = []
+  planets: Array<Planet> = []
 
   constructor(level: Level) {
     if (level === 'empty') {
     } else if (level === 'test') {
-      this.objects.push(
+      this.planets.push(
         newControlPlanet({x: 3, y: 4}, 1)
       )
     } else {
@@ -153,12 +157,12 @@ export class Scene {
     }
   }
 
-  addObject(object: SceneObject) {
-    this.objects.push(object)
+  addObject(object: Planet) {
+    this.planets.push(object)
   }
 
-  addObjects(objects: Array<SceneObject>) {
-    for (const object of objects) {
+  addObjects(planets: Array<Planet>) {
+    for (const object of planets) {
       this.addObject(object)
     }
   }
@@ -167,7 +171,7 @@ export class Scene {
     if (this.state === 'playing') {
       this._customSteps(timeDelta)
       this.planetInfluence = false
-      for (const object of this.toObjects()) {
+      for (const object of this.planets) {
         object.step(this, timeDelta)
       }
       this._stepControlVelocity(controls, timeDelta)
@@ -176,7 +180,7 @@ export class Scene {
   }
 
   _customSteps(timeDelta: number) {
-    for (const object of this.toObjects()) {
+    for (const object of this.planets) {
       if (object.customStep) {
         object.customStep(timeDelta)
       }
@@ -209,9 +213,9 @@ export class Scene {
     this.player.position.y += this.player.velocity.y * timeDelta
   }
 
-  toObjects(): Array<SceneObject> {
+  toSceneObjects(): Array<SceneObject> {
     let result = []
-    result = result.concat(this.objects)
+    result = result.concat(this.planets)
     result.push(this.player)
     return result
   }

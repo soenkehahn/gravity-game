@@ -97,11 +97,6 @@ describe('scene', () => {
         passedTimeDelta = 0
       })
 
-      it("executes player's customSteps for every step", () => {
-        scene.player.customStep = customMock
-        expectCustomStepCalled()
-      })
-
       it("executes ControlPlanet's customSteps for every step", () => {
         const planet = newControlPlanet({x: 0, y: 0}, 1)
         planet.customStep = customMock
@@ -295,19 +290,19 @@ describe('scene', () => {
     })
   })
 
-  describe('toObjects', () => {
+  describe('toSceneObjects', () => {
 
     it('returns the player', () => {
       const position = {x: 42, y: 23}
       scene.player.position = position
-      const objects = scene.toObjects()
+      const objects = scene.toSceneObjects()
       const expected = new Player({x: 42, y: 23})
       expect(objects).to.eql([expected])
     })
 
     it('returns the end planets', () => {
       scene.addObject(new EndPlanet({x: 1, y: 2}, 3))
-      const objects = scene.toObjects()
+      const objects = scene.toSceneObjects()
       expect(objects[0]).to.eql(new EndPlanet({x: 1, y: 2}, 3))
     })
 

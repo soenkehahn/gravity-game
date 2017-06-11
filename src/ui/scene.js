@@ -165,7 +165,7 @@ class Render extends React.Component<void, {scene: Scene, attractorsActive: bool
   }
 
   render() {
-    const objects = this.props.scene.toObjects()
+    const objects = this.props.scene.toSceneObjects()
     const viewBox = getViewBox()
     return <svg
       xmlns="http://www.w3.org/2000/svg"
