@@ -26,14 +26,10 @@ describe('ui/scene', () => {
 
   let wrapper
 
-  function modifyScene(f: Scene => void) {
+  function addSceneObjects(gravityPlanets: Array<SceneObject>): void {
     let scene = wrapper.state().scene
-    f(scene)
+    scene.addObjects(gravityPlanets)
     wrapper.setState({scene: scene})
-  }
-
-  function setGravityPlanets(gravityPlanets: Array<GravityPlanet>): void {
-    modifyScene((s) => {s.gravityPlanets = gravityPlanets})
   }
 
   afterEach(() => {
@@ -89,7 +85,7 @@ describe('ui/scene', () => {
 
     describe('gravityPlanets', () => {
       it('renders gravityPlanets', () => {
-        setGravityPlanets([newControlPlanet({x: 4, y: 5}, 10)])
+        addSceneObjects([newControlPlanet({x: 4, y: 5}, 10)])
         expectElementWithProps(wrapper.find('circle'), {
           cx: 4,
           cy: 5,
@@ -98,7 +94,7 @@ describe('ui/scene', () => {
       })
 
       it('renders influence spheres of gravityPlanets', () => {
-        setGravityPlanets([newControlPlanet({x: 4, y: 5}, 10, 2.4)])
+        addSceneObjects([newControlPlanet({x: 4, y: 5}, 10, 2.4)])
         expectElementWithProps(wrapper.find('circle'), {
           cx: 4,
           cy: 5,
@@ -107,7 +103,7 @@ describe('ui/scene', () => {
       })
 
       it('uses a default influence size of 2', () => {
-        setGravityPlanets([newControlPlanet({x: 4, y: 5}, 10)])
+        addSceneObjects([newControlPlanet({x: 4, y: 5}, 10)])
         expectElementWithProps(wrapper.find('circle'), {
           cx: 4,
           cy: 5,
@@ -116,7 +112,8 @@ describe('ui/scene', () => {
       })
 
       it('renders forbidden planets', () => {
-        modifyScene(s => {s.forbiddenPlanets.push(new ForbiddenPlanet({x: 5, y: 7}, 6))})
+        addSceneObjects([new ForbiddenPlanet({x: 5, y: 7}, 6)])
+
         expectElementWithProps(wrapper.find('circle'), {
           cx: 5,
           cy: 7,
@@ -185,7 +182,7 @@ describe('ui/scene', () => {
       })
 
       it('works through keypresses', () => {
-        setGravityPlanets([newControlPlanet({x: 0, y: 0}, 0)])
+        addSceneObjects([newControlPlanet({x: 0, y: 0}, 0)])
         callRequestAnimationCallback(10000)
         simulateKeyEvent('keydown', 'ArrowLeft')
         callRequestAnimationCallback(10002)

@@ -23,196 +23,164 @@ let levels: Array<Scene => void> = []
 levels.push((scene) => {
   scene.name = "tutorial"
   scene.player.position = {x: -5, y: 0}
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet({x: -5, y: 0}, 0.1),
-  ]
-  scene.endPlanets = [
     new EndPlanet({x: 5, y: 0}, 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "tutorial 2"
   scene.player.position = {x: 0, y: -5}
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet({x: 0, y: -5}, 0.1),
-  ]
-  scene.endPlanets = [
     new EndPlanet({x: 0, y: 5}, 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "heavier"
   scene.player.position = {x: 5, y: 0}
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet({x: 5, y: 0}, 0.2),
-  ]
-  scene.endPlanets = [
     new EndPlanet({x: -5, y: 0}, 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "heavier 2"
   scene.player.position = {x: 0, y: 5}
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet({x: 0, y: 5}, 0.2),
-  ]
-  scene.endPlanets = [
     new EndPlanet({x: 0, y: -5}, 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "45 degrees"
   let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
   scene.player.position = {x: unit, y: unit}
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet({x: unit, y: unit}, 0.2),
-  ]
-  scene.endPlanets = [
     new EndPlanet({x: -unit, y: -unit}, 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "difficult angle"
   let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
   scene.player.position = {x: unit / 2, y: unit}
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet({x: unit / 2, y: unit}, 0.2),
-  ]
-  scene.endPlanets = [
     new EndPlanet({x: -unit / 2, y: -unit}, 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "difficult angle 2"
   let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
   scene.player.position = {x: unit / 2, y: unit * 1.5}
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet({x: unit / 2, y: unit * 1.5}, 0.2),
-  ]
-  scene.endPlanets = [
     new EndPlanet({x: -unit / 2, y: -unit * 1.5}, 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "difficult angle 3"
   let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
   scene.player.position = {x: unit / 2, y: unit * 2}
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet({x: unit / 2, y: unit * 2}, 0.2),
-  ]
-  scene.endPlanets = [
     new EndPlanet({x: -unit / 2, y: -unit * 2}, 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "difficult angle 4"
   let unit = Math.sqrt(Math.pow(10.0, 2.0) / 2.0) / 2.0
   scene.player.position = {x: unit / 2, y: unit * 2.5}
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet({x: unit / 2, y: unit * 2.5}, 0.2),
-  ]
-  scene.endPlanets = [
     new EndPlanet({x: -unit / 2, y: -unit * 2.5}, 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "corners"
   scene.player.position = scale({x: -5, y: 5}, 0.75)
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet(scale({x: -5, y: 5}, 0.75), 0.2),
     newControlPlanet(scale({x: 5, y: 5}, 0.75), 0.2),
-  ]
-  scene.endPlanets = [
     new EndPlanet(scale({x: 5, y: -5}, 0.75), 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "corners 2"
   scene.player.position = scale({x: -10, y: 5}, 0.75)
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet(scale({x: -10, y: 5}, 0.75), 0.2),
     newControlPlanet(scale({x: 0, y: 5}, 0.75), 0.2),
     newControlPlanet(scale({x: 0, y: -5}, 0.75), 0.2),
-  ]
-  scene.endPlanets = [
     new EndPlanet(scale({x: 10, y: -5}, 0.75), 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "corners 3"
   scene.player.position = scale({x: -10, y: 10}, 0.75)
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet(scale({x: -10, y: 10}, 0.75), 0.2),
     newControlPlanet(scale({x: -10, y: 0}, 0.75), 0.2),
     newControlPlanet(scale({x: 0, y: 0}, 0.75), 0.2),
     newControlPlanet(scale({x: 0, y: -10}, 0.75), 0.2),
-  ]
-  scene.endPlanets = [
     new EndPlanet(scale({x: 10, y: -10}, 0.75), 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "corners 4"
   scene.player.position = scale({x: -10, y: 10}, 0.75)
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet(scale({x: -10, y: 10}, 0.75), 0.2),
     newControlPlanet(scale({x: -10, y: 0}, 0.75), 0.2),
     newControlPlanet(scale({x: 0, y: 0}, 0.75), 0.55),
     newControlPlanet(scale({x: 0, y: -10}, 0.75), 0.2),
-  ]
-  scene.endPlanets = [
     new EndPlanet(scale({x: 10, y: -10}, 0.75), 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "corners 5"
   scene.player.position = scale({x: -10, y: 10}, 0.75)
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet(scale({x: -10, y: 10}, 0.75), 0.2),
     newControlPlanet(scale({x: -10, y: 0}, 0.75), 0.2),
     newControlPlanet(scale({x: 0, y: 0}, 0.75), 0.9),
     newControlPlanet(scale({x: 0, y: -10}, 0.75), 0.2),
-  ]
-  scene.endPlanets = [
     new EndPlanet(scale({x: 10, y: -10}, 0.75), 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "corners 6"
   scene.player.position = scale({x: 0, y: 10}, 0.75)
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet(scale({x: 0, y: 10}, 0.75), 0.2),
     newControlPlanet(scale({x: 0, y: 0}, 0.75), 0.9),
-  ]
-  scene.endPlanets = [
     new EndPlanet(scale({x: 0, y: -10}, 0.75), 1),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = "corners 7"
   scene.player.position = scale({x: 0, y: 10}, 0.75)
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet(scale({x: 0, y: 10}, 0.75), 0.9),
     newControlPlanet(scale({x: 0, y: 0}, 0.75), 0.9),
-  ]
-  scene.endPlanets = [
     new EndPlanet(scale({x: 0, y: -10}, 0.75), 1),
-  ]
+  ])
 })
 
 function mkSwing(name, mkAngle: (number) => number) {
@@ -221,9 +189,7 @@ function mkSwing(name, mkAngle: (number) => number) {
     const unit = 9
     const origin = () => ({x: -(unit / 2), y: 0})
     scene.player.position = origin()
-    scene.gravityPlanets = [
-      newControlPlanet(origin(), 0.1, unit),
-    ]
+    scene.addObject(newControlPlanet(origin(), 0.1, unit))
 
     function mkPosition(phase: number): Vector {
       const angle = mkAngle(phase)
@@ -235,7 +201,7 @@ function mkSwing(name, mkAngle: (number) => number) {
       phase += timeDelta
       endPlanet.position = mkPosition(phase)
     }
-    scene.endPlanets = [endPlanet]
+    scene.addObject(endPlanet)
   }
 }
 
@@ -250,13 +216,9 @@ levels.push((scene) => {
   const unit = 4
   scene.player.position = {x: unit * -5, y: unit * 3}
   for (let x = -5; x < 5; x++) {
-    scene.gravityPlanets.push(
-      newControlPlanet({x: unit * x, y: unit * - x * 3 / 5}, 0.1),
-    )
+    scene.addObject(newControlPlanet({x: unit * x, y: unit * - x * 3 / 5}, 0.1))
   }
-  scene.endPlanets = [
-    new EndPlanet({x: unit * 5, y: unit * -3}, 1),
-  ]
+  scene.addObject(new EndPlanet({x: unit * 5, y: unit * -3}, 1))
 })
 
 function mkOrbit({name, player}) {
@@ -264,9 +226,7 @@ function mkOrbit({name, player}) {
     scene.name = name
     const u = 10
     scene.player.position = player(u)
-    scene.gravityPlanets = [
-      newControlPlanet(player(u), 0.2)
-    ]
+    scene.addObject(newControlPlanet(player(u), 0.2))
 
     const length = 11
     const movingPlanets = []
@@ -281,10 +241,8 @@ function mkOrbit({name, player}) {
         planet.position = mkPosition(i, phase)
       }
     }
-    scene.gravityPlanets = scene.gravityPlanets.concat(movingPlanets)
-    scene.endPlanets = [
-      new EndPlanet({x: u, y: 0}, 1),
-    ]
+    scene.addObjects(movingPlanets)
+    scene.addObject(new EndPlanet({x: u, y: 0}, 1))
 
     function mkPosition(i, phase) {
       const angle = (0.023 * (phase / 1000) * TAU) + (TAU / length) * i
@@ -301,28 +259,26 @@ levels.push((scene) => {
   scene.name = 'overlap'
   const u = 4
   scene.player.position = {x: -2 * u, y: 0}
-  scene.endPlanets = [
-    new EndPlanet({x: 2 * u, y: 0}, 1)
-  ]
+  scene.addObject(new EndPlanet({x: 2 * u, y: 0}, 1))
   const radius = 0.2
   const influence = 5
-  scene.gravityPlanets = [
+  scene.addObjects([
     newControlPlanet(_.cloneDeep(scene.player.position), 0.2),
     newControlPlanet({x: 0, y: -u}, radius, influence),
     newControlPlanet({x: 0, y: u}, radius, influence),
-  ]
+  ])
 })
 
 levels.push((scene) => {
   scene.name = 'which direction'
   const u = 10
-  scene.gravityPlanets.push(newControlPlanet(_.cloneDeep(scene.player.position), 0.5))
+  scene.addObject(newControlPlanet(_.cloneDeep(scene.player.position), 0.5))
   function mkPosition(phase) {
     const angle = 0.048 * (phase / 1000) * TAU
     return scale(fromAngle(angle), u)
   }
   const endPlanet = new EndPlanet(mkPosition(0), 1)
-  scene.endPlanets.push(endPlanet)
+  scene.addObject(endPlanet)
 
   let phase = 0
   endPlanet.customStep = (timeDelta) => {
@@ -334,22 +290,24 @@ levels.push((scene) => {
 levels.push((s) => {
   s.name = 'pills'
   const u = 10
-  s.gravityPlanets.push(newControlPlanet({x: 0, y: 0}, 0.3))
-  s.forbiddenPlanets.push(new ForbiddenPlanet({x: -u, y: 0}, 1))
-  s.endPlanets.push(new EndPlanet({x: u, y: 0}, 1))
+  s.addObjects([
+    newControlPlanet({x: 0, y: 0}, 0.3),
+    new ForbiddenPlanet({x: -u, y: 0}, 1),
+  ])
+  s.addObject(new EndPlanet({x: u, y: 0}, 1))
 })
 
 levels.push((s) => {
   s.name = 'pills 2'
   const u = 10
   s.player.position = {x: 0, y: u}
-  s.gravityPlanets = [
+  s.addObjects([
     newControlPlanet({x: 0, y: u}, 0.3),
     newControlPlanet({x: u, y: 0}, 0.3),
     newControlPlanet({x: -u, y: 0}, 0.3),
-  ]
-  s.forbiddenPlanets.push(new ForbiddenPlanet({x: 0, y: 0}, 1))
-  s.endPlanets.push(new EndPlanet({x: 0, y: -u}, 1))
+    new ForbiddenPlanet({x: 0, y: 0}, 1),
+  ])
+  s.addObject(new EndPlanet({x: 0, y: -u}, 1))
 })
 
 function mkAxis(name: string, custom: (Scene, number) => void) {
@@ -357,7 +315,7 @@ function mkAxis(name: string, custom: (Scene, number) => void) {
     s.name = name
     const u = 10
     s.player.position = {x: 0, y: u}
-    s.gravityPlanets.push(newControlPlanet({x: 0, y: u}, 0.4))
+    s.addObject(newControlPlanet({x: 0, y: u}, 0.4))
     custom(s, u)
     function position(phase) {
       const angle = 0.5 * (phase / 1000) * TAU
@@ -367,7 +325,7 @@ function mkAxis(name: string, custom: (Scene, number) => void) {
       return position
     }
     const endPlanet = new EndPlanet(position(0), 1)
-    s.endPlanets.push(endPlanet)
+    s.addObject(endPlanet)
     let phase = 0
     endPlanet.customStep = (delta) => {
       phase += delta
@@ -377,37 +335,35 @@ function mkAxis(name: string, custom: (Scene, number) => void) {
 }
 
 levels.push(mkAxis('axis', (s, u) => {
-  s.gravityPlanets.push(newControlPlanet({x: 0, y: -u}, 0.4))
+  s.addObject(newControlPlanet({x: 0, y: -u}, 0.4))
 }))
 
 levels.push(mkAxis('axis', (s, u) => {
-  s.forbiddenPlanets.push(new ForbiddenPlanet({x: 0, y: -u}, 1))
+  s.addObject(new ForbiddenPlanet({x: 0, y: -u}, 1))
 }))
 
 const detour = (name, custom) => (s) => {
   s.name = name
   const u = 8
   s.player.position = {x: -u, y: u}
-  s.forbiddenPlanets = [
+  s.addObjects([
     new ForbiddenPlanet({x: -u, y: 0}, 0.1),
     new ForbiddenPlanet({x: 0, y: 0}, 0.1),
     new ForbiddenPlanet({x: u, y: 0}, 0.1),
-  ]
-  s.gravityPlanets = [
     newControlPlanet({x: -u, y: u}, 0.3),
     newControlPlanet({x: 0, y: u}, 0.3),
     newControlPlanet({x: u, y: u}, 0.3),
     newControlPlanet({x: 2 * u, y: 0}, 0.3),
     newControlPlanet({x: u, y: -u}, 0.3),
     newControlPlanet({x: 0, y: -u}, 0.3),
-  ]
-  s.endPlanets.push(new EndPlanet({x: -u, y: -u}, 1))
+    new EndPlanet({x: -u, y: -u}, 1),
+  ])
   custom(s, u)
 }
 
 levels.push(detour('detour', () => {}))
 levels.push(detour('detour 2', (s, u) => {
-  s.gravityPlanets.push(newControlPlanet({x: -2 * u, y: -2 * u}, 0.3))
+  s.addObject(newControlPlanet({x: -2 * u, y: -2 * u}, 0.3))
 }))
 
 const squaredance = (length: number) => (s) => {
@@ -425,26 +381,26 @@ const squaredance = (length: number) => (s) => {
       const position = () => ({x: (-edge + i) * u, y: (-edge + j) * u})
       if (j === length - 1 && i === j) {
         s.player.position = position()
-        s.gravityPlanets.push(newControlPlanet(position(), 0.2, u / 2))
+        s.addObject(newControlPlanet(position(), 0.2, u / 2))
       } else if (j === 0 && i === j) {
-        s.gravityPlanets.push(newControlPlanet(position(), 0.2, u / 2))
+        s.addObject(newControlPlanet(position(), 0.2, u / 2))
       } else if (isEdge(j) && isEdge(i)) {
-        s.endPlanets.push(new EndPlanet(position(), 1))
+        s.addObject(new EndPlanet(position(), 1))
       } else if (isEdge(j) || isEdge(i)) {
       } else {
-        s.gravityPlanets.push(newGravityPlanet(position(), 0.7, u / 2))
+        s.addObject(newGravityPlanet(position(), 0.7, u / 2))
       }
     }
   }
 
   if (length > 2) {
     const size = 0.2
-    s.forbiddenPlanets = [
+    s.addObjects([
       new ForbiddenPlanet({x: -edge * u, y: 0}, size),
       new ForbiddenPlanet({x: edge * u, y: 0}, size),
       new ForbiddenPlanet({x: 0, y: -edge * u}, size),
       new ForbiddenPlanet({x: 0, y: edge * u}, size),
-    ]
+    ])
   }
 }
 
@@ -456,11 +412,11 @@ const slingshot = (name, endPlanetSize) => (s) => {
   s.name = name
   const u = 10
   s.player.position = {x: u, y: 0}
-  s.gravityPlanets = [
-    newControlPlanet({x: u, y: 0}, 0.1, u / 2)
-  ]
-  s.forbiddenPlanets.push(new ForbiddenPlanet({x: 0, y: 0}, 1))
-  s.endPlanets.push(new EndPlanet({x: -u, y: 0}, endPlanetSize(u)))
+  s.addObjects([
+    newControlPlanet({x: u, y: 0}, 0.1, u / 2),
+    new ForbiddenPlanet({x: 0, y: 0}, 1),
+    new EndPlanet({x: -u, y: 0}, endPlanetSize(u)),
+  ])
 }
 
 levels.push(slingshot('slingshot', (u) => u / 2))
@@ -471,13 +427,11 @@ levels.push((s) => {
   s.name = 'crowded'
   const u = 13
   s.player.position = {x: u, y: 0}
-  s.gravityPlanets = [
+  const n = TAU * 0.05
+  s.addObjects([
     newControlPlanet({x: u, y: 0}, 0.2),
     newGravityPlanet({x: 0, y: 0}, 0.02, u - 2),
-  ]
-  const n = TAU * 0.05
-  s.endPlanets = [
     new EndPlanet(scale(fromAngle((TAU / 3) + n), u), 2),
     new EndPlanet(scale(fromAngle((TAU * 2 / 3) - n), u), 2),
-  ]
+  ])
 })

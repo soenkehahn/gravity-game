@@ -138,21 +138,28 @@ export class Scene {
 
   player: Player = new Player()
 
-  gravityPlanets: Array<GravityPlanet> = []
   planetInfluence: boolean = false
 
-  forbiddenPlanets: Array<ForbiddenPlanet> = []
-
-  endPlanets: Array<EndPlanet> = []
+  objects: Array<SceneObject> = []
 
   constructor(level: Level) {
     if (level === 'empty') {
     } else if (level === 'test') {
-      this.gravityPlanets.push(
+      this.objects.push(
         newControlPlanet({x: 3, y: 4}, 1)
       )
     } else {
       getLevel(this, level)
+    }
+  }
+
+  addObject(object: SceneObject) {
+    this.objects.push(object)
+  }
+
+  addObjects(objects: Array<SceneObject>) {
+    for (const object of objects) {
+      this.addObject(object)
     }
   }
 
@@ -204,9 +211,7 @@ export class Scene {
 
   toObjects(): Array<SceneObject> {
     let result = []
-    result = result.concat(this.gravityPlanets)
-    result = result.concat(this.forbiddenPlanets)
-    result = result.concat(this.endPlanets)
+    result = result.concat(this.objects)
     result.push(this.player)
     return result
   }
