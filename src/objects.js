@@ -29,6 +29,13 @@ export function add(a: Vector, b: Vector): Vector {
   }
 }
 
+export function minus(a: Vector, b: Vector): Vector {
+  return {
+    x: a.x - b.x,
+    y: a.y - b.y,
+  }
+}
+
 export function scale(vector: Vector, scalar: number): Vector {
   return {
     x: vector.x * scalar,

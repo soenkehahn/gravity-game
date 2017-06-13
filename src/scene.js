@@ -166,7 +166,7 @@ export class Scene {
 
   _stepControlVelocity(controls: Controls, timeDelta: number) {
     if (this.planetInfluence) {
-      const controlVector = controls.controlVector()
+      const controlVector = controls.controlVector(this)
       if (controlVector) {
         this.player.velocity = add(this.player.velocity,
           scale(controlVector, this.constants.controlForce * timeDelta))

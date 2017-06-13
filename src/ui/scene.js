@@ -48,11 +48,41 @@ export class SceneComponent extends React.Component<void, Props, State> {
       this.setState({controls: this.state.controls})
     })
 
+    this.addTouchEventListeners()
+
     requestAnimationFrame((now) => this.loop(now))
   }
 
   addKeyboardEventListener(type: KeyboardEventTypes, callback: KeyboardEventListener) {
     document.addEventListener(type, callback)
+  }
+
+  addTouchEventListeners() {
+    const types = ['touchstart', 'touchmove', 'touchend']
+    for (const type of types) {
+      document.addEventListener(type, (event: TouchEvent) => {
+        // warning: untested code
+        event.preventDefault()
+        const touches = []
+        for (const touch of event.touches) {
+          touches.push({
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+          })
+        }
+        this._handleTouchEvent(getViewBox(), touches)
+      }, {passive: false})
+    }
+  }
+
+  _handleTouchEvent(viewBox: ViewBox, rawTouches: Array<{clientX: number, clientY: number}>) {
+    const touches = rawTouches.map((rawTouch) =>
+      ({
+        x: (rawTouch.clientX * viewBox.svgWidth / viewBox.windowWidth) - viewBox.svgWidth / 2,
+        y: (rawTouch.clientY * viewBox.svgHeight / viewBox.windowHeight) - viewBox.svgHeight / 2,
+      }))
+    this.state.controls.update(new Set(touches))
+    this.setState({controls: this.state.controls})
   }
 
   loop(now: number) {
@@ -157,8 +187,8 @@ class Render extends React.Component<void, {scene: Scene}, void> {
       xmlns="http://www.w3.org/2000/svg"
 
       viewBox={viewBox.viewBox}
-      width={viewBox.width}
-      height={viewBox.height}
+      width={viewBox.windowWidth}
+      height={viewBox.windowHeight}
       >
 
       <rect
@@ -171,7 +201,15 @@ class Render extends React.Component<void, {scene: Scene}, void> {
 
 }
 
-export function getViewBox() {
+type ViewBox = {|
+  windowWidth: number,
+  windowHeight: number,
+  svgWidth: number,
+  svgHeight: number,
+  viewBox: string,
+|}
+
+export function getViewBox(): ViewBox {
   const ratio = window.innerWidth / window.innerHeight
   let height, width
   if (ratio > 1) {
@@ -184,8 +222,10 @@ export function getViewBox() {
   const minX = -width / 2
   const minY = -height / 2
   return {
-    width: window.innerWidth,
-    height: window.innerHeight,
+    windowWidth: window.innerWidth,
+    windowHeight: window.innerHeight,
+    svgWidth: width,
+    svgHeight: height,
     viewBox: `${minX} ${minY} ${width.toString()} ${height.toString()}`,
   }
 }

@@ -2,7 +2,7 @@
 
 import {expect} from 'chai'
 
-import {equals, add, scale, difference, normalize, fromAngle, TAU}
+import {equals, add, minus, scale, difference, normalize, fromAngle, TAU}
   from '../src/objects'
 
 describe('objects', () => {
@@ -40,6 +40,14 @@ describe('objects', () => {
       const a = {x: 2, y: 3}
       const b = {x: 4, y: 5}
       expect(add(a, b)).to.eql({x: 6, y: 8})
+    })
+  })
+
+  describe('minus', () => {
+    it('subtracts componentwise', () => {
+      const a = {x: 2, y: 3}
+      const b = {x: 4, y: 1}
+      expect(minus(a, b)).to.eql({x: -2, y: 2})
     })
   })
 

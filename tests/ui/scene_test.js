@@ -43,8 +43,10 @@ describe('ui/scene', () => {
       window.innerWidth = 1000
       window.innerHeight = 600
       expect(getViewBox()).to.eql({
-        width: 1000,
-        height: 600,
+        windowWidth: 1000,
+        windowHeight: 600,
+        svgWidth: 66,
+        svgHeight: 40,
         viewBox: "-33 -20 66 40",
       })
     })
@@ -53,8 +55,10 @@ describe('ui/scene', () => {
       window.innerWidth = 400
       window.innerHeight = 600
       expect(getViewBox()).to.eql({
-        width: 400,
-        height: 600,
+        windowWidth: 400,
+        windowHeight: 600,
+        svgWidth: 40,
+        svgHeight: 60,
         viewBox: "-20 -30 40 60",
       })
     })
@@ -154,6 +158,37 @@ describe('ui/scene', () => {
       it("doesn't track keypresses that are marked as 'repeat'", () => {
         simulateKeyEvent('keydown', 'ArrowLeft', true)
         expect([...wrapper.state().controls._set]).to.eql([])
+      })
+    })
+
+    describe('touch events', () => {
+
+      beforeEach(() => {
+        const viewBox = {
+          windowWidth: 600,
+          windowHeight: 400,
+          svgWidth: 60,
+          svgHeight: 40,
+          viewBox: 'test-viewbox',
+        }
+        const component: SceneComponent = (wrapper.instance(): any)
+        const touch = {
+          type: 'touchstart',
+          clientX: 400,
+          clientY: 200,
+        }
+        component._handleTouchEvent(viewBox, [touch])
+      })
+
+      it('relays touch events to the controls', () => {
+        const state = wrapper.state()
+        expect(state.controls.controlVector(state.scene)).to.eql({x: 1, y: 0})
+      })
+
+      it('transforms the touch event coordinates according to the viewbox', () => {
+        expect([...wrapper.state().controls._touches]).to.eql([
+          {x: 10, y: 0},
+        ])
       })
     })
 
