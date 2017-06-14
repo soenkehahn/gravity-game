@@ -387,20 +387,16 @@ const squaredance = (length: number) => (s) => {
       } else if (isEdge(j) && isEdge(i)) {
         s.addObject(new EndPlanet(position(), 1))
       } else if (isEdge(j) || isEdge(i)) {
+        if (i + j === 1 || i + j === (length * 2) - 3) {
+          const size = 0.2
+          s.addObject(new ForbiddenPlanet(position(), size))
+        } else {
+          s.addObject(new EndPlanet(position(), 1))
+        }
       } else {
         s.addObject(newGravityPlanet(position(), 0.7, u / 2))
       }
     }
-  }
-
-  if (length > 2) {
-    const size = 0.2
-    s.addObjects([
-      new ForbiddenPlanet({x: -edge * u, y: 0}, size),
-      new ForbiddenPlanet({x: edge * u, y: 0}, size),
-      new ForbiddenPlanet({x: 0, y: -edge * u}, size),
-      new ForbiddenPlanet({x: 0, y: edge * u}, size),
-    ])
   }
 }
 
