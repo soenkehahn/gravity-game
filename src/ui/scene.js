@@ -23,6 +23,8 @@ export class SceneComponent extends React.Component<void, Props, State> {
 
   state: State
 
+  svgRef: ?Node
+
   constructor(props: Props) {
     super(props)
     this.state = this._newScene(props.startLevel)
@@ -58,20 +60,22 @@ export class SceneComponent extends React.Component<void, Props, State> {
   }
 
   addTouchEventListeners() {
-    const types = ['touchstart', 'touchmove', 'touchend']
-    for (const type of types) {
-      document.addEventListener(type, (event: TouchEvent) => {
-        // warning: untested code
-        event.preventDefault()
-        const touches = []
-        for (const touch of event.touches) {
-          touches.push({
-            clientX: touch.clientX,
-            clientY: touch.clientY,
-          })
-        }
-        this._handleTouchEvent(getViewBox(), touches)
-      }, {passive: false})
+    if (this.svgRef) {
+      const types = ['touchstart', 'touchmove', 'touchend']
+      for (const type of types) {
+        this.svgRef.addEventListener(type, (event: TouchEvent) => {
+          // warning: untested code
+          event.preventDefault()
+          const touches = []
+          for (const touch of event.touches) {
+            touches.push({
+              clientX: touch.clientX,
+              clientY: touch.clientY,
+            })
+          }
+          this._handleTouchEvent(getViewBox(), touches)
+        }, {passive: false})
+      }
     }
   }
 
@@ -135,12 +139,20 @@ export class SceneComponent extends React.Component<void, Props, State> {
         <br/>
         <div>{`Level: ${levelName}`}</div>
       </div>
-      <Render scene={this.state.scene} />
+      <Render
+        scene={this.state.scene}
+        setSvgRef={node => {this.svgRef = node}}
+        />
     </div>
   }
 }
 
-class Render extends React.Component<void, {scene: Scene}, void> {
+type RenderProps = {
+  scene: Scene,
+  setSvgRef: Node => void,
+}
+
+class Render extends React.Component<void, RenderProps, void> {
 
   _renderUIObject(o: SceneObject, i: number): * {
     if (o instanceof Player) {
@@ -189,6 +201,8 @@ class Render extends React.Component<void, {scene: Scene}, void> {
       viewBox={viewBox.viewBox}
       width={viewBox.windowWidth}
       height={viewBox.windowHeight}
+
+      ref={node => this.props.setSvgRef(node)}
       >
 
       <rect
