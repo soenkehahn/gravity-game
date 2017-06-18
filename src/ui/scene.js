@@ -1,7 +1,8 @@
 // @flow
 
-const React = require('react')
+import React from 'react'
 global.React = React
+import __hazTouch from 'haz-touch'
 
 import {Controls} from '../control'
 import type {Level, SceneObject} from '../scene'
@@ -23,11 +24,18 @@ export class SceneComponent extends React.Component<void, Props, State> {
 
   state: State
 
+  hazTouch: boolean
+
   svgRef: ?Node
 
   constructor(props: Props) {
     super(props)
     this.state = this._newScene(props.startLevel)
+    if (__hazTouch) {
+      this.hazTouch = true
+    } else {
+      this.hazTouch = false
+    }
   }
 
   _newScene(level: Level): State {
@@ -100,12 +108,16 @@ export class SceneComponent extends React.Component<void, Props, State> {
       } else if (this.state.controls.shouldGotoPreviousLevel()) {
         this._previousLevel()
       } else if (this.state.controls.shouldRestartLevel()) {
-        this.setState(this._newScene(this.state.level))
+        this._restartLevel()
       } else {
         this.setState({scene: scene, lastTime: now})
       }
     }
     requestAnimationFrame((now) => this.loop(now))
+  }
+
+  _restartLevel() {
+    this.setState(this._newScene(this.state.level))
   }
 
   _nextLevel() {
@@ -121,11 +133,31 @@ export class SceneComponent extends React.Component<void, Props, State> {
   }
 
   render() {
-    const textStyle = {
+    return <div style={{cursor: "none"}}>
+      {this._renderHeader()}
+      <Render
+        scene={this.state.scene}
+        setSvgRef={node => {this.svgRef = node}}
+        />
+      {this._renderRestartButton()}
+    </div>
+  }
+
+  _fontSize(): number {
+    if (this.hazTouch) {
+      return 80
+    } else {
+      return 16
+    }
+  }
+
+  _renderHeader() {
+    const style = {
       position: "absolute",
       margin: "10px",
       color: "white",
-      'fontFamily': 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+      fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+      fontSize: this._fontSize(),
     }
     let levelName: string
     if (this.state.scene.name) {
@@ -133,17 +165,38 @@ export class SceneComponent extends React.Component<void, Props, State> {
     } else {
       levelName = `untitled (${this.state.level})`
     }
-    return <div style={{cursor: "none"}}>
-      <div style={textStyle}>
+    let helpText = null
+    if (!this.hazTouch) {
+      helpText = <div>
         Controls: Arrow keys to move, Space to reset the level
         <br/>
-        <div>{`Level: ${levelName}`}</div>
       </div>
-      <Render
-        scene={this.state.scene}
-        setSvgRef={node => {this.svgRef = node}}
-        />
+    }
+
+    return <div style={style}>
+      {helpText}
+      <div>{`Level: ${levelName}`}</div>
     </div>
+  }
+
+  _renderRestartButton() {
+    if (this.hazTouch) {
+      const style = {
+        position: "absolute",
+        right: 0,
+        bottom: 0,
+        margin: "10px",
+        color: "white",
+        backgroundColor: 'black',
+        fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+        fontSize: this._fontSize(),
+      }
+      return <div
+        style={style}
+        onClick={(event) => {this._restartLevel()}} >
+        Restart
+      </div>
+    }
   }
 }
 

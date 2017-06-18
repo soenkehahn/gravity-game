@@ -1,6 +1,7 @@
 // @flow
 
 import {expect} from 'chai'
+import type {ReactWrapper} from 'enzyme'
 import {mount} from 'enzyme'
 require('jsdom-global')()
 
@@ -249,6 +250,61 @@ describe('ui/scene', () => {
       })
     }
 
+    const copy = 'Controls: Arrow keys to move, Space to reset the level'
+
+    const restartElement: () => ReactWrapper = () =>
+      wrapper.find('div').findWhere((e) => e.text() === 'Restart')
+
+    describe('when using a touch device', () => {
+
+      beforeEach(() => {
+        (wrapper.instance(): any).hazTouch = true
+        wrapper.update()
+      })
+
+      it('shows a reset button', () => {
+        expect(restartElement().length).to.eql(1)
+      })
+
+      it('clicking the reset button resets the level', () => {
+        const state = wrapper.state()
+        state.scene.player.position.x = 1
+        wrapper.setState(state)
+
+        callRequestAnimationCallback(10000)
+        expect(wrapper.state().scene.player.position.x).to.eql(1)
+
+        restartElement().simulate('click')
+        callRequestAnimationCallback(10001)
+        expect(wrapper.state().scene.player.position.x).to.eql(0)
+      })
+
+      it("doesn't show the keyboard help text", () => {
+        expect(wrapper.text()).to.not.include(copy)
+      })
+
+      it('uses a big font size', () => {
+        const component: SceneComponent = (wrapper.instance(): any)
+        expect(component._fontSize()).to.eql(80)
+      })
+    })
+
+    describe('when not using a touch device', () => {
+      it("doesn't show a reset button", () => {
+        expect(restartElement().length).to.eql(0)
+      })
+
+      it('uses a small font size', () => {
+        const component: SceneComponent = (wrapper.instance(): any)
+        expect(component._fontSize()).to.eql(16)
+      })
+    })
+
+    describe('help OSD', () => {
+      it('shows the keyboard help text', () => {
+        expect(wrapper.text()).to.include(copy)
+      })
+    })
   })
 
   describe('when playing level 1', () => {
