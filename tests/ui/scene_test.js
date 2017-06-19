@@ -9,7 +9,7 @@ import type {UIControl} from '../../src/control'
 import {allControls} from '../../src/control'
 import {SceneComponent, getViewBox} from '../../src/ui/scene'
 import type {Scene} from '../../src/scene'
-import {SceneObject, GravityPlanet, newControlPlanet, ForbiddenPlanet}
+import {SceneCircle, GravityPlanet, newControlPlanet, ForbiddenPlanet}
   from '../../src/scene'
 
 describe('ui/scene', () => {
@@ -29,7 +29,7 @@ describe('ui/scene', () => {
 
   let wrapper
 
-  function addSceneObjects(gravityPlanets: Array<SceneObject>): void {
+  function addSceneCircles(gravityPlanets: Array<SceneCircle>): void {
     let scene = wrapper.state().scene
     scene.addObjects(gravityPlanets)
     wrapper.setState({scene: scene})
@@ -92,7 +92,7 @@ describe('ui/scene', () => {
 
     describe('gravityPlanets', () => {
       it('renders gravityPlanets', () => {
-        addSceneObjects([newControlPlanet({x: 4, y: 5}, 10)])
+        addSceneCircles([newControlPlanet({x: 4, y: 5}, 10)])
         expectElementWithProps(wrapper.find('circle'), {
           cx: 4,
           cy: 5,
@@ -101,7 +101,7 @@ describe('ui/scene', () => {
       })
 
       it('renders influence spheres of gravityPlanets', () => {
-        addSceneObjects([newControlPlanet({x: 4, y: 5}, 10, 2.4)])
+        addSceneCircles([newControlPlanet({x: 4, y: 5}, 10, 2.4)])
         expectElementWithProps(wrapper.find('circle'), {
           cx: 4,
           cy: 5,
@@ -110,7 +110,7 @@ describe('ui/scene', () => {
       })
 
       it('uses a default influence size of 2', () => {
-        addSceneObjects([newControlPlanet({x: 4, y: 5}, 10)])
+        addSceneCircles([newControlPlanet({x: 4, y: 5}, 10)])
         expectElementWithProps(wrapper.find('circle'), {
           cx: 4,
           cy: 5,
@@ -119,7 +119,7 @@ describe('ui/scene', () => {
       })
 
       it('renders forbidden planets', () => {
-        addSceneObjects([new ForbiddenPlanet({x: 5, y: 7}, 6)])
+        addSceneCircles([new ForbiddenPlanet({x: 5, y: 7}, 6)])
 
         expectElementWithProps(wrapper.find('circle'), {
           cx: 5,
@@ -202,34 +202,70 @@ describe('ui/scene', () => {
       })
     })
 
-    describe('when calling requestAnimationFrame callbacks', () => {
+    describe('requestAnimationFrame', () => {
       it('saves the last time at the first call', () => {
         callRequestAnimationCallback(10000)
         expect(wrapper.state().lastTime).to.eql(10000)
       })
+    })
 
-      it('moves the player by the current velocity', () => {
-        wrapper.state().scene.player.velocity.x = 3
+    it('moves the player by the current velocity', () => {
+      wrapper.state().scene.player.velocity.x = 3
+      callRequestAnimationCallback(10000)
+      callRequestAnimationCallback(10002)
+      expectElementWithProps(wrapper.find('circle'), {
+        cx: 2 * 3,
+        cy: 0,
+        r: 1,
+      })
+    })
+
+    it('moves the player through keypresses', () => {
+      addSceneCircles([newControlPlanet({x: 0, y: 0}, 0)])
+      callRequestAnimationCallback(10000)
+      simulateKeyEvent('keydown', 'ArrowLeft')
+      callRequestAnimationCallback(10002)
+      expectElementWithProps(wrapper.find('circle'), {
+        cx: -(2 * 2),
+        cy: 0,
+        r: 1,
+      })
+    })
+
+    const tests = [
+      {arrow: 'ArrowLeft', x1: -4, y1: 0, x2: -7, y2: 0},
+      {arrow: 'ArrowUp', x1: 0, y1: -4, x2: 0, y2: -7},
+    ]
+    for (const test of tests) {
+      it(`shows an indicator for exerted force (${test.arrow})`, () => {
+        addSceneCircles([newControlPlanet({x: 0, y: 0}, 0)])
         callRequestAnimationCallback(10000)
+        simulateKeyEvent('keydown', test.arrow)
         callRequestAnimationCallback(10002)
-        expectElementWithProps(wrapper.find('circle'), {
-          cx: 2 * 3,
-          cy: 0,
-          r: 1,
+        expectElementWithProps(wrapper.find('line'), {
+          x1: test.x1,
+          y1: test.y1,
+          x2: test.x2,
+          y2: test.y2,
         })
       })
+    }
 
-      it('works through keypresses', () => {
-        addSceneObjects([newControlPlanet({x: 0, y: 0}, 0)])
-        callRequestAnimationCallback(10000)
-        simulateKeyEvent('keydown', 'ArrowLeft')
-        callRequestAnimationCallback(10002)
-        expectElementWithProps(wrapper.find('circle'), {
-          cx: -(2 * 2),
-          cy: 0,
-          r: 1,
-        })
-      })
+    it(`stops showing the indicator after the key is released`, () => {
+      addSceneCircles([newControlPlanet({x: 0, y: 0}, 0)])
+      callRequestAnimationCallback(10000)
+      simulateKeyEvent('keydown', 'ArrowLeft')
+      callRequestAnimationCallback(10002)
+      simulateKeyEvent('keyup', 'ArrowLeft')
+      callRequestAnimationCallback(10004)
+      expect(wrapper.find('line').length).to.eql(0)
+    })
+
+    it("doesn't show an indicator when no force is exerted", () => {
+      addSceneCircles([newControlPlanet({x: 0, y: 0}, 0)])
+      callRequestAnimationCallback(10000)
+      callRequestAnimationCallback(10002)
+      expect(wrapper.find('line').length).to.eql(0)
     })
 
     const restartKeys: Array<UIControl> = ['Enter', 'Space']

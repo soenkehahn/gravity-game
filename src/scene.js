@@ -8,15 +8,31 @@ import type {Controls} from './control'
 
 export class SceneObject {
   position: Vector
+
+  constructor(position: Vector) {
+    this.position = position
+  }
+}
+
+export class SceneLine extends SceneObject {
+  end: Vector
+
+  constructor(position: Vector, end: Vector) {
+    super(position)
+    this.end = end
+  }
+}
+
+export class SceneCircle extends SceneObject {
   radius: number
 
   constructor(position: Vector, radius: number) {
-    this.position = position
+    super(position)
     this.radius = radius
   }
 }
 
-export class Player extends SceneObject {
+export class Player extends SceneCircle {
 
   velocity: Vector = {x: 0, y: 0}
 
@@ -25,7 +41,7 @@ export class Player extends SceneObject {
   }
 }
 
-export class Planet extends SceneObject {
+export class Planet extends SceneCircle {
 
   customStep: ?((timeDelta: number) => void) = null
 
@@ -120,6 +136,7 @@ export class Scene {
   player: Player = new Player()
 
   planetInfluence: boolean = false
+  controlVector: ?Vector = null
 
   planets: Array<Planet> = []
 
@@ -148,6 +165,7 @@ export class Scene {
     if (this.state === 'playing') {
       this._customSteps(timeDelta)
       this.planetInfluence = false
+      this.controlVector = null
       for (const object of this.planets) {
         object.step(this, timeDelta)
       }
@@ -166,10 +184,10 @@ export class Scene {
 
   _stepControlVelocity(controls: Controls, timeDelta: number) {
     if (this.planetInfluence) {
-      const controlVector = controls.controlVector(this)
-      if (controlVector) {
+      this.controlVector = controls.controlVector(this)
+      if (this.controlVector) {
         this.player.velocity = add(this.player.velocity,
-          scale(controlVector, this.constants.controlForce * timeDelta))
+          scale(this.controlVector, this.constants.controlForce * timeDelta))
       }
     }
   }
@@ -183,6 +201,13 @@ export class Scene {
     let result = []
     result = result.concat(this.planets)
     result.push(this.player)
+    if (this.controlVector) {
+      const line = new SceneLine(
+        this.player.position,
+        add(this.player.position, scale(this.controlVector, 3))
+      )
+      result.push(line)
+    }
     return result
   }
 }

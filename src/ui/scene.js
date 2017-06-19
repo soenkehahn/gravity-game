@@ -5,9 +5,9 @@ global.React = React
 import __hazTouch from 'haz-touch'
 
 import {Controls} from '../control'
-import type {Level, SceneObject} from '../scene'
-import {Scene, Player, GravityPlanet, ForbiddenPlanet, EndPlanet}
-  from '../scene'
+import type {Level} from '../scene'
+import {Scene, SceneObject, SceneLine, Player, GravityPlanet, ForbiddenPlanet,
+  EndPlanet} from '../scene'
 
 type Props = {|
   startLevel: Level
@@ -240,6 +240,25 @@ class Render extends React.Component<void, RenderProps, void> {
           cx={o.position.x} cy={o.position.y}
           r={o.radius}
           fill="red" />
+      </g>
+    } else if (o instanceof SceneLine) {
+      const color = "yellow"
+      return <g>
+        <line
+          x1={o.position.x}
+          y1={o.position.y}
+          x2={o.end.x}
+          y2={o.end.y}
+          stroke={color}
+          strokeWidth={0.3}
+          strokeLinecap="round"
+          />
+        <circle
+          cx={o.end.x}
+          cy={o.end.y}
+          r={0.5}
+          fill={color}
+          />
       </g>
     }
     throw new Error('unknown SceneObject class: ' + o.constructor.name)
