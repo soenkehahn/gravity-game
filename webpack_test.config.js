@@ -1,10 +1,10 @@
 // @flow
 
-const path = require('path')
-const nodeExternals = require('webpack-node-externals')
+const path = require("path");
+const nodeExternals = require("webpack-node-externals");
 
 module.exports = {
-  target: 'node',
+  target: "node",
   externals: [nodeExternals()],
   module: {
     loaders: [
@@ -14,10 +14,10 @@ module.exports = {
         test: /\.js$/,
 
         query: {
-          plugins: ['transform-runtime'],
-          presets: ['es2015', 'stage-0'],
+          plugins: ["transform-runtime"],
+          presets: ["es2015", "stage-0"]
         }
-      },
+      }
     ]
-  },
-}
+  }
+};
