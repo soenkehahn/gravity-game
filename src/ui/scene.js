@@ -3,6 +3,7 @@
 import React from "react";
 global.React = React;
 import __hazTouch from "haz-touch";
+import { lens } from "flow-lens";
 
 import { Controls } from "../control";
 import type { Level } from "../scene";
@@ -26,6 +27,11 @@ type State = {|
   controls: Controls,
   lastTime: ?number
 |};
+
+const controls_ = lens((state, f) => ({
+  ...state,
+  controls: f(state.controls)
+}));
 
 export class SceneComponent extends React.Component<void, Props, State> {
   state: State;
@@ -55,13 +61,21 @@ export class SceneComponent extends React.Component<void, Props, State> {
 
   componentDidMount() {
     this.addKeyboardEventListener("keydown", event => {
-      this.state.controls.update(event);
-      this.setState({ controls: this.state.controls });
+      this.setState(
+        controls_.modify(this.state, c => {
+          c.update(event);
+          return c;
+        })
+      );
     });
 
     this.addKeyboardEventListener("keyup", event => {
-      this.state.controls.update(event);
-      this.setState({ controls: this.state.controls });
+      this.setState(
+        controls_.modify(this.state, c => {
+          c.update(event);
+          return c;
+        })
+      );
     });
 
     this.addTouchEventListeners();

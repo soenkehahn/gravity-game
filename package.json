@@ -35,6 +35,7 @@
     "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
+    "flow-lens": "^1.0.0-alpha",
     "haz-touch": "^1.1.1",
     "lodash": "^4.17.4",
     "react": "^15.5.4",
