@@ -5,7 +5,10 @@
       "transform-react-jsx",
       "transform-flow-strip-types"
     ],
-    "presets": ["es2015", "stage-0"]
+    "presets": [
+      "es2015",
+      "stage-0"
+    ]
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

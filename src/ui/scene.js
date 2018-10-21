@@ -106,10 +106,10 @@ export class SceneComponent extends React.Component<void, Props, State> {
   ) {
     const touches = rawTouches.map(rawTouch => ({
       x:
-        rawTouch.clientX * viewBox.svgWidth / viewBox.windowWidth -
+        (rawTouch.clientX * viewBox.svgWidth) / viewBox.windowWidth -
         viewBox.svgWidth / 2,
       y:
-        rawTouch.clientY * viewBox.svgHeight / viewBox.windowHeight -
+        (rawTouch.clientY * viewBox.svgHeight) / viewBox.windowHeight -
         viewBox.svgHeight / 2
     }));
     this.state.controls.update(new Set(touches));

@@ -222,7 +222,7 @@ levels.push(scene => {
   scene.player.position = { x: unit * -5, y: unit * 3 };
   for (let x = -5; x < 5; x++) {
     scene.addObject(
-      newControlPlanet({ x: unit * x, y: unit * -x * 3 / 5 }, 0.1)
+      newControlPlanet({ x: unit * x, y: (unit * -x * 3) / 5 }, 0.1)
     );
   }
   scene.addObject(new EndPlanet({ x: unit * 5, y: unit * -3 }, 1));
@@ -252,7 +252,7 @@ function mkOrbit({ name, player }) {
     scene.addObject(new EndPlanet({ x: u, y: 0 }, 1));
 
     function mkPosition(i, phase) {
-      const angle = 0.023 * (phase / 1000) * TAU + TAU / length * i;
+      const angle = 0.023 * (phase / 1000) * TAU + (TAU / length) * i;
       return add(scale(fromAngle(angle), u), { x: u, y: 0 });
     }
   };
@@ -440,6 +440,6 @@ levels.push(s => {
     newControlPlanet({ x: u, y: 0 }, 0.2),
     newGravityPlanet({ x: 0, y: 0 }, 0.02, u - 2),
     new EndPlanet(scale(fromAngle(TAU / 3 + n), u), 2),
-    new EndPlanet(scale(fromAngle(TAU * 2 / 3 - n), u), 2)
+    new EndPlanet(scale(fromAngle((TAU * 2) / 3 - n), u), 2)
   ]);
 });
