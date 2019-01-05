@@ -14221,7 +14221,11 @@ var _scene = __webpack_require__(261);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var root = document.getElementById("root");
-_reactDom2.default.render(React.createElement(_scene.SceneComponent, { startLevel: 1 }), root);
+if (root) {
+  _reactDom2.default.render(React.createElement(_scene.SceneComponent, { startLevel: 1 }), root);
+} else {
+  throw new Error("root not found");
+}
 
 /***/ }),
 /* 258 */
