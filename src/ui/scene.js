@@ -27,7 +27,7 @@ type State = {|
   lastTime: ?number
 |};
 
-export class SceneComponent extends React.Component<void, Props, State> {
+export class SceneComponent extends React.Component<Props, State> {
   state: State;
 
   hazTouch: boolean;
@@ -234,10 +234,10 @@ export class SceneComponent extends React.Component<void, Props, State> {
 
 type RenderProps = {
   scene: Scene,
-  setSvgRef: Node => void
+  setSvgRef: (Node | null) => void
 };
 
-class Render extends React.Component<void, RenderProps, void> {
+class Render extends React.Component<RenderProps, void> {
   _renderUIObject(o: SceneObject, i: number): * {
     if (o instanceof Player) {
       return (

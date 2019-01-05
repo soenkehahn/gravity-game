@@ -352,7 +352,7 @@ levels.push(
   })
 );
 
-const detour = (name, custom) => s => {
+const detour = (name, custom: (Scene, number) => void) => s => {
   s.name = name;
   const u = 8;
   s.player.position = { x: -u, y: u };
