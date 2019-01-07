@@ -29,12 +29,10 @@
     "jsdom": "^10.1.0",
     "jsdom-global": "^3.0.2",
     "mocha": "^3.3.0",
-    "mocha-webpack": "^0.7.0",
     "prettier": "^1.10.2",
     "react-addons-test-utils": "^15.5.1",
     "webpack": "^2.5.1",
-    "webpack-dev-server": "^2.4.5",
-    "webpack-node-externals": "^1.6.0"
+    "webpack-dev-server": "^2.4.5"
   },
   "dependencies": {
     "haz-touch": "^1.1.1",
