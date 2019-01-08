@@ -8,6 +8,7 @@ dev:
 	parcel src/index.html
 
 deploy-to-docs:
+	rm docs -rf
 	parcel build \
 	  --public-url https://soenkehahn.github.io/gravity-game/ \
 		--out-dir docs \
