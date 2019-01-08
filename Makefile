@@ -1,13 +1,14 @@
 test:
-	mocha --require babel-register --require src/setup-tests.js 'tests/**/*.js'
+	mocha --require @babel/register --require src/setup-tests.js 'tests/**/*.js'
 
 test-watch:
-	mocha --require babel-register --require src/setup-tests.js 'tests/**/*.js' --watch
+	mocha --require @babel/register --require src/setup-tests.js 'tests/**/*.js' --watch
 
 dev:
-	webpack-dev-server --content-base dist
+	parcel src/index.html
 
 deploy-to-docs:
-	webpack
-	mkdir -p docs
-	cp dist/* docs/
+	parcel build \
+	  --public-url https://soenkehahn.github.io/gravity-game/ \
+		--out-dir docs \
+		src/index.html
