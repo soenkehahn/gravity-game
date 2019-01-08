@@ -21,6 +21,7 @@ type Props = {|
 |};
 
 type State = {|
+  hazTouch: boolean,
   level: Level,
   scene: Scene,
   controls: Controls,
@@ -30,22 +31,16 @@ type State = {|
 export class SceneComponent extends React.Component<Props, State> {
   state: State;
 
-  hazTouch: boolean;
-
   svgRef: ?Node;
 
   constructor(props: Props) {
     super(props);
     this.state = this._newScene(props.startLevel);
-    if (__hazTouch) {
-      this.hazTouch = true;
-    } else {
-      this.hazTouch = false;
-    }
   }
 
   _newScene(level: Level): State {
     return {
+      hazTouch: __hazTouch,
       level: level,
       scene: new Scene(level),
       controls: new Controls(),
@@ -167,7 +162,7 @@ export class SceneComponent extends React.Component<Props, State> {
   }
 
   _fontSize(): number {
-    if (this.hazTouch) {
+    if (this.state.hazTouch) {
       return 80;
     } else {
       return 16;
@@ -189,7 +184,7 @@ export class SceneComponent extends React.Component<Props, State> {
       levelName = `untitled (${this.state.level})`;
     }
     let helpText = null;
-    if (!this.hazTouch) {
+    if (!this.state.hazTouch) {
       helpText = (
         <div>
           Controls: Arrow keys to move, Space to reset the level
@@ -207,7 +202,7 @@ export class SceneComponent extends React.Component<Props, State> {
   }
 
   _renderRestartButton() {
-    if (this.hazTouch) {
+    if (this.state.hazTouch) {
       const style = {
         position: "absolute",
         right: 0,
