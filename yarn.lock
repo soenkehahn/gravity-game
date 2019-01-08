@@ -2958,9 +2958,10 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
-haz-touch@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/haz-touch/-/haz-touch-1.1.1.tgz#849bf33411e8cc65e227048f49cb51b237454d7b"
+haz-touch@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/haz-touch/-/haz-touch-1.1.2.tgz#c1a6ee35aab36f0a90f637608fb3a9dd64ead710"
+  integrity sha512-YlOxTH/Zgkzdzfvcyl/vu1cAfSOIpxsv8B9oWLJy/H6s12KhZu+v7JOJkBCQqup0FROenfh3sP0gxN6wxWkTAg==
 
 he@1.1.1:
   version "1.1.1"
@@ -3721,7 +3722,7 @@ lodash@^4.13.1, lodash@^4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
-lodash@^4.15.0, lodash@^4.17.10:
+lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
@@ -5190,9 +5191,10 @@ prepend-http@^1.0.0, prepend-http@^1.0.1:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-1.0.4.tgz#d4f4562b0ce3696e41ac52d0e002e57a635dc6dc"
   integrity sha1-1PRWKwzjaW5BrFLQ4ALlemNdxtw=
 
-prettier@^1.10.2:
-  version "1.14.3"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.3.tgz#90238dd4c0684b7edce5f83b0fb7328e48bd0895"
+prettier@^1.15.3:
+  version "1.15.3"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.15.3.tgz#1feaac5bdd181237b54dbe65d874e02a1472786a"
+  integrity sha512-gAU9AGAPMaKb3NNSUUuhhFAS7SCO4ALTN4nRIn6PJ075Qd28Yn2Ig2ahEJWdJwJmlEBTUfC7mMUSFy8MwsOCfg==
 
 private@^0.1.6:
   version "0.1.7"
