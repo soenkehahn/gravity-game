@@ -1,5 +1,5 @@
-// flow-typed signature: cdafc513ba81412d8ae5e68b73f8e091
-// flow-typed version: 0c27d3bc32/lodash_v4.x.x/flow_>=v0.63.x
+// flow-typed signature: d9766b94a52c23f077a0dcb3f8c649fb
+// flow-typed version: 917093eeb7/lodash_v4.x.x/flow_>=v0.63.x
 
 declare module "lodash" {
   declare type __CurriedFunction1<A, R, AA: A> = (...r: [AA]) => R;
@@ -948,7 +948,7 @@ declare module "lodash" {
     round(number: number, precision?: number): number;
     subtract(minuend: number, subtrahend: number): number;
     sum(array: Array<*>): number;
-    sumBy<T>(array: Array<T>, iteratee?: Iteratee<T>): number;
+    sumBy<T>(array: $ReadOnlyArray<T>, iteratee?: Iteratee<T>): number;
 
     // number
     clamp(number?: number, lower?: ?number, upper?: ?number): number;

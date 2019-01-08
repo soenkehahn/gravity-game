@@ -220,6 +220,7 @@ describe("ui/scene", () => {
       wrapper.state().scene.player.velocity.x = 3;
       callRequestAnimationCallback(10000);
       callRequestAnimationCallback(10002);
+      wrapper.update();
       expectElementWithProps(wrapper.find("circle"), {
         cx: 2 * 3,
         cy: 0,
@@ -232,6 +233,7 @@ describe("ui/scene", () => {
       callRequestAnimationCallback(10000);
       simulateKeyEvent("keydown", "ArrowLeft");
       callRequestAnimationCallback(10002);
+      wrapper.update();
       expectElementWithProps(wrapper.find("circle"), {
         cx: -(2 * 2),
         cy: 0,
@@ -249,6 +251,7 @@ describe("ui/scene", () => {
         callRequestAnimationCallback(10000);
         simulateKeyEvent("keydown", test.arrow);
         callRequestAnimationCallback(10002);
+        wrapper.update();
         expectElementWithProps(wrapper.find("line"), {
           x1: test.x1,
           y1: test.y1,
@@ -296,11 +299,11 @@ describe("ui/scene", () => {
     const copy = "Controls: Arrow keys to move, Space to reset the level";
 
     const restartElement: () => ReactWrapper = () =>
-      wrapper.find("div").findWhere(e => e.text() === "Restart");
+      wrapper.find("div").filterWhere(e => e.text() === "Restart");
 
     describe("when using a touch device", () => {
       beforeEach(() => {
-        (wrapper.instance(): any).hazTouch = true;
+        wrapper.setState({ hazTouch: true });
         wrapper.update();
       });
 
@@ -408,6 +411,7 @@ function simulateKeyEvent(
 }
 
 function expectElementWithProps(wrapper, object) {
+  wrapper.update();
   const candidates = [];
   const found = wrapper.findWhere(e => {
     const candidate = e.props();
