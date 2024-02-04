@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-global.React = React;
+// global.React = React;
 import __hazTouch from "haz-touch";
 
 import { Controls } from "../control";
