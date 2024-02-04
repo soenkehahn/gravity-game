@@ -1,4 +1,6 @@
 {
+  "name": "gravity-game",
+  "version": "0.0.0",
   "babel": {
     "plugins": [
       "@babel/plugin-proposal-class-properties",
@@ -17,6 +19,8 @@
     "chai": "^4.2.0",
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-16": "^1.2.0",
+    "esbuild": "^0.20.0",
+    "esbuild-plugin-flow": "^0.3.2",
     "flow-bin": "^0.89.0",
     "flow-typed": "^2.5.1",
     "jsdom": "^13.1.0",
