@@ -5,7 +5,7 @@ test-watch:
 	mocha --require @babel/register --require src/setup-tests.js 'tests/**/*.js' --watch
 
 dev:
-	parcel src/index.html
+	PATH="./node_modules/.bin:${PATH}" parcel src/index.html
 
 deploy-to-docs:
 	rm docs -rf
